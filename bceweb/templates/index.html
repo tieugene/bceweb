@@ -1,38 +1,7 @@
 {% extends "base.html" %}
 {% block title %} Index {% endblock %}
 {% block head %}
-    <style type="text/css">
-	li {
-		list-style-type: none;
-	}
-	ul#empl {
-		padding: 0;
-	}
-    </style>
 {% endblock %}
 {% block body %}
 <p> Index <p>
-<p> <a href="https://dev.w3.org/html5/html-author/charref"> Entities: </a>
-	&and; &or; &lt; &gt; &xwedge; &xvee; &xutri; &xdtri; &utri; &rtri; &dtri; &ltri; &utrif; &rtrif; &dtrif; &ltrif; 
-</p>
-<p> Test collapse: </p>
-<ul id="empl">
-	<li><input name="empl" type="checkbox" value="one" /> <label for="empl">1. One</label></li>
-	<li> <details> <summary> <input name="empl" type="checkbox" value="two" /> <label for="empl">2. Two</label> </summary>
-		<ul>
-			<li><input name="empl" type="checkbox" value="ten" /> <label for="empl">10. Ten</label></li>
-			<li><input name="empl" type="checkbox" value="eleven" /> <label for="empl">11. Eleven</label></li>
-		</ul>
-	</details> </li>
-	<li><input name="empl" type="checkbox" value="two" /> <label for="empl">3. Three</label>
-		<ul>
-			<li><input name="empl" type="checkbox" value="ten" /> <label for="empl">31. Ten</label></li>
-			<li><input name="empl" type="checkbox" value="eleven" /> <label for="empl">32. Eleven</label></li>
-		</ul>
-	</li>
-</ul>
-<details>
-	<summary>See More</summary>
-	This text will be hidden if your browser supports it.
-</details>
 {% endblock %}

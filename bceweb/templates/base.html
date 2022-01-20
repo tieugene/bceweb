@@ -17,7 +17,16 @@
 		{% endif %}
 	{% endwith %}
     <p>
-        <a href="{{ url_for('bceweb.index') }}"> <button type="button" title="Home"> <img class="svg" alt="Home" src="{{ url_for('static', filename='svg/home.svg') }}"/> </button> </a>
+        <a href="{{ url_for('bceweb.index') }}">
+            <button type="button" title="Home">
+                <img class="svg" alt="Home" src="{{ url_for('static', filename='svg/home.svg') }}"/>
+            </button>
+        </a>
+        <a href="{{ url_for('bceweb.src_dates') }}">
+            <button type="button" title="Dates">
+                <img class="svg" alt="Dates" src="{{ url_for('static', filename='svg/archive.svg') }}"/>
+            </button>
+        </a>
     </p>
     {% block body %}{% endblock %}
 </body>
