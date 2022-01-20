@@ -1,0 +1,54 @@
+* {
+    padding: 0;
+    margin: 0;
+}
+
+html, body {
+    height: 100%;
+}
+
+a {
+    text-decoration: none;
+}
+
+footer {
+    background-color: #F8F8F8;
+}
+
+button:hover {
+    background-color: greenyellow;
+}
+
+button {
+    text-align: center;
+    vertical-align: middle;
+    border-style: solid;
+    cursor: pointer;
+    text-decoration: none;
+    border-color: silver;
+    background-color: Transparent;  // #F8
+}
+
+button > img {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+img.svg {
+    width: 16px;
+}
+
+td {
+    min-width: 0;
+}
+
+td.trunc {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+td.mini {
+    width: 1px;
+    white-space: nowrap;
+}

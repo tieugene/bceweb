@@ -1,2 +1,2 @@
 # bceweb
-beers web frontend
+bcerq/bce2 web frontend

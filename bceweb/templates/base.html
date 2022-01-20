@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+	<meta charset="utf-8"/>
+	<title>BCEWEB: {% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}"/>
+    {%  block head %}{% endblock %}
+</head>
+<body>
+	{% with messages = get_flashed_messages() %}
+	{% if messages %}
+		<ul>
+		{% for message in messages %}
+			<li>{{ message }}</li>
+		{% endfor %}
+		</ul>
+		{% endif %}
+	{% endwith %}
+    <p>
+        <a href="{{ url_for('bceweb.index') }}"> <button type="button" title="Home"> <img class="svg" alt="Home" src="{{ url_for('static', filename='svg/home.svg') }}"/> </button> </a>
+    </p>
+    {% block body %}{% endblock %}
+</body>
+</html>
