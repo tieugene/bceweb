@@ -6,11 +6,11 @@ from flask import Blueprint, render_template, request
 
 import vars
 
-bp = Blueprint('bceweb', __name__)
-
-PAGE_SIZE = 10
+PAGE_SIZE = 25
 Q_DATES_COUNT = 'SELECT COUNT(DISTINCT DATE(datime)) FROM bk;'
 Q_DATES = 'SELECT DISTINCT DATE(datime) AS date, COUNT(*) AS num FROM bk GROUP BY date ORDER BY date OFFSET {offset} LIMIT {limit};'
+
+bp = Blueprint('bceweb', __name__)
 
 
 def get_count(q: str) -> int:
@@ -31,13 +31,13 @@ def index():
 @bp.route('/src/dates', methods=['GET'])
 def src_dates():
     """List dates
-    :note: user cur.rowcount, cur.rownumber
     """
-    page = request.args.get('page', 1, type=int)
-    count = get_count(Q_DATES_COUNT)
+    pages = math.ceil(get_count(Q_DATES_COUNT) / PAGE_SIZE)
+    if (page := request.args.get('page', 1, type=int)) > pages:
+        page = pages
     cur = vars.CONN.cursor()
     cur.execute(Q_DATES.format(limit=PAGE_SIZE, offset=(page-1) * PAGE_SIZE))
-    return render_template('src_dates.html', data=cur, pager=(page, math.ceil(count / PAGE_SIZE)))
+    return render_template('src_dates.html', data=cur, pager=(page, pages))
 
 
 '''

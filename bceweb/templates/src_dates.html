@@ -5,11 +5,11 @@
 {% block body %}
     <h1> Src dates </h1>
     <p>
-        <a href="?page=1"> &larrb; </a>
-        <a href="?page={{ pager[0] - 1 }}"> &larr; </a>
+        <button type="button"> {% if pager[0] > 1 %} <a href="?page=1"> &larrb; </a> {% else %} &larrb; {% endif %} </button>
+        <button type="button"> {% if pager[0] > 1 %} <a href="?page={{ pager[0] - 1 }}"> &larr; {% else %} &larr; {% endif %} </a> </button>
         Page {{ pager[0] }} / {{ pager[1] }}
-        <a href="?page={{ pager[0] + 1 }}"> &rarr; </a>
-        <a href="?page={{ pager[1] }}"> &rarrb; </a>
+        <button type="button"> {% if pager[0] < pager[1] %} <a href="?page={{ pager[0] + 1 }}"> &rarr; </a> {% else %} &rarr; {% endif %} </button>
+        <button type="button"> {% if pager[0] < pager[1] %} <a href="?page={{ pager[1] }}"> &rarrb; </a> {% else %} &rarrb; {% endif %} </button>
     </p>
     <table border="1">
     <col/><col align="right"/>

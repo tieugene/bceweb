@@ -1,7 +1,7 @@
 import psycopg2
 from flask import Flask
-# from flask_sqlalchemy import SQLAlchemy
 
+import routes
 import vars
 
 
@@ -18,8 +18,8 @@ def create_app():
     # utils.init_cfg()
     app = Flask(__name__)
     app.config.from_pyfile('bceweb.cfg')
-    from bceweb.routes import bp
-    app.register_blueprint(bp)
+    # from bceweb.routes import bp
+    app.register_blueprint(routes.bp)
     init_db(app)
     return app
 
