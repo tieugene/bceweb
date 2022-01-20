@@ -7,12 +7,12 @@
     {% include 'pager.html' %}
     <table border="1">
     <col/><col align="right"/>
-    <thead><tr><th> Block </th><th> DateTime </th><th>TXs</th></tr></thead>
+    <thead><tr><th> Block </th><th> DateTime </th><th> TXs </th></tr></thead>
     {% for rec in data %}
         <tr>
             <td> {{ rec[0] }} </td>
             <td> {{ rec[1] }} </td>
-            <td> {{ rec[2] }} </td>
+            <td> <a href="{{ url_for('bceweb.src_txs', bk=rec[0]) }}"> {{ rec[2] }} </a> </td>
         </tr>
     {% endfor %}
     </table>
