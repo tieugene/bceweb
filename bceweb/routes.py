@@ -33,8 +33,7 @@ def index():
 
 @bp.route('/src/dates', methods=['GET'])
 def src_dates():
-    """List dates
-    """
+    """List dates"""
     pages = math.ceil(get_count(Q_DATES_COUNT) / PAGE_SIZE)
     if (page := request.args.get('page', 1, type=int)) > pages:
         page = pages
@@ -57,7 +56,7 @@ def src_bks(d: str):
 
 '''
 @bp.route('/src/bk/<int:bk>', methods=['GET'])
-def src_bks():
+def src_txs():
     """List txs of block"""
     ...
 
