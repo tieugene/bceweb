@@ -1,7 +1,5 @@
 """
-:todo: link user/session with cursor
 """
-import datetime
 import math
 from flask import Blueprint, render_template, request
 
@@ -15,7 +13,9 @@ Q_BLOCKS = "SELECT id, datime, (SELECT COUNT(*) FROM tx WHERE tx.b_id = bk.id GR
 Q_TXS_COUNT = "SELECT COUNT(*) FROM tx WHERE b_id = {bk};"
 Q_TXS = "SELECT id, b_id, hash, (SELECT COUNT(*) FROM vout WHERE vout.t_id_in = tx.id), (SELECT COUNT(*) FROM vout WHERE vout.t_id = tx.id), (SELECT SUM(money) FROM vout WHERE vout.t_id = tx.id) FROM tx WHERE b_id = {bk} ORDER BY id ASC OFFSET {offset} LIMIT {limit};"
 Q_VINS_COUNT = "SELECT COUNT(*) FROM vout WHERE t_id_in = {tx};"
-Q_VINS = "SELECT t_id, n, t_id_in, money, a_id FROM vout WHERE t_id_in = {tx} ORDER BY t_id ASC, n ASC OFFSET {offset} LIMIT {limit};"
+Q_VINS = "SELECT t_id, n, t_id_in, money, a_id, addr.name FROM vout LEFT JOIN addr ON addr.id = vout.a_id WHERE t_id_in = {tx} ORDER BY t_id ASC, n ASC OFFSET {offset} LIMIT {limit};"
+Q_VOUTS_COUNT = "SELECT COUNT(*) FROM vout WHERE t_id = {tx};"
+Q_VOUTS = "SELECT t_id, n, t_id_in, money, a_id, addr.name FROM vout LEFT JOIN addr ON addr.id = vout.a_id WHERE t_id = {tx} ORDER BY t_id ASC, n ASC OFFSET {offset} LIMIT {limit};"
 
 bp = Blueprint('bceweb', __name__)
 
@@ -84,3 +84,16 @@ def src_vins(tx: int):
     cur = vars.CONN.cursor()
     cur.execute(Q_VINS.format(tx=tx, limit=PAGE_SIZE, offset=(page-1) * PAGE_SIZE))
     return render_template('src_vins.html', data=cur, pager=(page, pages))
+
+
+@bp.route('/src/vouts/<int:tx>', methods=['GET'])
+def src_vouts(tx: int):
+    """List vouts of tx.
+    :todo: show bk, tx details
+    """
+    pages = math.ceil(get_count(Q_VOUTS_COUNT.format(tx=tx)) / PAGE_SIZE)
+    if (page := request.args.get('page', 1, type=int)) > pages:
+        page = pages
+    cur = vars.CONN.cursor()
+    cur.execute(Q_VOUTS.format(tx=tx, limit=PAGE_SIZE, offset=(page-1) * PAGE_SIZE))
+    return render_template('src_vouts.html', data=cur, pager=(page, pages))
