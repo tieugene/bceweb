@@ -1,0 +1,1 @@
+SELECT DISTINCT id, datime FROM bk WHERE id = {bk};

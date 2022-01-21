@@ -1,5 +1,5 @@
 """
-:todo: external sql
+:todo: parametered sqls
 :todo: format money (thousands separator)
 """
 import math

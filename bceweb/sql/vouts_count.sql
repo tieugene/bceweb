@@ -1,0 +1,1 @@
+SELECT COUNT(*) FROM vout WHERE t_id = {tx};

@@ -1,0 +1,1 @@
+SELECT COUNT(*) FROM tx WHERE b_id = {bk};
