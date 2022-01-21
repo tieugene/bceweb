@@ -5,8 +5,8 @@ from flask import Blueprint, render_template, request
 import psycopg2
 
 
-import vars
-from queries import Qry
+from . import vars
+from .queries import Qry
 
 PAGE_SIZE = 25
 

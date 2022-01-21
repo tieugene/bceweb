@@ -2,7 +2,7 @@ import configparser
 import os
 import sys
 
-import vars
+from . import vars
 
 
 # 5. utils

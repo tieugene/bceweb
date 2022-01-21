@@ -1,8 +1,7 @@
 import psycopg2
 from flask import Flask
 
-import routes
-import vars
+from . import routes, vars
 
 
 def init_db(app):
