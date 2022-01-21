@@ -1,3 +1,5 @@
+import os.path
+
 import psycopg2
 from flask import Flask
 
@@ -5,7 +7,6 @@ from . import routes, vars
 
 
 def init_db(app):
-    # vars.DB = SQLAlchemy(app)
     vars.CONN = psycopg2.connect(
         host=app.config['DB_HOST'],
         database=app.config['DB_NAME'],
@@ -15,9 +16,9 @@ def init_db(app):
 
 def create_app():
     # utils.init_cfg()
+    cfg_file = '/etc/bceweb.cfg' if os.path.isfile('/etc/bceweb.cfg') else 'bceweb.cfg'
     app = Flask(__name__)
-    app.config.from_pyfile('bceweb.cfg')
-    # from bceweb.routes import bp
+    app.config.from_pyfile(cfg_file)
     app.register_blueprint(routes.bp)
     init_db(app)
     return app
