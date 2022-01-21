@@ -1,7 +1,5 @@
-"""
-:todo: parametered sqls
-:todo: format money (thousands separator)
-"""
+"""Main router"""
+
 import math
 from flask import Blueprint, render_template, request
 
