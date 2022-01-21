@@ -1,6 +1,6 @@
 """
-:todo: format money (BTC, dec separator)
 :todo: external sql
+:todo: format money (thousands separator)
 """
 import math
 from flask import Blueprint, render_template, request

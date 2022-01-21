@@ -19,11 +19,12 @@
     {% include 'pager.html' %}
     <table border="1">
     <col/><col align="right"/><col align="right"/><col align="right"/><col align="right"/><col align="right"/>
-    <thead><tr><th> t_id </th><th> n </th><th> Money </th><th> a_id </th><th> addr </th><th title="Addresses number"> qty </th></tr></thead>
+    <thead><tr><th> t_id </th><th> n </th><th> &#8383; </th><th> satoshi </th><th> a_id </th><th> addr </th><th title="Addresses number"> qty </th></tr></thead>
     {% for rec in data %}
         <tr>
             <td class="right"> <a href="{{ url_for('bceweb.src_vouts', tx=rec[0]) }}"> {{ rec[0] }} </a> </td>
             <td class="right"> {{ rec[1] }} </td>
+            <td class="right"> {{ "%.8f"|format(rec[3]/100000000) }} </td>
             <td class="right"> {{ rec[3] }} </td>
             <td class="right"> <a href="{{ url_for('bceweb.src_addr', aid=rec[4]) }}"> {{ rec[4] }} </a> </td>
             <td>
