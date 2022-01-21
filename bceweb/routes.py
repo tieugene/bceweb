@@ -1,6 +1,6 @@
 """
-:todo: X-links
 :todo: format money (BTC, dec separator)
+:todo: external sql
 """
 import math
 from flask import Blueprint, render_template, request
@@ -15,7 +15,7 @@ Q_BLOCKS = "SELECT id, datime, (SELECT COUNT(*) FROM tx WHERE tx.b_id = bk.id GR
 Q_BLOCK = "SELECT DISTINCT id, datime FROM bk WHERE id = {bk};"
 Q_TXS_COUNT = "SELECT COUNT(*) FROM tx WHERE b_id = {bk};"
 Q_TXS = "SELECT id, b_id, hash, (SELECT COUNT(*) FROM vout WHERE vout.t_id_in = tx.id), (SELECT COUNT(*) FROM vout WHERE vout.t_id = tx.id), (SELECT SUM(money) FROM vout WHERE vout.t_id = tx.id) FROM tx WHERE b_id = {bk} ORDER BY id ASC OFFSET {offset} LIMIT {limit};"
-Q_TX = "SELECT DISTINCT id, b_id, hash FROM tx WHERE id = {tx};"
+Q_TX = "SELECT DISTINCT id, b_id, hash, (SELECT COUNT(*) FROM vout WHERE t_id_in = {tx}), (SELECT COUNT(*) FROM vout WHERE t_id = {tx}) FROM tx WHERE id = {tx};"
 Q_VINS_COUNT = "SELECT COUNT(*) FROM vout WHERE t_id_in = {tx};"
 Q_VINS = "SELECT t_id, n, t_id_in, money, a_id, addr.name, addr.qty FROM vout LEFT JOIN addr ON addr.id = vout.a_id WHERE t_id_in = {tx} ORDER BY t_id ASC, n ASC OFFSET {offset} LIMIT {limit};"
 Q_VOUTS_COUNT = "SELECT COUNT(*) FROM vout WHERE t_id = {tx};"
@@ -89,7 +89,8 @@ def src_txs(bk: int):
 @bp.route('/src/vins/<int:tx>', methods=['GET'])
 def src_vins(tx: int):
     """List vins of tx"""
-    pages = math.ceil(__get_a_value(Q_VINS_COUNT.format(tx=tx)) / PAGE_SIZE)
+    if (pages := math.ceil(__get_a_value(Q_VINS_COUNT.format(tx=tx)) / PAGE_SIZE)) == 0:
+        pages = 1
     if (page := request.args.get('page', 1, type=int)) > pages:
         page = pages
     tx_rec = __get_a_record(Q_TX.format(tx=tx))
@@ -101,7 +102,8 @@ def src_vins(tx: int):
 @bp.route('/src/vouts/<int:tx>', methods=['GET'])
 def src_vouts(tx: int):
     """List vouts of tx"""
-    pages = math.ceil(__get_a_value(Q_VOUTS_COUNT.format(tx=tx)) / PAGE_SIZE)
+    if (pages := math.ceil(__get_a_value(Q_VOUTS_COUNT.format(tx=tx)) / PAGE_SIZE)) == 0:
+        pages = 1
     if (page := request.args.get('page', 1, type=int)) > pages:
         page = pages
     tx_rec = __get_a_record(Q_TX.format(tx=tx))

@@ -11,7 +11,7 @@
         </a>
     </p>
     <p>
-        TX # {{ tx[0] }} ({{ tx[2] }})
+        TX # {{ tx[0] }} ({{ tx[2] }}): <a href="{{ url_for('bceweb.src_vins', tx=tx[0]) }}"> vins </a> = {{ tx[3] }},  vouts = {{ tx[4] }}
         <a href="https://www.blockchain.com/btc/tx/{{ tx[2] }}" target="_blank" rel="noopener noreferrer">
             <img src="{{ url_for('static', filename='bmp/blockchain.com-16x16.png') }}"/>
         </a>
@@ -23,7 +23,7 @@
     {% for rec in data %}
         <tr>
             <td class="right"> {{ rec[1] }} </td>
-            <td class="right"> {{ rec[2] }} </td>
+            <td class="right"> {% if rec[2] %}  <a href="{{ url_for('bceweb.src_vins', tx=rec[2]) }}"> {{ rec[2] }} </a> {% endif %} </td>
             <td class="right"> {{ rec[3] }} </td>
             <td class="right"> <a href="{{ url_for('bceweb.src_addr', aid=rec[4]) }}"> {{ rec[4] }} </a> </td>
             <td>
