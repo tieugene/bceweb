@@ -52,3 +52,7 @@ td.mini {
     width: 1px;
     white-space: nowrap;
 }
+
+td.right {
+    text-align: right;
+}

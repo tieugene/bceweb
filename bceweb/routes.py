@@ -1,6 +1,7 @@
 """
-:todo: bk[, tx] details
-:todo: addr
+:todo: X-links
+:todo: format money (BTC, dec separator)
+:todo: ext links as pic
 """
 import math
 from flask import Blueprint, render_template, request
@@ -20,7 +21,7 @@ Q_VINS_COUNT = "SELECT COUNT(*) FROM vout WHERE t_id_in = {tx};"
 Q_VINS = "SELECT t_id, n, t_id_in, money, a_id, addr.name, addr.qty FROM vout LEFT JOIN addr ON addr.id = vout.a_id WHERE t_id_in = {tx} ORDER BY t_id ASC, n ASC OFFSET {offset} LIMIT {limit};"
 Q_VOUTS_COUNT = "SELECT COUNT(*) FROM vout WHERE t_id = {tx};"
 Q_VOUTS = "SELECT t_id, n, t_id_in, money, a_id, addr.name, addr.qty FROM vout LEFT JOIN addr ON addr.id = vout.a_id WHERE t_id = {tx} ORDER BY t_id ASC, n ASC OFFSET {offset} LIMIT {limit};"
-Q_ADDR = "SELECT DISTINCT id, name, qty FROM addr WHERE id = {aid};"
+Q_ADDR = "SELECT DISTINCT id, name, qty, (SELECT SUM(money) FROM vout WHERE a_id = {aid} AND t_id_in IS NULL) FROM addr WHERE id = {aid};"
 Q_ADDR_MOVES_COUNT = "SELECT COUNT(*) FROM vout WHERE a_id = {aid};"
 Q_ADDR_MOVES = "SELECT t_id, n, t_id_in, money FROM vout WHERE a_id = {aid} ORDER BY t_id ASC, n ASC OFFSET {offset} LIMIT {limit};"
 

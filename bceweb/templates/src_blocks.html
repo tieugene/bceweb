@@ -10,9 +10,9 @@
     <thead><tr><th> Block </th><th> DateTime </th><th> TXs </th></tr></thead>
     {% for rec in data %}
         <tr>
-            <td> <a href="{{ url_for('bceweb.src_txs', bk=rec[0]) }}"> {{ rec[0] }} </a> </td>
+            <td class="right"> <a href="{{ url_for('bceweb.src_txs', bk=rec[0]) }}"> {{ rec[0] }} </a> </td>
             <td> {{ rec[1] }} </td>
-            <td> {{ rec[2] }} </td>
+            <td class="right"> {{ rec[2] }} </td>
         </tr>
     {% endfor %}
     </table>

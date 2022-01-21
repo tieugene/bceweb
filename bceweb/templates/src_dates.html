@@ -10,8 +10,8 @@
     <thead><tr><th> Date </th><th> Blocks </th></tr></thead>
     {% for rec in data %}
         <tr>
-            <td> {{ rec[0] }} </td>
-            <td> <a href="{{ url_for('bceweb.src_bks', d=rec[0]) }}"> {{ rec[1] }} </a> </td>
+            <td> <a href="{{ url_for('bceweb.src_bks', d=rec[0]) }}"> {{ rec[0] }} </a> </td>
+            <td class="right"> {{ rec[1] }} </td>
         </tr>
     {% endfor %}
     </table>
