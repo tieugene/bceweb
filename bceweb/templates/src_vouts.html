@@ -4,8 +4,18 @@
 {% endblock %}
 {% block body %}
     <h1> TX vouts </h1>
-    <p> Block # <a href="{{ url_for('bceweb.src_txs', bk=block[0]) }}"> {{ block[0] }} </a> (<a href="{{ url_for('bceweb.src_bks', d=block[1].date().isoformat()) }}"> {{ block[1] }} </a>) </p>
-    <p> TX # {{ tx[0] }} ({{ tx[2] }}) </p>
+    <p>
+        Block # <a href="{{ url_for('bceweb.src_txs', bk=block[0]) }}"> {{ block[0] }} </a> (<a href="{{ url_for('bceweb.src_bks', d=block[1].date().isoformat()) }}"> {{ block[1] }} </a>)
+        <a href="https://www.blockchain.com/btc/block/{{ block[0] }}" target="_blank" rel="noopener noreferrer">
+            <img src="{{ url_for('static', filename='bmp/blockchain.com-16x16.png') }}"/>
+        </a>
+    </p>
+    <p>
+        TX # {{ tx[0] }} ({{ tx[2] }})
+        <a href="https://www.blockchain.com/btc/tx/{{ tx[2] }}" target="_blank" rel="noopener noreferrer">
+            <img src="{{ url_for('static', filename='bmp/blockchain.com-16x16.png') }}"/>
+        </a>
+    </p>
     {% include 'pager.html' %}
     <table border="1">
     <col/><col align="right"/><col align="right"/><col align="right"/><col align="right"/><col align="right"/>
@@ -16,7 +26,12 @@
             <td class="right"> {{ rec[2] }} </td>
             <td class="right"> {{ rec[3] }} </td>
             <td class="right"> <a href="{{ url_for('bceweb.src_addr', aid=rec[4]) }}"> {{ rec[4] }} </a> </td>
-            <td> {{ rec[5] }} </td>
+            <td>
+                {{ rec[5] }}
+                <a href="https://www.blockchain.com/btc/address/{{ rec[5] }}" target="_blank" rel="noopener noreferrer">
+                    <img src="{{ url_for('static', filename='bmp/blockchain.com-16x16.png') }}"/>
+                </a>
+            </td>
             <td class="right"> {{ rec[6] }} </td>
         </tr>
     {% endfor %}

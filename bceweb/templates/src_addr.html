@@ -4,7 +4,12 @@
 {% endblock %}
 {% block body %}
     <h1> Addr moves </h1>
-    <p> Addr # {{ addr[0] }} ({{ addr[1] }}, {{ addr[2] }}), {{ addr[3] }} sat. </p>
+    <p>
+        Addr # {{ addr[0] }} ({{ addr[1] }}, {{ addr[2] }}), {% if addr[3] %} {{ addr[3] }} sat. {% else %} &empty; {% endif %}
+        <a href="https://www.blockchain.com/btc/address/{{ addr[1] }}" target="_blank" rel="noopener noreferrer">
+            <img src="{{ url_for('static', filename='bmp/blockchain.com-16x16.png') }}"/>
+        </a>
+    </p>
     {% include 'pager.html' %}
     <table border="1">
     <col/><col align="right"/><col align="right"/><col align="right"/><col align="right"/><col align="right"/>

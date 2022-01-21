@@ -1,7 +1,6 @@
 """
 :todo: X-links
 :todo: format money (BTC, dec separator)
-:todo: ext links as pic
 """
 import math
 from flask import Blueprint, render_template, request
