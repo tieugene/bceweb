@@ -1,4 +1,6 @@
 """
+:todo: bk[, tx] details
+:todo: addr
 """
 import math
 from flask import Blueprint, render_template, request
@@ -10,24 +12,38 @@ Q_DATES_COUNT = "SELECT COUNT(DISTINCT DATE(datime)) FROM bk;"
 Q_DATES = "SELECT DISTINCT DATE(datime) AS date, COUNT(*) AS num FROM bk GROUP BY date ORDER BY date ASC OFFSET {offset} LIMIT {limit};"
 Q_BLOCKS_COUNT = "SELECT COUNT(*) FROM bk WHERE DATE(datime) = '{date}';"
 Q_BLOCKS = "SELECT id, datime, (SELECT COUNT(*) FROM tx WHERE tx.b_id = bk.id GROUP BY bk.id) FROM bk WHERE DATE(datime) = '{date}' ORDER BY id ASC OFFSET {offset} LIMIT {limit};"
+Q_BLOCK = "SELECT DISTINCT id, datime FROM bk WHERE id = {bk};"
 Q_TXS_COUNT = "SELECT COUNT(*) FROM tx WHERE b_id = {bk};"
 Q_TXS = "SELECT id, b_id, hash, (SELECT COUNT(*) FROM vout WHERE vout.t_id_in = tx.id), (SELECT COUNT(*) FROM vout WHERE vout.t_id = tx.id), (SELECT SUM(money) FROM vout WHERE vout.t_id = tx.id) FROM tx WHERE b_id = {bk} ORDER BY id ASC OFFSET {offset} LIMIT {limit};"
+Q_TX = "SELECT DISTINCT id, b_id, hash FROM tx WHERE id = {tx};"
 Q_VINS_COUNT = "SELECT COUNT(*) FROM vout WHERE t_id_in = {tx};"
-Q_VINS = "SELECT t_id, n, t_id_in, money, a_id, addr.name FROM vout LEFT JOIN addr ON addr.id = vout.a_id WHERE t_id_in = {tx} ORDER BY t_id ASC, n ASC OFFSET {offset} LIMIT {limit};"
+Q_VINS = "SELECT t_id, n, t_id_in, money, a_id, addr.name, addr.qty FROM vout LEFT JOIN addr ON addr.id = vout.a_id WHERE t_id_in = {tx} ORDER BY t_id ASC, n ASC OFFSET {offset} LIMIT {limit};"
 Q_VOUTS_COUNT = "SELECT COUNT(*) FROM vout WHERE t_id = {tx};"
-Q_VOUTS = "SELECT t_id, n, t_id_in, money, a_id, addr.name FROM vout LEFT JOIN addr ON addr.id = vout.a_id WHERE t_id = {tx} ORDER BY t_id ASC, n ASC OFFSET {offset} LIMIT {limit};"
+Q_VOUTS = "SELECT t_id, n, t_id_in, money, a_id, addr.name, addr.qty FROM vout LEFT JOIN addr ON addr.id = vout.a_id WHERE t_id = {tx} ORDER BY t_id ASC, n ASC OFFSET {offset} LIMIT {limit};"
 
 bp = Blueprint('bceweb', __name__)
 
 
-def get_count(q: str) -> int:
+def __get_a_value(q: str) -> int:
     """Get single value from query.
     :param q: query text to execute
     :return: value get
     """
+    return __get_a_record(q)[0]
+
+
+def __get_a_record(q: str) -> list:
+    """Get single record from query.
+    :param q: query text to execute
+    :return: value get
+    """
+    return __get_records(q).fetchone()
+
+
+def __get_records(q: str):
     cur = vars.CONN.cursor()
     cur.execute(q)
-    return cur.fetchone()[0]
+    return cur
 
 
 @bp.route('/', methods=['GET'])
@@ -38,39 +54,33 @@ def index():
 @bp.route('/src/dates', methods=['GET'])
 def src_dates():
     """List dates"""
-    pages = math.ceil(get_count(Q_DATES_COUNT) / PAGE_SIZE)
+    pages = math.ceil(__get_a_value(Q_DATES_COUNT) / PAGE_SIZE)
     if (page := request.args.get('page', 1, type=int)) > pages:
         page = pages
-    cur = vars.CONN.cursor()
-    cur.execute(Q_DATES.format(limit=PAGE_SIZE, offset=(page-1) * PAGE_SIZE))
+    cur = __get_records(Q_DATES.format(limit=PAGE_SIZE, offset=(page-1) * PAGE_SIZE))
     return render_template('src_dates.html', data=cur, pager=(page, pages))
 
 
 @bp.route('/src/bks/<d>', methods=['GET'])
 def src_bks(d: str):
-    """List blocks of date.
-    :todo: show date
-    """
+    """List blocks of date"""
     # date = datetime.date.fromisoformat(d)
-    pages = math.ceil(get_count(Q_BLOCKS_COUNT.format(date=d)) / PAGE_SIZE)
+    pages = math.ceil(__get_a_value(Q_BLOCKS_COUNT.format(date=d)) / PAGE_SIZE)
     if (page := request.args.get('page', 1, type=int)) > pages:
         page = pages
-    cur = vars.CONN.cursor()
-    cur.execute(Q_BLOCKS.format(date=d, limit=PAGE_SIZE, offset=(page-1) * PAGE_SIZE))
-    return render_template('src_blocks.html', data=cur, pager=(page, pages))
+    cur = __get_records(Q_BLOCKS.format(date=d, limit=PAGE_SIZE, offset=(page-1) * PAGE_SIZE))
+    return render_template('src_blocks.html', date=d, data=cur, pager=(page, pages))
 
 
 @bp.route('/src/txs/<int:bk>', methods=['GET'])
 def src_txs(bk: int):
-    """List txs of block.
-    :todo: show bk details
-    """
-    pages = math.ceil(get_count(Q_TXS_COUNT.format(bk=bk)) / PAGE_SIZE)
+    """List txs of block"""
+    pages = math.ceil(__get_a_value(Q_TXS_COUNT.format(bk=bk)) / PAGE_SIZE)
     if (page := request.args.get('page', 1, type=int)) > pages:
         page = pages
-    cur = vars.CONN.cursor()
-    cur.execute(Q_TXS.format(bk=bk, limit=PAGE_SIZE, offset=(page-1) * PAGE_SIZE))
-    return render_template('src_txs.html', data=cur, pager=(page, pages))
+    block = __get_a_record(Q_BLOCK.format(bk=bk))
+    cur = __get_records(Q_TXS.format(bk=bk, limit=PAGE_SIZE, offset=(page-1) * PAGE_SIZE))
+    return render_template('src_txs.html', block=block, data=cur, pager=(page, pages))
 
 
 @bp.route('/src/vins/<int:tx>', methods=['GET'])
@@ -78,12 +88,13 @@ def src_vins(tx: int):
     """List vins of tx.
     :todo: show bk, tx details
     """
-    pages = math.ceil(get_count(Q_VINS_COUNT.format(tx=tx)) / PAGE_SIZE)
+    pages = math.ceil(__get_a_value(Q_VINS_COUNT.format(tx=tx)) / PAGE_SIZE)
     if (page := request.args.get('page', 1, type=int)) > pages:
         page = pages
-    cur = vars.CONN.cursor()
-    cur.execute(Q_VINS.format(tx=tx, limit=PAGE_SIZE, offset=(page-1) * PAGE_SIZE))
-    return render_template('src_vins.html', data=cur, pager=(page, pages))
+    tx_rec = __get_a_record(Q_TX.format(tx=tx))
+    block = __get_a_record(Q_BLOCK.format(bk=tx_rec[1]))
+    cur = __get_records(Q_VINS.format(tx=tx, limit=PAGE_SIZE, offset=(page-1) * PAGE_SIZE))
+    return render_template('src_vins.html', block=block, tx=tx_rec, data=cur, pager=(page, pages))
 
 
 @bp.route('/src/vouts/<int:tx>', methods=['GET'])
@@ -91,9 +102,10 @@ def src_vouts(tx: int):
     """List vouts of tx.
     :todo: show bk, tx details
     """
-    pages = math.ceil(get_count(Q_VOUTS_COUNT.format(tx=tx)) / PAGE_SIZE)
+    pages = math.ceil(__get_a_value(Q_VOUTS_COUNT.format(tx=tx)) / PAGE_SIZE)
     if (page := request.args.get('page', 1, type=int)) > pages:
         page = pages
-    cur = vars.CONN.cursor()
-    cur.execute(Q_VOUTS.format(tx=tx, limit=PAGE_SIZE, offset=(page-1) * PAGE_SIZE))
-    return render_template('src_vouts.html', data=cur, pager=(page, pages))
+    tx_rec = __get_a_record(Q_TX.format(tx=tx))
+    block = __get_a_record(Q_BLOCK.format(bk=tx_rec[1]))
+    cur = __get_records(Q_VOUTS.format(tx=tx, limit=PAGE_SIZE, offset=(page-1) * PAGE_SIZE))
+    return render_template('src_vouts.html', block=block, tx=tx_rec, data=cur, pager=(page, pages))

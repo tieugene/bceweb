@@ -1,13 +1,15 @@
 {% extends "base.html" %}
-{% block title %} Src vouts {% endblock %}
+{% block title %} TX vouts {% endblock %}
 {% block head %}
 {% endblock %}
 {% block body %}
-    <h1> Src vouts </h1>
+    <h1> TX vouts </h1>
+    <p> Block # <a href="{{ url_for('bceweb.src_txs', bk=block[0]) }}"> {{ block[0] }} </a> (<a href="{{ url_for('bceweb.src_bks', d=block[1].date().isoformat()) }}"> {{ block[1] }} </a>) </p>
+    <p> TX # {{ tx[0] }} ({{ tx[2] }}) </p>
     {% include 'pager.html' %}
     <table border="1">
     <col/><col align="right"/><col align="right"/><col align="right"/><col align="right"/><col align="right"/>
-    <thead><tr><th> t_id </th><th> n </th><th> t_id_in </th><th> Money </th><th> a_id </th><th> addr </th></tr></thead>
+    <thead><tr><th> t_id </th><th> n </th><th> t_id_in </th><th> Money </th><th> a_id </th><th> addr </th><th title="Addresses number"> qty </th></tr></thead>
     {% for rec in data %}
         <tr>
             <td> {{ rec[0] }} </td>
@@ -16,6 +18,7 @@
             <td> {{ rec[3] }} </td>
             <td> {{ rec[4] }} </td>
             <td> {{ rec[5] }} </td>
+            <td> {{ rec[6] }} </td>
         </tr>
     {% endfor %}
     </table>

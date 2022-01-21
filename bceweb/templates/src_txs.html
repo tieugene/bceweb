@@ -1,9 +1,10 @@
 {% extends "base.html" %}
-{% block title %} Src TXs {% endblock %}
+{% block title %} Block TXs {% endblock %}
 {% block head %}
 {% endblock %}
 {% block body %}
-    <h1> Src TXs </h1>
+    <h1> Block TXs </h1>
+    <p> Block # {{ block[0] }} (<a href="{{ url_for('bceweb.src_bks', d=block[1].date().isoformat()) }}"> {{ block[1] }} </a>) </p>
     {% include 'pager.html' %}
     <table border="1">
     <col/><col align="right"/><col align="right"/><col align="right"/><col align="right"/><col align="right"/>
