@@ -2,6 +2,8 @@
 
 import math
 from flask import Blueprint, render_template, request
+import psycopg2
+
 
 import vars
 from queries import Qry
@@ -27,9 +29,9 @@ def __get_a_record(q: str) -> list:
     return __get_records(q).fetchone()
 
 
-def __get_records(q: str):
+def __get_records(q: str, data: dict = None):
     cur = vars.CONN.cursor()
-    cur.execute(q)
+    cur.execute(q, data)
     return cur
 
 

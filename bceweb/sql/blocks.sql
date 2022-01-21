@@ -1,1 +1,8 @@
-SELECT id, datime, (SELECT COUNT(*) FROM tx WHERE tx.b_id = bk.id GROUP BY bk.id) FROM bk WHERE DATE(datime) = '{date}' ORDER BY id ASC OFFSET {offset} LIMIT {limit};
+SELECT
+   id,
+   datime,
+   (SELECT COUNT(*) FROM tx WHERE tx.b_id = bk.id GROUP BY bk.id)
+FROM bk
+WHERE DATE(datime) = '{date}'
+ORDER BY id
+OFFSET {offset} LIMIT {limit};
