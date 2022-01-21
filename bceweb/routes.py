@@ -20,6 +20,9 @@ Q_VINS_COUNT = "SELECT COUNT(*) FROM vout WHERE t_id_in = {tx};"
 Q_VINS = "SELECT t_id, n, t_id_in, money, a_id, addr.name, addr.qty FROM vout LEFT JOIN addr ON addr.id = vout.a_id WHERE t_id_in = {tx} ORDER BY t_id ASC, n ASC OFFSET {offset} LIMIT {limit};"
 Q_VOUTS_COUNT = "SELECT COUNT(*) FROM vout WHERE t_id = {tx};"
 Q_VOUTS = "SELECT t_id, n, t_id_in, money, a_id, addr.name, addr.qty FROM vout LEFT JOIN addr ON addr.id = vout.a_id WHERE t_id = {tx} ORDER BY t_id ASC, n ASC OFFSET {offset} LIMIT {limit};"
+Q_ADDR = "SELECT DISTINCT id, name, qty FROM addr WHERE id = {aid};"
+Q_ADDR_MOVES_COUNT = "SELECT COUNT(*) FROM vout WHERE a_id = {aid};"
+Q_ADDR_MOVES = "SELECT t_id, n, t_id_in, money FROM vout WHERE a_id = {aid} ORDER BY t_id ASC, n ASC OFFSET {offset} LIMIT {limit};"
 
 bp = Blueprint('bceweb', __name__)
 
@@ -85,9 +88,7 @@ def src_txs(bk: int):
 
 @bp.route('/src/vins/<int:tx>', methods=['GET'])
 def src_vins(tx: int):
-    """List vins of tx.
-    :todo: show bk, tx details
-    """
+    """List vins of tx"""
     pages = math.ceil(__get_a_value(Q_VINS_COUNT.format(tx=tx)) / PAGE_SIZE)
     if (page := request.args.get('page', 1, type=int)) > pages:
         page = pages
@@ -99,9 +100,7 @@ def src_vins(tx: int):
 
 @bp.route('/src/vouts/<int:tx>', methods=['GET'])
 def src_vouts(tx: int):
-    """List vouts of tx.
-    :todo: show bk, tx details
-    """
+    """List vouts of tx"""
     pages = math.ceil(__get_a_value(Q_VOUTS_COUNT.format(tx=tx)) / PAGE_SIZE)
     if (page := request.args.get('page', 1, type=int)) > pages:
         page = pages
@@ -109,3 +108,14 @@ def src_vouts(tx: int):
     block = __get_a_record(Q_BLOCK.format(bk=tx_rec[1]))
     cur = __get_records(Q_VOUTS.format(tx=tx, limit=PAGE_SIZE, offset=(page-1) * PAGE_SIZE))
     return render_template('src_vouts.html', block=block, tx=tx_rec, data=cur, pager=(page, pages))
+
+
+@bp.route('/src/addr/<int:aid>', methods=['GET'])
+def src_addr(aid: int):
+    """List of address operations"""
+    pages = math.ceil(__get_a_value(Q_ADDR_MOVES_COUNT.format(aid=aid)) / PAGE_SIZE)
+    if (page := request.args.get('page', 1, type=int)) > pages:
+        page = pages
+    addr = __get_a_record(Q_ADDR.format(aid=aid))
+    cur = __get_records(Q_ADDR_MOVES.format(aid=aid, limit=PAGE_SIZE, offset=(page-1) * PAGE_SIZE))
+    return render_template('src_addr.html', addr=addr, data=cur, pager=(page, pages))

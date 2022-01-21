@@ -17,7 +17,7 @@
             <td> {{ rec[2] }} </td>
             <td> {{ rec[3] }} </td>
             <td> {{ rec[4] }} </td>
-            <td> {{ rec[5] }} </td>
+            <td> <a href="{{ url_for('bceweb.src_addr', aid=rec[4]) }}"> {{ rec[5] }} </a> </td>
             <td> {{ rec[6] }} </td>
         </tr>
     {% endfor %}
