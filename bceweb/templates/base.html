@@ -23,8 +23,18 @@
             </button>
         </a>
         <a href="{{ url_for('bceweb.src_dates') }}">
-            <button type="button" title="Dates">
-                <img class="svg" alt="Dates" src="{{ url_for('static', filename='svg/archive.svg') }}"/>
+            <button type="button" title="Blockchain explorer">
+                <img class="svg" alt="BTC crowler" src="{{ url_for('static', filename='svg/sitemap.svg') }}"/>
+            </button>
+        </a>
+        <a href="{{ url_for('bceweb.q_index') }}">
+            <button type="button" title="Queries">
+                <img class="svg" alt="BTC" src="{{ url_for('static', filename='svg/btc.svg') }}"/>
+            </button>
+        </a>
+        <a href="">
+            <button type="button" title="System info (TODO)">
+                <img class="svg" alt="Info" src="{{ url_for('static', filename='svg/info.svg') }}"/>
             </button>
         </a>
     </p>

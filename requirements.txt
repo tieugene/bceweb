@@ -1,5 +1,5 @@
-Flask
-# Flask-WTF?
-Jinja2
-# Flask-SQLAlchemy
 psycopg2
+Flask
+Jinja2
+Flask-WTF
+WTForms

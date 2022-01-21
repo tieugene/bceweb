@@ -13,7 +13,6 @@
     <p> &#8383;: {% if addr[3] %} {{ "%.8f"|format(addr[3]/100000000) }} ({{ addr[3] }} sat.) {% else %} &empty; {% endif %} </p>
     {% include 'pager.html' %}
     <table border="1">
-    <col/><col align="right"/><col align="right"/><col align="right"/><col align="right"/><col align="right"/>
     <thead><tr><th> t_id </th><th> n </th><th> t_id_in </th><th> &#8383; </th><th> satoshi </th></tr></thead>
     {% for rec in data %}
         <tr>

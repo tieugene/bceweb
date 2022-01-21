@@ -1,11 +1,11 @@
 """Main router"""
-
+import datetime
 import math
-from flask import Blueprint, render_template, request
-import psycopg2
+from flask import Blueprint, render_template, request, session
+# import psycopg2
 
 
-from . import vars
+from . import vars, forms
 from .queries import Qry
 
 PAGE_SIZE = 25
@@ -107,3 +107,23 @@ def src_addr(aid: int):
     addr = __get_a_record(Qry.get('SRC_ADDR').format(aid=aid))
     cur = __get_records(Qry.get('SRC_ADDR_MOVES').format(aid=aid, limit=PAGE_SIZE, offset=(page-1) * PAGE_SIZE))
     return render_template('src_addr.html', addr=addr, data=cur, pager=(page, pages))
+
+
+@bp.route('/q', methods=['GET'])
+def q_index():
+    """List of queries"""
+    return render_template('q_index.html')
+
+
+@bp.route('/q/addr_btc_max', methods=['GET', 'POST'])
+def q_addr_btc_max():
+    """Top [num] addresses by gain (₿) in period [fromdate]...[todate]"""
+    form = forms.ND0D1Form()
+    cur = []
+    if form.validate_on_submit():
+        num = form.num.data
+        date0 = form.date0.data
+        date1 = form.date1.data
+        cur = __get_records(Qry.get('Q_ADDR_BTC_MAX').format(num=num, date0=date0, date1=date1))
+    session['time0'] = datetime.datetime.now()
+    return render_template('q_addr_btc_max.html', data=cur, form=form)
