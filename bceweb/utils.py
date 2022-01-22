@@ -1,9 +1,7 @@
 import sys
+from flask import current_app
 
-from . import vars
 
-
-# 5. utils
 def eprint(s: str):
     """
     Print err/warning message to stderr
@@ -19,5 +17,5 @@ def vprint(s: str):
     :param s: message
     :return: None
     """
-    if vars.DEBUG:
+    if current_app.config['DEBUG']:
         eprint(s)

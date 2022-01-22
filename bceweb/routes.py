@@ -1,11 +1,12 @@
 """Main router"""
+# 1. std
 import datetime
 import math
-from flask import Blueprint, render_template, request, session, send_file, current_app
-# import psycopg2
-
-
-from . import vars, forms, xlstore
+# 2. 3rd
+import psycopg2
+from flask import Blueprint, render_template, request, send_file, g, current_app
+# 3. local
+from . import forms, xlstore
 from .queries import Qry
 
 PAGE_SIZE = 25
@@ -13,12 +14,25 @@ PAGE_SIZE = 25
 bp = Blueprint('bceweb', __name__)
 
 
+# utils
+# - misc
 def __timestamp() -> int:
     return int(datetime.datetime.now().timestamp())
 
 
 def __now() -> datetime.datetime:
     return datetime.datetime.now().replace(microsecond=0)
+
+
+# - db
+def __get_db():
+    if (db := g.get('_database')) is None:
+        db = g._database = psycopg2.connect(
+            host=current_app.config['DB_HOST'],
+            database=current_app.config['DB_NAME'],
+            user=current_app.config['DB_USER'],
+            password=current_app.config['DB_PASS'])
+    return db
 
 
 def __get_a_value(q: str) -> int:
@@ -38,11 +52,12 @@ def __get_a_record(q: str) -> list:
 
 
 def __get_records(q: str, data: dict = None):
-    cur = vars.CONN.cursor()
+    cur = __get_db().cursor()
     cur.execute(q, data)
     return cur
 
 
+# routes
 @bp.route('/', methods=['GET'])
 def index():
     return render_template('index.html')
@@ -150,5 +165,4 @@ def q_addr_btc_max():
         meta = {'title': title, 'subject': '', 'created': time1, 'comments': ''}
         head = ('a_id', 'addr', 'itog0', 'itog1', 'profilt')
         xl_id = xlstore.mk_xlsx(meta, head, data)
-    print(current_app.config['XLSTORE'])
     return render_template('q_addr_btc_max.html', data=data, form=form, dtime=dtime, xl_id=xl_id)

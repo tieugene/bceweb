@@ -1,17 +1,9 @@
+# 1. std
 import os.path
-
-import psycopg2
+# 2. 3rd
 from flask import Flask
-
-from . import routes, vars
-
-
-def init_db(app):
-    vars.CONN = psycopg2.connect(
-        host=app.config['DB_HOST'],
-        database=app.config['DB_NAME'],
-        user=app.config['DB_USER'],
-        password=app.config['DB_PASS'])
+# 3. local
+from . import routes
 
 
 def create_app():
@@ -20,7 +12,6 @@ def create_app():
     app = Flask(__name__)
     app.config.from_pyfile(cfg_file)
     app.register_blueprint(routes.bp)
-    init_db(app)
     return app
 
 
