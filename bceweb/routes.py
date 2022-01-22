@@ -154,14 +154,14 @@ def get_xl(xl_id: int):
 
 
 # diffs: head:list, title:str, query
-def __q_addr_x_y(title: str, head: tuple, qry_name: str):
-    form = forms.ND0D1Form()
+def __q_addr_x_y(formclass, title: str, head: tuple, qry_name: str):
+    form = formclass()
     data = []
     dtime = 0
     xl_id = 0
     if form.validate_on_submit():
         num = form.num.data
-        date0 = form.date0.data
+        date0 = form.date0.data if 'date0' in form.data else None
         date1 = form.date1.data
         time0 = __now()
         cur = __get_records(Qry.get(qry_name).format(num=num, date0=date0, date1=date1))
@@ -178,6 +178,7 @@ def __q_addr_x_y(title: str, head: tuple, qry_name: str):
 def q_addr_btc_max():
     """Top [num] addresses by gain (₿) in period [fromdate]...[todate]"""
     return __q_addr_x_y(
+        forms.ND0D1Form,
         "Топ {num} адресов по увеличению баланса (₿) за {date0}...{date1}",
         ('a_id', 'addr', 'itog0', 'itog1', 'profit'),
         'Q_ADDR_BTC_MAX'
@@ -188,6 +189,7 @@ def q_addr_btc_max():
 def q_addr_btc_min():
     """Top [num] addresses by lost (₿) in period [fromdate]...[todate]"""
     return __q_addr_x_y(
+        forms.ND0D1Form,
         "Топ {num} адресов по уменьшению баланса (₿) за {date0}...{date1}",
         ('a_id', 'addr', 'itog0', 'itog1', 'profit'),
         'Q_ADDR_BTC_MIN'
@@ -198,6 +200,7 @@ def q_addr_btc_min():
 def q_addr_cnt_max():
     """Top [num] addresses by gain (%) in period [fromdate]...[todate]"""
     return __q_addr_x_y(
+        forms.ND0D1Form,
         "Топ {num} адресов по увеличению баланса (%) за {date0}...{date1}",
         ('a_id', 'addr', 'begin data', 'end data', 'rel gain, %'),
         'Q_ADDR_CNT_MAX'
@@ -208,7 +211,19 @@ def q_addr_cnt_max():
 def q_addr_cnt_min():
     """Top [num] addresses by lost (%) in period [fromdate]...[todate]"""
     return __q_addr_x_y(
+        forms.ND0D1Form,
         "Топ {num} адресов по уменьшению баланса (%) за {date0}...{date1}",
         ('a_id', 'addr', 'begin data', 'end data', 'rel gain, %'),
         'Q_ADDR_CNT_MIN'
+    )
+
+
+@bp.route('/q/addr_gt', methods=['GET', 'POST'])
+def q_addr_gt():
+    """Addresses with balance > ₿[num] on [date]"""
+    return __q_addr_x_y(
+        forms.ND1Form,
+        "Адреса с балансом > ₿{num} на {date1}",
+        ("a_id", "address", "balance>N, data"),
+        'Q_ADDR_GT'
     )

@@ -12,3 +12,9 @@ class ND0D1Form(FlaskForm):
     num = IntegerField("Num:")
     date0 = DateField("from:")
     date1 = DateField("to:")
+
+
+class ND1Form(FlaskForm):
+    """Form for N, Date"""
+    num = IntegerField("Num:")
+    date1 = DateField("Date:")
