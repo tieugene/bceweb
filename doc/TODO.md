@@ -11,15 +11,6 @@
 ## q_
 - [ ] add timestamp + timer 
 
-## Info
-- [ ] services status
-  - [ ] bitcoind
-  - [ ] db
-- [ ] DBs info:
-  - [ ] bitcoind height
-  - [ ] DB main (blocks, dates)
-  - [ ] txo
-
 ## UI
 - [ ] permanent vertical menu
 - [ ] mobile version

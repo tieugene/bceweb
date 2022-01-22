@@ -132,6 +132,14 @@ def src_addr(aid: int):
     return render_template('src_addr.html', addr=addr, data=cur, pager=(page, pages))
 
 
+@bp.route('/info', methods=['GET'])
+def info():
+    data = dict()
+    data['bk'] = __get_a_record(Qry.get('INFO_BK'))
+    data['txo'] = __get_a_record(Qry.get('INFO_TXO'))
+    return render_template('info.html', data=data)
+
+
 @bp.route('/q', methods=['GET'])
 def q_index():
     """List of queries"""
@@ -147,7 +155,8 @@ def get_xl(xl_id: int):
 
 @bp.route('/q/addr_btc_max', methods=['GET', 'POST'])
 def q_addr_btc_max():
-    """Top [num] addresses by gain (₿) in period [fromdate]...[todate]"""
+    """Top [num] addresses by gain (₿) in period [fromdate]...[todate]
+    """
     form = forms.ND0D1Form()
     data = []
     dtime = 0

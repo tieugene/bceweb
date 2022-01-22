@@ -1,0 +1,1 @@
+SELECT MAX(id), MAX(datime) FROM bk;

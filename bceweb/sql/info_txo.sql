@@ -1,0 +1,1 @@
+SELECT MIN(date0), MAX(date0), MIN(date1), MAX(date1) FROM txo;
