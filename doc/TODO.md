@@ -9,15 +9,14 @@
 *(None)*
 
 ## q_
-- [ ] add timestamp + timer
 - [ ] unification:
-  - [ ] date0, date1, num (addr_*_* x4)
-  - [ ] date1, num (addr_gt)
-  - [ ] date0, date1, num, alist (alist_*_* x4)
+  - [x] num, date0, date1 (addr_*_* x4; num=qty (10..100))
+  - [x] num, date1 (addr_gt; num=$ (1G+))
+  - [ ] num, date0, date1, alist (alist_*_* x4; num=$/%)
   - [ ] date0, date1, alist (alist_moves)
 - [ ] XLSX: format
-  - thousands
-  - mono
+  - [ ] thousands
+  - [ ] mono
 
 ## UI
 - [ ] permanent vertical menu
@@ -27,5 +26,6 @@
 - [ ] bceweb.spec
 
 ## Future
+- [ ] xlsx cache as BytesIO()
 - [ ] mobile version
 - [ ] parametered sqls

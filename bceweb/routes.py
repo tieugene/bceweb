@@ -157,7 +157,7 @@ def get_xl(xl_id: int):
 def __q_addr_x_y(formclass, title: str, head: tuple, qry_name: str):
     form = formclass()
     data = []
-    dtime = 0
+    times = None
     xl_id = 0
     if form.validate_on_submit():
         num = form.num.data
@@ -167,11 +167,11 @@ def __q_addr_x_y(formclass, title: str, head: tuple, qry_name: str):
         cur = __get_records(Qry.get(qry_name).format(num=num, date0=date0, date1=date1))
         data = cur.fetchall()
         time1 = __now()
-        dtime = time1 - time0
+        times = (time0, time1)
         title = title.format(num=num, date0=date0, date1=date1)
         meta = {'title': title, 'subject': '', 'created': time1, 'comments': ''}
         xl_id = xlstore.mk_xlsx(meta, head, data)
-    return render_template('q_addr_x_y.html', title=title, head=head, data=data, form=form, dtime=dtime, xl_id=xl_id)
+    return render_template('q_addr_x_y.html', title=title, head=head, data=data, form=form, times=times, xl_id=xl_id)
 
 
 @bp.route('/q/addr_btc_max', methods=['GET', 'POST'])

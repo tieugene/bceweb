@@ -50,7 +50,10 @@ class Store:
 def mk_xlsx(meta: dict, head: tuple, data) -> int:
     """Create xlsx file.
     :return: New file id
+    :todo: cell_format = workbook.add_format({'bold': True, 'italic': True})
     """
+    # 'strings_to_numbers': True
+    options = {'in_memory': True}
     xl_id = Store.new()
     workbook = xlsxwriter.Workbook(Store.path(xl_id))
     workbook.set_properties(meta)  # 'title', 'subject', 'create[d]', comments)

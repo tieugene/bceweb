@@ -23,7 +23,7 @@
     {% if data %}
         <table border="1">
         <caption>
-            Query complete: {{ dtime }}
+            Query times: {{ times[0] }} &hellip; {{ times[1] }} &rArr; {{ times[1] - times[0] }}
             <a href="{{ url_for('bceweb.get_xl', xl_id=xl_id) }}">
                 <button type="button" title="Export to XLSX">
                     <img class="svg" src="{{ url_for('static', filename='svg/file-excel-o.svg') }}"/>
