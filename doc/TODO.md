@@ -15,6 +15,9 @@
   - [ ] date1, num (addr_gt)
   - [ ] date0, date1, num, alist (alist_*_* x4)
   - [ ] date0, date1, alist (alist_moves)
+- [ ] XLSX: format
+  - thousands
+  - mono
 
 ## UI
 - [ ] permanent vertical menu

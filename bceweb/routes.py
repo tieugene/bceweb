@@ -178,7 +178,7 @@ def __q_addr_x_y(title: str, head: tuple, qry_name: str):
 def q_addr_btc_max():
     """Top [num] addresses by gain (₿) in period [fromdate]...[todate]"""
     return __q_addr_x_y(
-        "Топ {num} адресов по увеличению баланса за {date0}...{date1}",
+        "Топ {num} адресов по увеличению баланса (₿) за {date0}...{date1}",
         ('a_id', 'addr', 'itog0', 'itog1', 'profit'),
         'Q_ADDR_BTC_MAX'
     )
@@ -188,7 +188,27 @@ def q_addr_btc_max():
 def q_addr_btc_min():
     """Top [num] addresses by lost (₿) in period [fromdate]...[todate]"""
     return __q_addr_x_y(
-        "Топ {num} адресов по уменьшению баланса за {date0}...{date1}",
+        "Топ {num} адресов по уменьшению баланса (₿) за {date0}...{date1}",
         ('a_id', 'addr', 'itog0', 'itog1', 'profit'),
         'Q_ADDR_BTC_MIN'
+    )
+
+
+@bp.route('/q/addr_cnt_max', methods=['GET', 'POST'])
+def q_addr_cnt_max():
+    """Top [num] addresses by gain (%) in period [fromdate]...[todate]"""
+    return __q_addr_x_y(
+        "Топ {num} адресов по увеличению баланса (%) за {date0}...{date1}",
+        ('a_id', 'addr', 'begin data', 'end data', 'rel gain, %'),
+        'Q_ADDR_CNT_MAX'
+    )
+
+
+@bp.route('/q/addr_cnt_min', methods=['GET', 'POST'])
+def q_addr_cnt_min():
+    """Top [num] addresses by lost (%) in period [fromdate]...[todate]"""
+    return __q_addr_x_y(
+        "Топ {num} адресов по уменьшению баланса (%) за {date0}...{date1}",
+        ('a_id', 'addr', 'begin data', 'end data', 'rel gain, %'),
+        'Q_ADDR_CNT_MIN'
     )
