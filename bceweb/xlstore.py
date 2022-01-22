@@ -59,11 +59,9 @@ def mk_xlsx(meta: dict, head: tuple, data) -> int:
     workbook.set_properties(meta)  # 'title', 'subject', 'create[d]', comments)
     worksheet = workbook.add_worksheet()
     # header
-    for col, cell in enumerate(head):
-        worksheet.write(0, col, cell)
+    worksheet.write_row(0, 0, head)
     # data
     for row, item in enumerate(data):
-        for col, cell in enumerate(item):
-            worksheet.write(row+1, col, cell)
+        worksheet.write_row(row+1, 0, item)
     workbook.close()
     return xl_id
