@@ -1,8 +1,6 @@
-import os
-
 # 1. consts
 # flask
-DEBUG = True
+# DEBUG = True
 CONN = None
 # DB = None
 

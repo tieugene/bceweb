@@ -17,18 +17,26 @@
                 {% endfor %}
             </td>
 		{% endfor %}
-            <td><input id="submit" name="submit" type="submit" value="Apply"></td>
+            <td><input id="submit" name="submit" type="submit" value="Go"></td>
         </tr></table>
 	</form>
     {% if data %}
         <table border="1">
+        <caption>
+            Query complete: {{ dtime }}
+            <a href="{{ url_for('bceweb.get_xl', xl_id=xl_id) }}">
+                <button type="button">
+                    <img class="svg" src="{{ url_for('static', filename='svg/file-excel-o.svg') }}"/>
+                </button>
+            </a>
+        </caption>
         <thead><tr><th> a_id </th><th> addr </th><th> itogo0 </th><th> itogo1 </th><th> profit </th></tr></thead>
         <tbody>
         {% for rec in data %}
             <tr>
                 <td class="right"> {{ rec[0] }} </td>
                 <td> {{ rec[1] }} </td>
-                <td class="right"> {{ rec[2]|default('') }} </td>
+                <td class="right"> {% if rec[2] %} {{ rec[2] }} {% endif %} </td>
                 <td class="right"> {{ rec[3] }} </td>
                 <td class="right"> {{ rec[4] }} </td>
             </tr>
