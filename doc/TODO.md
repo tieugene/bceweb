@@ -3,10 +3,11 @@
 - [RTFM](https://jinja.palletsprojects.com/en/3.0.x/templates/)
 
 ## common
-
-## src_
 - [ ] parametered sqls
 - [ ] format money (thousands separator)
+
+## src_
+*(None)*
 
 ## q_
 - [ ] add timestamp + timer
@@ -21,5 +22,8 @@
 - [ ] mobile version
 
 ## Maintain
+- [ ] production:
+  - [ ] no date selector
+  - [ ] cannot validate date
 - [ ] setup.py
-- [ ] .spec
+- [ ] bceweb.spec

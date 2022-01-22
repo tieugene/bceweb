@@ -25,8 +25,8 @@
         <caption>
             Query complete: {{ dtime }}
             <a href="{{ url_for('bceweb.get_xl', xl_id=xl_id) }}">
-                <button type="button">
-                    <img class="svg32" src="{{ url_for('static', filename='svg/file-excel-o.svg') }}"/>
+                <button type="button" title="Export to XLSX">
+                    <img class="svg" src="{{ url_for('static', filename='svg/file-excel-o.svg') }}"/>
                 </button>
             </a>
         </caption>

@@ -153,10 +153,10 @@ def get_xl(xl_id: int):
         return send_file(path)
 
 
+# diffs: head:list, title:str, query
 @bp.route('/q/addr_btc_max', methods=['GET', 'POST'])
 def q_addr_btc_max():
-    """Top [num] addresses by gain (₿) in period [fromdate]...[todate]
-    """
+    """Top [num] addresses by gain (₿) in period [fromdate]...[todate]"""
     form = forms.ND0D1Form()
     data = []
     dtime = 0
@@ -180,8 +180,7 @@ def q_addr_btc_max():
 
 @bp.route('/q/addr_btc_min', methods=['GET', 'POST'])
 def q_addr_btc_min():
-    """Top [num] addresses by lost (₿) in period [fromdate]...[todate]
-    """
+    """Top [num] addresses by lost (₿) in period [fromdate]...[todate]"""
     form = forms.ND0D1Form()
     data = []
     dtime = 0
