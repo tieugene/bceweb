@@ -4,7 +4,8 @@
 {% endblock %}
 {% block body %}
 <h1> Queries </h1>
-    <ul>
-        <li> <a href="{{ url_for('bceweb.q_addr_btc_max') }}"> Топ N адресов за период </a> </li>
-    </ul>
+    <ol>
+        <li> <a href="{{ url_for('bceweb.q_addr_btc_max') }}"> Топ N адресов &uarr;&#8383; за период </a> </li>
+        <li> <a href="{{ url_for('bceweb.q_addr_btc_min') }}"> Топ N адресов &darr;&#8383; за период </a> </li>
+    </ol>
 {% endblock %}

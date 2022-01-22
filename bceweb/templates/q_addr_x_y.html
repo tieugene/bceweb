@@ -1,9 +1,9 @@
 {% extends "base.html" %}
-{% block title %} Query #1 {% endblock %}
+{% block title %} Query: {{ title }} {% endblock %}
 {% block head %}
 {% endblock %}
 {% block body %}
-    <h1> Query: #1 </h1>
+    <h1> Query: </h1>
     <h2> {{ title }} </h2>
     <form action="" method="post" novalidate="">
 		{{ form.csrf_token() }}
@@ -26,7 +26,7 @@
             Query complete: {{ dtime }}
             <a href="{{ url_for('bceweb.get_xl', xl_id=xl_id) }}">
                 <button type="button">
-                    <img class="svg" src="{{ url_for('static', filename='svg/file-excel-o.svg') }}"/>
+                    <img class="svg32" src="{{ url_for('static', filename='svg/file-excel-o.svg') }}"/>
                 </button>
             </a>
         </caption>
@@ -34,11 +34,9 @@
         <tbody>
         {% for rec in data %}
             <tr>
-                <td class="right"> {{ rec[0] }} </td>
-                <td> {{ rec[1] }} </td>
-                <td class="right"> {% if rec[2] %} {{ rec[2] }} {% endif %} </td>
-                <td class="right"> {{ rec[3] }} </td>
-                <td class="right"> {{ rec[4] }} </td>
+            {% for cell in rec %}
+                <td class="right"> {% if cell is not none %} {{ cell }} {% endif %} </td>
+            {% endfor %}
             </tr>
         {% endfor %}
         </tbody>

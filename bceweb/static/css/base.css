@@ -38,6 +38,10 @@ img.svg {
     width: 16px;
 }
 
+img.svg32 {
+    width: 32px;
+}
+
 td {
     min-width: 0;
 }
