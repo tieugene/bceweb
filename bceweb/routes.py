@@ -154,21 +154,17 @@ def get_xl(xl_id: int):
 
 
 # diffs: head:list, title:str, query
-@bp.route('/q/addr_btc_max', methods=['GET', 'POST'])
-def q_addr_btc_max():
-    """Top [num] addresses by gain (₿) in period [fromdate]...[todate]"""
+def __q_addr_x_y(title: str, head: tuple, qry_name: str):
     form = forms.ND0D1Form()
     data = []
     dtime = 0
     xl_id = 0
-    head = ('a_id', 'addr', 'itog0', 'itog1', 'profilt')
-    title = "Топ {num} адресов по увеличению баланса за {date0}...{date1}"
     if form.validate_on_submit():
         num = form.num.data
         date0 = form.date0.data
         date1 = form.date1.data
         time0 = __now()
-        cur = __get_records(Qry.get('Q_ADDR_BTC_MAX').format(num=num, date0=date0, date1=date1))
+        cur = __get_records(Qry.get(qry_name).format(num=num, date0=date0, date1=date1))
         data = cur.fetchall()
         time1 = __now()
         dtime = time1 - time0
@@ -176,27 +172,23 @@ def q_addr_btc_max():
         meta = {'title': title, 'subject': '', 'created': time1, 'comments': ''}
         xl_id = xlstore.mk_xlsx(meta, head, data)
     return render_template('q_addr_x_y.html', title=title, head=head, data=data, form=form, dtime=dtime, xl_id=xl_id)
+
+
+@bp.route('/q/addr_btc_max', methods=['GET', 'POST'])
+def q_addr_btc_max():
+    """Top [num] addresses by gain (₿) in period [fromdate]...[todate]"""
+    return __q_addr_x_y(
+        "Топ {num} адресов по увеличению баланса за {date0}...{date1}",
+        ('a_id', 'addr', 'itog0', 'itog1', 'profit'),
+        'Q_ADDR_BTC_MAX'
+    )
 
 
 @bp.route('/q/addr_btc_min', methods=['GET', 'POST'])
 def q_addr_btc_min():
     """Top [num] addresses by lost (₿) in period [fromdate]...[todate]"""
-    form = forms.ND0D1Form()
-    data = []
-    dtime = 0
-    xl_id = 0
-    head = ('a_id', 'addr', 'itog0', 'itog1', 'profilt')
-    title = "Топ {num} адресов по уменьшению баланса за {date0}...{date1}"
-    if form.validate_on_submit():
-        num = form.num.data
-        date0 = form.date0.data
-        date1 = form.date1.data
-        time0 = __now()
-        cur = __get_records(Qry.get('Q_ADDR_BTC_MIN').format(num=num, date0=date0, date1=date1))
-        data = cur.fetchall()
-        time1 = __now()
-        dtime = time1 - time0
-        title = title.format(num=num, date0=date0, date1=date1)
-        meta = {'title': title, 'subject': '', 'created': time1, 'comments': ''}
-        xl_id = xlstore.mk_xlsx(meta, head, data)
-    return render_template('q_addr_x_y.html', title=title, head=head, data=data, form=form, dtime=dtime, xl_id=xl_id)
+    return __q_addr_x_y(
+        "Топ {num} адресов по уменьшению баланса за {date0}...{date1}",
+        ('a_id', 'addr', 'itog0', 'itog1', 'profit'),
+        'Q_ADDR_BTC_MIN'
+    )

@@ -6,3 +6,4 @@
 - [x] Hot xlsx download
 - [x] on-demand DB connection
 - [x] info
+- [x] date input (chk wtforms versions compatibility)

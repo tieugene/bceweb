@@ -3,7 +3,6 @@
 - [RTFM](https://jinja.palletsprojects.com/en/3.0.x/templates/)
 
 ## common
-- [ ] parametered sqls
 - [ ] format money (thousands separator)
 
 ## src_
@@ -19,12 +18,11 @@
 
 ## UI
 - [ ] permanent vertical menu
-- [ ] mobile version
 
 ## Maintain
-- [ ] production:
-  - [ ] no date selector
-    - [ ] dev: html5 (`input type="date"`)
-    - [ ] prod: html4 (`<input type="text">`)
 - [ ] setup.py
 - [ ] bceweb.spec
+
+## Future
+- [ ] mobile version
+- [ ] parametered sqls
