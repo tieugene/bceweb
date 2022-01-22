@@ -24,6 +24,7 @@
 ## Maintain
 - [ ] production:
   - [ ] no date selector
-  - [ ] cannot validate date
+    - [ ] dev: html5 (`input type="date"`)
+    - [ ] prod: html4 (`<input type="text">`)
 - [ ] setup.py
 - [ ] bceweb.spec
