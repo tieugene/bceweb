@@ -4,7 +4,7 @@
 {% endblock %}
 {% block body %}
     <h1> Query: #1 </h1>
-    <h2> Топ [num] адресов по увеличению баланса за период [from]&hellip;[to]. </h2>
+    <h2> {{ title }} </h2>
     <form action="" method="post" novalidate="">
 		{{ form.csrf_token() }}
 		<table> <tr>
@@ -30,7 +30,7 @@
                 </button>
             </a>
         </caption>
-        <thead><tr><th> a_id </th><th> addr </th><th> itogo0 </th><th> itogo1 </th><th> profit </th></tr></thead>
+        <thead><tr>{% for h in head %}<th> {{ h }} </th>{% endfor %}</tr></thead>
         <tbody>
         {% for rec in data %}
             <tr>

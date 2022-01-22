@@ -161,6 +161,8 @@ def q_addr_btc_max():
     data = []
     dtime = 0
     xl_id = 0
+    head = ('a_id', 'addr', 'itog0', 'itog1', 'profilt')
+    title = "Топ {num} адресов по увеличению баланса за {date0}...{date1}"
     if form.validate_on_submit():
         num = form.num.data
         date0 = form.date0.data
@@ -170,8 +172,7 @@ def q_addr_btc_max():
         data = cur.fetchall()
         time1 = __now()
         dtime = time1 - time0
-        title = f"Топ {num} адресов по увеличению баланса за {date0}...{date1}"
+        title = title.format(num=num, date0=date0, date1=date1)
         meta = {'title': title, 'subject': '', 'created': time1, 'comments': ''}
-        head = ('a_id', 'addr', 'itog0', 'itog1', 'profilt')
         xl_id = xlstore.mk_xlsx(meta, head, data)
-    return render_template('q_addr_btc_max.html', data=data, form=form, dtime=dtime, xl_id=xl_id)
+    return render_template('q_addr_x_y.html', title=title, head=head, data=data, form=form, dtime=dtime, xl_id=xl_id)
