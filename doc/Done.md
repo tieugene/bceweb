@@ -13,3 +13,4 @@
   - [x] format header: bold, center, freeze
   - [x] btc
   - [x] format cells: mono, .8f, 1000s
+  - [x] in-memory storage

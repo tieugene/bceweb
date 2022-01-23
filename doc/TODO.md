@@ -29,7 +29,7 @@
 - [ ] bceweb.spec
 
 ## Future
+- [ ] xlsx: autoclean
 - [ ] xlsx as template (&lt; flat xml)
-- [ ] xlsx cache as BytesIO()
 - [ ] mobile version
 - [ ] parametered sqls

@@ -1,9 +1,9 @@
 """Main router"""
 # 1. std
 import datetime
+import io
 import math
 # 2. 3rd
-import jinja2
 import psycopg2
 from flask import Blueprint, render_template, request, send_file, g, current_app
 # 3. local
@@ -157,8 +157,8 @@ def q_index():
 @bp.route('/xl/<int:xl_id>', methods=['GET'])
 def get_xl(xl_id: int):
     """Get previously created XLSX"""
-    if path := xlstore.Store.get(xl_id):
-        return send_file(path)
+    if data := xlstore.Store.get(xl_id):
+        return send_file(io.BytesIO(data), download_name=f"{xl_id}.xlsx")
 
 
 # diffs: head:list, title:str, query

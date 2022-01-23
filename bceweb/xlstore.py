@@ -1,50 +1,37 @@
 """XLSX files store"""
 # 1. std
-import os
+import io
 from typing import Optional, Iterable
 # 2. 3rd
-from flask import current_app
 import xlsxwriter
 
 
 class Store:
     __counter: int = 0
-
-    @staticmethod
-    def __base():
-        return current_app.config.get('XLSTORE')
-
-    @staticmethod
-    def __clean():
-        """Clean cache dir before usage"""
-        with os.scandir(Store.__base()) as itr:
-            for entry in itr:
-                if not entry.is_file():
-                    os.remove(entry.path)
-
-    @staticmethod
-    def path(xl_id: int):
-        return os.path.join(Store.__base(), str(xl_id)+'.xlsx')
+    __store: dict[int, bytes] = {}
 
     @staticmethod
     def new() -> int:
         """Create new filename.
         :return: Path of new file
         """
-        if Store.__counter == 0:
-            Store.__clean()
         Store.__counter += 1
         return Store.__counter
 
     @staticmethod
-    def get(xl_id: int) -> Optional[str]:
+    def set(xl_id: int, data: io.BytesIO):
+        """Save in-memory 'file' to store
+        :todo: autoclean
+        """
+        Store.__store[xl_id] = data.getvalue()
+
+    @staticmethod
+    def get(xl_id: int) -> Optional[bytes]:
         """Get file path if exists.
         :param xl_id: File ID to get
         :return: Path of prev created XLSX file
         """
-        path = Store.path(xl_id)
-        if os.path.isfile(path):
-            return path
+        return Store.__store.get(xl_id)
 
 
 def mk_xlsx(meta: dict, head: tuple, data: Iterable, btc_cols: set = {}) -> int:
@@ -54,7 +41,8 @@ def mk_xlsx(meta: dict, head: tuple, data: Iterable, btc_cols: set = {}) -> int:
     # 'strings_to_numbers': True
     options = {'in_memory': True}
     xl_id = Store.new()
-    workbook = xlsxwriter.Workbook(Store.path(xl_id), options)
+    like_file = io.BytesIO()
+    workbook = xlsxwriter.Workbook(like_file, options)
     workbook.set_properties(meta)  # 'title', 'subject', 'create[d]', comments)
     worksheet = workbook.add_worksheet()
     # formats
@@ -72,4 +60,5 @@ def mk_xlsx(meta: dict, head: tuple, data: Iterable, btc_cols: set = {}) -> int:
                 else:
                     worksheet.write(row + 1, col, cell)
     workbook.close()
+    Store.set(xl_id, like_file)
     return xl_id
