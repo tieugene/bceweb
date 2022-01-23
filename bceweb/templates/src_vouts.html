@@ -25,14 +25,15 @@
             <td class="right"> {{ rec[1] }} </td>
             <td class="right"> {% if rec[2] %}  <a href="{{ url_for('bceweb.src_vins', tx=rec[2]) }}"> {{ rec[2] }} </a> {% endif %} </td>
             <td class="right"> {{ rec[3]|sa2btc }} </td>
-            <td class="right"> <a href="{{ url_for('bceweb.src_addr', aid=rec[4]) }}"> {{ rec[4] }} </a> </td>
-            <td>
+            <td class="right"> {% if rec[4] %} <a href="{{ url_for('bceweb.src_addr', aid=rec[4]) }}"> {{ rec[4] }} </a> {% endif %} </td>
+            <td>{% if rec[4] %}
                 {{ rec[5] }}
                 <a href="https://www.blockchain.com/btc/address/{{ rec[5] }}" target="_blank" rel="noopener noreferrer">
                     <img src="{{ url_for('static', filename='bmp/blockchain.com-16x16.png') }}"/>
                 </a>
+                {% endif %}
             </td>
-            <td class="right"> {{ rec[6] }} </td>
+            <td class="right">{% if rec[4] %} {{ rec[6] }} {% endif %}</td>
         </tr>
     {% endfor %}
     </table>

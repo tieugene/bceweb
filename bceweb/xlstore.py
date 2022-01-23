@@ -58,8 +58,11 @@ def mk_xlsx(meta: dict, head: tuple, data) -> int:
     workbook = xlsxwriter.Workbook(Store.path(xl_id))
     workbook.set_properties(meta)  # 'title', 'subject', 'create[d]', comments)
     worksheet = workbook.add_worksheet()
+    # formats
+    head_format = workbook.add_format({'bold': True, 'align': 'center'})
     # header
-    worksheet.write_row(0, 0, head)
+    worksheet.write_row(0, 0, head, head_format)
+    worksheet.freeze_panes(1, 0)
     # data
     for row, item in enumerate(data):
         worksheet.write_row(row+1, 0, item)

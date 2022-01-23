@@ -9,3 +9,5 @@
 - [x] date input (chk wtforms versions compatibility)
 - [x] add timestamp + timer
 - [x] html: satoshi => btc
+- [x] XLSX format:
+  - [x] header: bold, center, freeze

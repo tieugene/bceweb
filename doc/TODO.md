@@ -14,13 +14,13 @@
   - [x] num, date1 (addr_gt; num=$ (1G+))
   - [ ] num, date0, date1, alist (alist_*_* x4; num=$/%)
   - [ ] date0, date1, alist (alist_moves)
-- [ ] XLSX: format
-  - [ ] thousands
-  - [ ] mono
-  - [ ] center on point
-  - [ ] worksheet.freeze_panes()
+- [ ] XLSX:
+  - [ ] btc
+  - [ ] format cells:
+    - [ ] mono
+    - [ ] right
+    - [ ] thousands
 - [ ] don't forget wtforms.DecimalField()
-- Idea: xlsx as template
 
 ## UI
 - [ ] permanent vertical menu
@@ -30,6 +30,7 @@
 - [ ] bceweb.spec
 
 ## Future
+- [ ] xlsx as template (&lt; flat xml)
 - [ ] xlsx cache as BytesIO()
 - [ ] mobile version
 - [ ] parametered sqls
