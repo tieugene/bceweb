@@ -1,7 +1,7 @@
 """XLSX files store"""
 # 1. std
 import os
-from typing import Optional
+from typing import Optional, Iterable
 # 2. 3rd
 from flask import current_app
 import xlsxwriter
@@ -47,24 +47,29 @@ class Store:
             return path
 
 
-def mk_xlsx(meta: dict, head: tuple, data) -> int:
+def mk_xlsx(meta: dict, head: tuple, data: Iterable, btc_cols: set = {}) -> int:
     """Create xlsx file.
     :return: New file id
-    :todo: cell_format = workbook.add_format({'bold': True, 'font_name': 'Courier', 'align': 'right', 'num_format': '$#,##0.00'})
     """
     # 'strings_to_numbers': True
     options = {'in_memory': True}
     xl_id = Store.new()
-    workbook = xlsxwriter.Workbook(Store.path(xl_id))
+    workbook = xlsxwriter.Workbook(Store.path(xl_id), options)
     workbook.set_properties(meta)  # 'title', 'subject', 'create[d]', comments)
     worksheet = workbook.add_worksheet()
     # formats
     head_format = workbook.add_format({'bold': True, 'align': 'center'})
+    btc_format = workbook.add_format({'font_name': 'Courier', 'num_format': '# ##0.00000000'})
     # header
     worksheet.write_row(0, 0, head, head_format)
     worksheet.freeze_panes(1, 0)
     # data
-    for row, item in enumerate(data):
-        worksheet.write_row(row+1, 0, item)
+    for row, data_row in enumerate(data):
+        for col, cell in enumerate(data_row):
+            if cell is not None:
+                if col in btc_cols:
+                    worksheet.write_number(row + 1, col, cell/100000000, btc_format)
+                else:
+                    worksheet.write(row + 1, col, cell)
     workbook.close()
     return xl_id

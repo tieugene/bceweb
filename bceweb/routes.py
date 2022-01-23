@@ -162,7 +162,7 @@ def get_xl(xl_id: int):
 
 
 # diffs: head:list, title:str, query
-def __q_addr_x_y(formclass, title: str, head: tuple, qry_name: str, tpl_name: str):
+def __q_addr_x_y(formclass, title: str, head: tuple, qry_name: str, tpl_name: str, btc_cols: set = {}):
     form = formclass()
     data = []
     times = None
@@ -178,7 +178,7 @@ def __q_addr_x_y(formclass, title: str, head: tuple, qry_name: str, tpl_name: st
         times = (time0, time1)
         title = title.format(num=num, date0=date0, date1=date1)
         meta = {'title': title, 'subject': '', 'created': time1, 'comments': ''}
-        xl_id = xlstore.mk_xlsx(meta, head, data)
+        xl_id = xlstore.mk_xlsx(meta, head, data, btc_cols)
     return render_template(tpl_name, title=title, head=head, data=data, form=form, times=times, xl_id=xl_id)
 
 
@@ -190,7 +190,8 @@ def q_addr_btc_max():
         "Топ {num} адресов по увеличению баланса (₿) за {date0}...{date1}",
         ('a_id', 'Адрес', 'Было', 'Стало', 'Profit'),
         'Q_ADDR_BTC_MAX',
-        'q_addr_btc_.html'
+        'q_addr_btc_.html',
+        {2, 3, 4}
     )
 
 
@@ -202,7 +203,8 @@ def q_addr_btc_min():
         "Топ {num} адресов по уменьшению баланса (₿) за {date0}...{date1}",
         ('a_id', 'Адрес', 'Было', 'Стало', 'Profit'),
         'Q_ADDR_BTC_MIN',
-        'q_addr_btc_.html'
+        'q_addr_btc_.html',
+        {2, 3, 4}
     )
 
 
@@ -214,7 +216,8 @@ def q_addr_cnt_max():
         "Топ {num} адресов по увеличению баланса (%) за {date0}...{date1}",
         ('a_id', 'Адрес', 'Было', 'Стало', 'Рост, %'),
         'Q_ADDR_CNT_MAX',
-        'q_addr_cnt_.html'
+        'q_addr_cnt_.html',
+        {2, 3}
     )
 
 
@@ -226,7 +229,8 @@ def q_addr_cnt_min():
         "Топ {num} адресов по уменьшению баланса (%) за {date0}...{date1}",
         ('a_id', 'Адрес', 'Было', 'Стало', 'Рост, %'),
         'Q_ADDR_CNT_MIN',
-        'q_addr_cnt_.html'
+        'q_addr_cnt_.html',
+        {2, 3}
     )
 
 
@@ -238,5 +242,6 @@ def q_addr_gt():
         "Адреса с балансом > {num} sat. на {date1}",
         ("a_id", "Адрес", "Баланс, ₿"),
         'Q_ADDR_GT',
-        'q_addr_gt.html'
+        'q_addr_gt.html',
+        {2}
     )

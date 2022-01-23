@@ -14,12 +14,11 @@
   - [x] num, date1 (addr_gt; num=$ (1G+))
   - [ ] num, date0, date1, alist (alist_*_* x4; num=$/%)
   - [ ] date0, date1, alist (alist_moves)
-- [ ] XLSX:
-  - [ ] btc
-  - [ ] format cells:
-    - [ ] mono
-    - [ ] right
-    - [ ] thousands
+- [ ] alist:
+  - CSV
+  - multicolumn text
+  - checkboxed
+  - upload
 - [ ] don't forget wtforms.DecimalField()
 
 ## UI
