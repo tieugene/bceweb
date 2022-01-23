@@ -3,6 +3,7 @@
 import datetime
 import math
 # 2. 3rd
+import jinja2
 import psycopg2
 from flask import Blueprint, render_template, request, send_file, g, current_app
 # 3. local
@@ -55,6 +56,13 @@ def __get_records(q: str, data: dict = None):
     cur = __get_db().cursor()
     cur.execute(q, data)
     return cur
+
+
+# filters
+@bp.add_app_template_filter
+def sa2btc(sat: int) -> str:
+    """Convert satoshi to btc."""
+    return "{:.8f}".format(sat/100000000)
 
 
 # routes

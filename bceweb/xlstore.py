@@ -50,7 +50,7 @@ class Store:
 def mk_xlsx(meta: dict, head: tuple, data) -> int:
     """Create xlsx file.
     :return: New file id
-    :todo: cell_format = workbook.add_format({'bold': True, 'italic': True})
+    :todo: cell_format = workbook.add_format({'bold': True, 'font_name': 'Courier', 'align': 'right', 'num_format': '$#,##0.00'})
     """
     # 'strings_to_numbers': True
     options = {'in_memory': True}

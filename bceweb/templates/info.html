@@ -4,8 +4,10 @@
 {% endblock %}
 {% block body %}
     <h1> Info </h1>
-    <dl>
-        <dt> Max block: </dt> <dd>#{{ data.bk[0] }}, {{ data.bk[1] }}</dd>
-        <dt> TXO: </dt> <dd> date0={{ data.txo[0] }}&hellip;{{ data.txo[1] }}<br/>date1={{ data.txo[2] }}&hellip;{{ data.txo[3] }} </dd>
-    </dl>
+    <p> <b> Max block: </b> #{{ data.bk[0] }} ({{ data.bk[1] }} </p>
+    <p> TXO: </p>
+    <table>
+        <tr> <th> Vouts: </th> <td> {{ data.txo[0] }}&hellip;{{ data.txo[1] }} </td> </tr>
+        <tr> <th> Vins:&nbsp; </th> <td> {{ data.txo[2] }}&hellip;{{ data.txo[3] }} </td> </tr>
+    </table>
 {% endblock %}

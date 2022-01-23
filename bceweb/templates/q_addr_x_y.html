@@ -9,7 +9,7 @@
 		{{ form.csrf_token() }}
 		<table> <tr>
         {% for field in form if field.name != "csrf_token" %}
-            <th valign="top">{{ field.label() }}</th>
+            <th>{{ field.label() }}</th>
             <td>
                 <p>{{ field }}</p>
                 {% for error in field.errors %}
@@ -26,7 +26,7 @@
             Query times: {{ times[0] }} &hellip; {{ times[1] }} &rArr; {{ times[1] - times[0] }}
             <a href="{{ url_for('bceweb.get_xl', xl_id=xl_id) }}">
                 <button type="button" title="Export to XLSX">
-                    <img class="svg" src="{{ url_for('static', filename='svg/file-excel-o.svg') }}"/>
+                    <img class="svg" alt="xlsx" src="{{ url_for('static', filename='svg/file-excel-o.svg') }}"/>
                 </button>
             </a>
         </caption>
@@ -34,8 +34,15 @@
         <tbody>
         {% for rec in data %}
             <tr>
-            {% for cell in rec %}
-                <td class="right"> {% if cell is not none %} {{ cell }} {% endif %} </td>
+                <td class="right"> <a href="{{ url_for('bceweb.src_addr', aid=rec[0]) }}"> {{ rec[0] }} </a> </td>
+                <td>
+                    {{ rec[1] }}
+                    <a href="https://www.blockchain.com/btc/address/{{ rec[1] }}" target="_blank" rel="noopener noreferrer">
+                    <img alt="blockchain.com" src="{{ url_for('static', filename='bmp/blockchain.com-16x16.png') }}"/>
+                </a>
+                </td>
+            {% for cell in rec[2:] %}
+                <td class="right"> {% if cell is not none %} {{ cell|sa2btc }} {% endif %} </td>
             {% endfor %}
             </tr>
         {% endfor %}
