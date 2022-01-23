@@ -8,3 +8,4 @@
 - [x] info
 - [x] date input (chk wtforms versions compatibility)
 - [x] add timestamp + timer
+- [x] html: satoshi => btc

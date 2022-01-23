@@ -3,16 +3,7 @@
 - [RTFM](https://jinja.palletsprojects.com/en/3.0.x/templates/)
 
 ## common
-- [ ] sa2btc:
-  - [ ] ~~SQL~~
-  - [x] float
-    - [x] test
-  - [ ] Decimal()
-  - [ ] str
-  - [ ] don't forget wtforms.DecimalField()
-- [ ] format money:
-  - thousands separator
-  - center on point
+*(None)*
 
 ## src_
 *(None)*
@@ -26,7 +17,10 @@
 - [ ] XLSX: format
   - [ ] thousands
   - [ ] mono
+  - [ ] center on point
   - [ ] worksheet.freeze_panes()
+- [ ] don't forget wtforms.DecimalField()
+- Idea: xlsx as template
 
 ## UI
 - [ ] permanent vertical menu

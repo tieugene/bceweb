@@ -1,0 +1,17 @@
+{% extends "q_addr_.html" %}
+{% block tbody %}
+    {% for rec in data %}
+        <tr>
+            <td class="right"> <a href="{{ url_for('bceweb.src_addr', aid=rec[0]) }}"> {{ rec[0] }} </a> </td>
+            <td>
+                {{ rec[1] }}
+                <a href="https://www.blockchain.com/btc/address/{{ rec[1] }}" target="_blank" rel="noopener noreferrer">
+                    <img alt="blockchain.com" src="{{ url_for('static', filename='bmp/blockchain.com-16x16.png') }}"/>
+                </a>
+            </td>
+            <td class="right"> {% if rec[2] is not none %} {{ rec[2]|sa2btc }} {% endif %} </td>
+            <td class="right"> {% if rec[3] is not none %} {{ rec[3]|sa2btc }} {% endif %} </td>
+            <td class="right"> {{ rec[4] }} </td>
+        </tr>
+    {% endfor %}
+{% endblock %}
