@@ -1,9 +1,23 @@
 # TODO
 
-- [RTFM](https://jinja.palletsprojects.com/en/3.0.x/templates/)
-
 ## common
-*(None)*
+- [ ] named query results:
+
+   ```python
+   from psycopg2.extras import NamedTupleCursor
+   # or .NamedTupleConnection
+   with conn.cursor(cursor_factory=NamedTupleCursor) as cur:
+       ...
+   ```
+
+- [ ] Query tree:
+  1. Year + Mon/Day
+  1. Blocks (of date) (+scroll date)
+  1. Block (+scroll blocks): stat
+  1. tx (+scroll)
+  1. vins/vouts (+scroll)
+- [ ] Query `txo:date0/1` &rArr; `vout:tx_id/..._in`
+- [ ] remove blueprint
 
 ## src_
 *(None)*
@@ -33,3 +47,7 @@
 - [ ] xlsx as template (&lt; flat xml)
 - [ ] mobile version
 - [ ] parametered sqls
+
+## misc
+- https://pythonru.com/uroki/1-vvedenie-vo-flask
+- [RTFM](https://jinja.palletsprojects.com/en/3.0.x/templates/)
