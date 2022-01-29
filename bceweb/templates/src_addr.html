@@ -5,21 +5,21 @@
 {% block body %}
     <h1> Addr moves </h1>
     <p>
-        Addr # {{ addr[0] }} ({{ addr[1] }}, {{ addr[2] }})
-        <a href="https://www.blockchain.com/btc/address/{{ addr[1] }}" target="_blank" rel="noopener noreferrer">
+        Addr # {{ addr.id }} ({{ addr.name }}, {{ addr.qty }})
+        <a href="https://www.blockchain.com/btc/address/{{ addr.name }}" target="_blank" rel="noopener noreferrer">
             <img src="{{ url_for('static', filename='bmp/blockchain.com-16x16.png') }}"/>
         </a>
     </p>
-    <p> &#8383;: {% if addr[3] %} {{ "%.8f"|format(addr[3]/100000000) }} ({{ addr[3] }} sat.) {% else %} &empty; {% endif %} </p>
+    <p> &#8383;: {% if addr.money %} {{ "%.8f"|format(addr.money/100000000) }} ({{ addr.money }} sat.) {% else %} &empty; {% endif %} </p>
     {% include 'pager.html' %}
     <table border="1">
     <thead><tr><th> t_id </th><th> n </th><th> t_id_in </th><th> &#8383; </th></tr></thead>
     {% for rec in data %}
         <tr>
-            <td class="right"> <a href="{{ url_for('bceweb.src_vouts', tx=rec[0]) }}"> {{ rec[0] }} </a> </td>
-            <td class="right"> {{ rec[1] }} </td>
-            <td class="right"> {% if rec[2] %}  <a href="{{ url_for('bceweb.src_vins', tx=rec[2]) }}"> {{ rec[2] }} </a> {% endif %} </td>
-            <td class="right"> {{ rec[3]|sa2btc }} </td>
+            <td class="right"> <a href="{{ url_for('bceweb.src_vouts', tx=rec.t_id) }}"> {{ rec.t_id }} </a> </td>
+            <td class="right"> {{ rec.n }} </td>
+            <td class="right"> {% if rec.t_id_in %}  <a href="{{ url_for('bceweb.src_vins', tx=rec.t_id_in) }}"> {{ rec.t_id_in }} </a> {% endif %} </td>
+            <td class="right"> {{ rec.money|sa2btc }} </td>
         </tr>
     {% endfor %}
     </table>

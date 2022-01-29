@@ -1,1 +1,1 @@
-SELECT MIN(date0), MAX(date0), MIN(date1), MAX(date1) FROM txo;
+SELECT MIN(date0) AS d0_min, MAX(date0) AS d0_max, MIN(date1) AS d1_min, MAX(date1) AS d1_max FROM txo;
