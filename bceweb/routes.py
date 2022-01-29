@@ -4,7 +4,7 @@ import datetime
 import io
 import math
 # 2. 3rd
-import psycopg2
+import psycopg2, psycopg2.extras
 from flask import Blueprint, render_template, request, send_file, g, current_app
 # 3. local
 from . import forms, xlstore
@@ -30,9 +30,11 @@ def __get_db():
     if (db := g.get('_database')) is None:
         db = g._database = psycopg2.connect(
             host=current_app.config['DB_HOST'],
+            port=current_app.config['DB_PORT'],
             database=current_app.config['DB_NAME'],
             user=current_app.config['DB_USER'],
-            password=current_app.config['DB_PASS'])
+            password=current_app.config['DB_PASS']
+        )
     return db
 
 

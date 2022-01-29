@@ -10,13 +10,13 @@
        ...
    ```
 
+- [ ] Query `txo:date0/1` &rArr; `vout:tx_id/..._in`
 - [ ] Query tree:
   1. Year + Mon/Day
   1. Blocks (of date) (+scroll date)
   1. Block (+scroll blocks): stat
   1. tx (+scroll)
   1. vins/vouts (+scroll)
-- [ ] Query `txo:date0/1` &rArr; `vout:tx_id/..._in`
 - [ ] remove blueprint
 
 ## src_
