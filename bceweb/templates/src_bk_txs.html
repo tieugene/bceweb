@@ -1,18 +1,20 @@
 {% extends "base.html" %}
-{% block title %} Block TXs {% endblock %}
+{% block title %} Block {{ block.id }}: TXs {% endblock %}
 {% block head %}
 {% endblock %}
 {% block body %}
-    <h1> Block TXs </h1>
+    <h1>
+        Block {{ block.id }} TXs
+        (<a href="{{ url_for('bceweb.src_bk', bk=block.id) }}"> info </a>)
+    </h1>
     <p>
-        Block # {{ block.id }} (<a href="{{ url_for('bceweb.src_date_bks', d=block.datime.date().isoformat()) }}"> {{ block.datime }})
+        Block # {{ block.id }} (<a href="{{ url_for('bceweb.src_date_bks', d=block.datime.date().isoformat()) }}"> {{ block.datime }} </a>)
         <a href="https://www.blockchain.com/btc/block/{{ block.id }}" target="_blank" rel="noopener noreferrer">
-            <img src="{{ url_for('static', filename='bmp/blockchain.com-16x16.png') }}"/>
+            <img alt="blockchain.com" src="{{ url_for('static', filename='bmp/blockchain.com-16x16.png') }}"/>
         </a>
     </p>
     {% include 'pager.html' %}
     <table border="1">
-    <colgroup><col/><col align="right"/><col align="right"/><col align="right"/><col align="right"/></colgroup>
     <thead><tr><th> ID </th><th> Hash </th><th> Vins </th><th> Vouts </th><th> &#8383; </th></tr></thead>
     <tbody>
     {% for rec in data %}
@@ -20,7 +22,7 @@
             <td class="right"> {{ rec.id }} </td>
             <td> {{ rec.hash }}
                 <a href="https://www.blockchain.com/btc/tx/{{ rec.hash }}" target="_blank" rel="noopener noreferrer">
-                    <img src="{{ url_for('static', filename='bmp/blockchain.com-16x16.png') }}"/>
+                    <img alt="blockchain.com" src="{{ url_for('static', filename='bmp/blockchain.com-16x16.png') }}"/>
                 </a>
             </td>
             <td class="right"> {% if rec.vi_num %} <a href="{{ url_for('bceweb.src_tx_vins', tx=rec.id) }}"> {{ rec.vi_num }} </a> {% else %} {{ rec.vi_num }} {% endif %}</td>

@@ -11,7 +11,7 @@
     {% for rec in data %}
         <tr>
             <td class="right">
-                <a href="{{ url_for('bceweb.src_bk_txs', bk=rec.id) }}"> {{ rec.id }} </a>
+                <a href="{{ url_for('bceweb.src_bk', bk=rec.id) }}"> {{ rec.id }} </a>
                 <a href="https://www.blockchain.com/btc/block/{{ rec.id }}" target="_blank" rel="noopener noreferrer">
                     <img src="{{ url_for('static', filename='bmp/blockchain.com-16x16.png') }}"/>
                 </a>

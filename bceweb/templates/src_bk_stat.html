@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block title %} Block {{ block.id }}: TXs {% endblock %}
+{% block head %}
+{% endblock %}
+{% block body %}
+    <h1>
+        Block {{ block.id }} info
+        (<a href="{{ url_for('bceweb.src_bk_txs', bk=block.id) }}"> TXs </a>)
+    </h1>
+    <p>
+        Block # {{ block.id }} (<a href="{{ url_for('bceweb.src_date_bks', d=block.d.isoformat()) }}"> {{ block.d }} </a> {{ block.datime.time().isoformat() }})
+        <a href="https://www.blockchain.com/btc/block/{{ block.id }}" target="_blank" rel="noopener noreferrer">
+            <img alt="blockchain.com" src="{{ url_for('static', filename='bmp/blockchain.com-16x16.png') }}"/>
+        </a>
+    </p>
+    {# include 'pager.html' #}
+    <table border="1">
+        <thead>
+            <tr><th rowspan="2"> Attribute </th><th colspan="2"> All </th> <th colspan="2"> Job </th> <th colspan="2"> &Delta; </th></tr>
+            <tr><th> # </th> <th> &#8383; </th><th> # </th> <th> &#8383; </th><th> # </th> <th> &#8383; </th></tr>
+        </thead>
+    <tbody>
+        <tr> <th> TXs: </th> <td> {{ block.tx_num }} </td> <td colspan="5"/> </tr>
+        <tr> <th> Price </th> <td/> <td class="right"> {{ block.price|sa2btc }} </td> <td colspan="4"/> </tr>
+    <!-- vi/vo/si/lo/uo x _num/_num_job, sum/_sum_job -->
+        <tr>
+            <th> Vins </th>
+            <td class="right"> {{ block.vi_num }} </td>
+            <td class="right"> {{ block.vi_sum|sa2btc }} </td>
+            <td class="right"> {{ block.vi_num_job }} </td>
+            <td class="right"> {{ block.vi_sum_job|sa2btc }} </td>
+            <td class="right"> {{ block.vi_num - block.vi_num_job }} </td>
+            <td class="right"> {{ (block.vi_sum - block.vi_sum_job)|sa2btc }} </td>
+        </tr>
+        <tr>
+            <th> Vouts </th>
+            <td class="right"> {{ block.vo_num }} </td>
+            <td class="right"> {{ block.vo_sum|sa2btc }} </td>
+            <td class="right"> {{ block.vo_num_job }} </td>
+            <td class="right"> {{ block.vo_sum_job|sa2btc }} </td>
+            <td class="right"> {{ block.vo_num - block.vo_num_job }} </td>
+            <td class="right"> {{ (block.vo_sum - block.vo_sum_job)|sa2btc }} </td>
+        </tr>
+        <tr>
+            <th> Vo-Vi </th>
+            <td/>
+            <td class="right"> {{ (block.vo_sum - block.vi_sum)|sa2btc }} </td>
+            <td/>
+            <td class="right"> {{ (block.vo_sum_job - block.vi_sum_job)|sa2btc }} </td>
+            <td/>
+            <td class="right"> {{ ((block.vo_sum - block.vi_sum) - (block.vo_sum_job - block.vi_sum_job))|sa2btc }} </td>
+        </tr>
+        <tr>
+            <th> STXO </th>
+            <td class="right"> {{ block.so_num }} </td>
+            <td class="right"> {{ block.so_sum|sa2btc }} </td>
+            <td class="right"> {{ block.so_num_job }} </td>
+            <td class="right"> {{ block.so_sum_job|sa2btc }} </td>
+            <td class="right"> {{ block.so_num - block.so_num_job }} </td>
+            <td class="right"> {{ (block.so_sum - block.so_sum_job)|sa2btc }} </td>
+        </tr>
+        <tr>
+            <th> Loops </th>
+            <td class="right"> {{ block.lo_num }} </td>
+            <td class="right"> {{ block.lo_sum|sa2btc }} </td>
+            <td class="right"> {{ block.lo_num_job }} </td>
+            <td class="right"> {{ block.lo_sum_job|sa2btc }} </td>
+            <td class="right"> {{ block.lo_num - block.lo_num_job }} </td>
+            <td class="right"> {{ (block.lo_sum - block.lo_sum_job)|sa2btc }} </td>
+        </tr>
+        <tr>
+            <th> UTXO </th>
+            <td class="right"> {{ block.uo_num }} </td>
+            <td class="right"> {{ block.uo_sum|sa2btc }} </td>
+            <td class="right"> {{ block.uo_num_job }} </td>
+            <td class="right"> {{ block.uo_sum_job|sa2btc }} </td>
+            <td class="right"> {{ block.uo_num - block.uo_num_job }} </td>
+            <td class="right"> {{ (block.uo_sum - block.uo_sum_job)|sa2btc }} </td>
+        </tr>
+    <!-- +_inc -->
+    </tbody>
+    </table>
+{% endblock %}

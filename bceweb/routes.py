@@ -102,12 +102,11 @@ def src_date_bks(d: str):
 @bp.route('/src/bk/<int:bk>', methods=['GET'])
 def src_bk(bk: int):
     """Block info (stat)"""
-    pages = math.ceil(__get_a_value(Qry.get('SRC_BK_TXS_COUNT').format(bk=bk)) / PAGE_SIZE)
+    pages = math.ceil(__get_a_value(Qry.get('SRC_BK_MAX')) / PAGE_SIZE)  # ??? bk_max <> bk_count
     if (page := request.args.get('page', 1, type=int)) > pages:
         page = pages
-    block = __get_a_record(Qry.get('SRC_BK').format(bk=bk))
-    cur = __get_records(Qry.get('SRC_BK_TXS').format(bk=bk, limit=PAGE_SIZE, offset=(page-1) * PAGE_SIZE))
-    return render_template('src_bk_stat.html', block=block, data=cur, pager=(page, pages))
+    block = __get_a_record(Qry.get('SRC_BK_STAT').format(bk=bk))
+    return render_template('src_bk_stat.html', block=block, pager=(page, pages))
 
 
 @bp.route('/src/bk/<int:bk>/txs', methods=['GET'])
