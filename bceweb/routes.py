@@ -80,7 +80,7 @@ def index():
 
 @bp.route('/src/dates', methods=['GET'])
 def src_dates():
-    """List dates"""
+    """Dates available"""
     pages = math.ceil(__get_a_value(Qry.get('SRC_DATES_COUNT')) / PAGE_SIZE)
     if (page := request.args.get('page', 1, type=int)) > pages:
         page = pages
@@ -90,29 +90,40 @@ def src_dates():
 
 @bp.route('/src/date/<d>/bks', methods=['GET'])
 def src_date_bks(d: str):
-    """List blocks of date"""
+    """Date's blocks"""
     # date = datetime.date.fromisoformat(d)
     pages = math.ceil(__get_a_value(Qry.get('SRC_BLOCKS_COUNT').format(date=d)) / PAGE_SIZE)
     if (page := request.args.get('page', 1, type=int)) > pages:
         page = pages
     cur = __get_records(Qry.get('SRC_BLOCKS').format(date=d, limit=PAGE_SIZE, offset=(page-1) * PAGE_SIZE))
-    return render_template('src_blocks.html', date=d, data=cur, pager=(page, pages))
+    return render_template('src_date_bks.html', date=d, data=cur, pager=(page, pages))
 
 
-@bp.route('/src/bk/<int:bk>/txs', methods=['GET'])
-def src_bk_txs(bk: int):
-    """List txs of block"""
+@bp.route('/src/bk/<int:bk>', methods=['GET'])
+def src_bk(bk: int):
+    """Block info (stat)"""
     pages = math.ceil(__get_a_value(Qry.get('SRC_TXS_COUNT').format(bk=bk)) / PAGE_SIZE)
     if (page := request.args.get('page', 1, type=int)) > pages:
         page = pages
     block = __get_a_record(Qry.get('SRC_BLOCK').format(bk=bk))
     cur = __get_records(Qry.get('SRC_TXS').format(bk=bk, limit=PAGE_SIZE, offset=(page-1) * PAGE_SIZE))
-    return render_template('src_txs.html', block=block, data=cur, pager=(page, pages))
+    return render_template('src_bk_txs.html', block=block, data=cur, pager=(page, pages))
+
+
+@bp.route('/src/bk/<int:bk>/txs', methods=['GET'])
+def src_bk_txs(bk: int):
+    """Block's TXs"""
+    pages = math.ceil(__get_a_value(Qry.get('SRC_TXS_COUNT').format(bk=bk)) / PAGE_SIZE)
+    if (page := request.args.get('page', 1, type=int)) > pages:
+        page = pages
+    block = __get_a_record(Qry.get('SRC_BLOCK').format(bk=bk))
+    cur = __get_records(Qry.get('SRC_TXS').format(bk=bk, limit=PAGE_SIZE, offset=(page-1) * PAGE_SIZE))
+    return render_template('src_bk_txs.html', block=block, data=cur, pager=(page, pages))
 
 
 @bp.route('/src/tx/<int:tx>/vins', methods=['GET'])
 def src_tx_vins(tx: int):
-    """List vins of tx"""
+    """TX's vins"""
     if (pages := math.ceil(__get_a_value(Qry.get('SRC_VINS_COUNT').format(tx=tx)) / PAGE_SIZE)) == 0:
         pages = 1
     if (page := request.args.get('page', 1, type=int)) > pages:
@@ -120,12 +131,12 @@ def src_tx_vins(tx: int):
     tx_rec = __get_a_record(Qry.get('SRC_TX').format(tx=tx))
     block = __get_a_record(Qry.get('SRC_BLOCK').format(bk=tx_rec[1]))  # ! not 'b_id'
     cur = __get_records(Qry.get('SRC_VINS').format(tx=tx, limit=PAGE_SIZE, offset=(page-1) * PAGE_SIZE))
-    return render_template('src_vins.html', block=block, tx=tx_rec, data=cur, pager=(page, pages))
+    return render_template('src_tx_vins.html', block=block, tx=tx_rec, data=cur, pager=(page, pages))
 
 
 @bp.route('/src/tx/<int:tx>/vouts', methods=['GET'])
 def src_tx_vouts(tx: int):
-    """List vouts of tx"""
+    """TX's vouts"""
     if (pages := math.ceil(__get_a_value(Qry.get('SRC_VOUTS_COUNT').format(tx=tx)) / PAGE_SIZE)) == 0:
         pages = 1
     if (page := request.args.get('page', 1, type=int)) > pages:
@@ -133,12 +144,12 @@ def src_tx_vouts(tx: int):
     tx_rec = __get_a_record(Qry.get('SRC_TX').format(tx=tx))
     block = __get_a_record(Qry.get('SRC_BLOCK').format(bk=tx_rec[1]))  # ! not 'b_id'
     cur = __get_records(Qry.get('SRC_VOUTS').format(tx=tx, limit=PAGE_SIZE, offset=(page-1) * PAGE_SIZE))
-    return render_template('src_vouts.html', block=block, tx=tx_rec, data=cur, pager=(page, pages))
+    return render_template('src_tx_vouts.html', block=block, tx=tx_rec, data=cur, pager=(page, pages))
 
 
 @bp.route('/src/addr/<int:aid>', methods=['GET'])
 def src_addr(aid: int):
-    """List of address operations"""
+    """Address' operations"""
     pages = math.ceil(__get_a_value(Qry.get('SRC_ADDR_MOVES_COUNT').format(aid=aid)) / PAGE_SIZE)
     if (page := request.args.get('page', 1, type=int)) > pages:
         page = pages
