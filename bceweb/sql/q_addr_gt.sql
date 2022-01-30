@@ -1,6 +1,6 @@
 SELECT
     a_id,
-    addr.name as address,
+    addr.name as a_name,
     itogo
 FROM (
     SELECT a_id, sum(money) as itogo

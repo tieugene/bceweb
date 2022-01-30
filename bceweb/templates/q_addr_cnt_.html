@@ -2,16 +2,16 @@
 {% block tbody %}
     {% for rec in data %}
         <tr>
-            <td class="right"> <a href="{{ url_for('bceweb.src_addr', aid=rec[0]) }}"> {{ rec[0] }} </a> </td>
+            <td class="right"> <a href="{{ url_for('bceweb.src_addr', aid=rec.a_id) }}"> {{ rec.a_id }} </a> </td>
             <td>
-                {{ rec[1] }}
-                <a href="https://www.blockchain.com/btc/address/{{ rec[1] }}" target="_blank" rel="noopener noreferrer">
+                {{ rec.a_name }}
+                <a href="https://www.blockchain.com/btc/address/{{ rec.a_name }}" target="_blank" rel="noopener noreferrer">
                     <img alt="blockchain.com" src="{{ url_for('static', filename='bmp/blockchain.com-16x16.png') }}"/>
                 </a>
             </td>
-            <td class="right"> {% if rec[2] is not none %} {{ rec[2]|sa2btc }} {% endif %} </td>
-            <td class="right"> {% if rec[3] is not none %} {{ rec[3]|sa2btc }} {% endif %} </td>
-            <td class="right"> {{ rec[4] }} </td>
+            <td class="right"> {% if rec.itogo0 is not none %} {{ rec.itogo0|sa2btc }} {% endif %} </td>
+            <td class="right"> {% if rec.itogo1 is not none %} {{ rec.itogo1|sa2btc }} {% endif %} </td>
+            <td class="right"> {{ rec.profit }} </td>
         </tr>
     {% endfor %}
 {% endblock %}

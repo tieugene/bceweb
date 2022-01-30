@@ -3,9 +3,12 @@
 import datetime
 import io
 import math
+
 # 2. 3rd
-import psycopg2, psycopg2.extras
+import psycopg2
+import psycopg2.extras
 from flask import Blueprint, render_template, request, send_file, g, current_app
+
 # 3. local
 from . import forms, xlstore
 from .queries import Qry
