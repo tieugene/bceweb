@@ -3,9 +3,12 @@
 import datetime
 import io
 import math
+
 # 2. 3rd
 import psycopg2
+import psycopg2.extras
 from flask import Blueprint, render_template, request, send_file, g, current_app
+
 # 3. local
 from . import forms, xlstore
 from .queries import Qry
@@ -28,11 +31,14 @@ def __now() -> datetime.datetime:
 # - db
 def __get_db():
     if (db := g.get('_database')) is None:
+        # db = g._database = psycopg2.extras.NamedTupleConnection(
         db = g._database = psycopg2.connect(
             host=current_app.config['DB_HOST'],
+            port=current_app.config['DB_PORT'],
             database=current_app.config['DB_NAME'],
             user=current_app.config['DB_USER'],
-            password=current_app.config['DB_PASS'])
+            password=current_app.config['DB_PASS']
+        )
     return db
 
 
@@ -53,7 +59,8 @@ def __get_a_record(q: str) -> list:
 
 
 def __get_records(q: str, data: dict = None):
-    cur = __get_db().cursor()
+    cur = __get_db().cursor(cursor_factory=psycopg2.extras.NamedTupleCursor)
+    # cur = __get_db().cursor()
     cur.execute(q, data)
     return cur
 
@@ -111,7 +118,7 @@ def src_vins(tx: int):
     if (page := request.args.get('page', 1, type=int)) > pages:
         page = pages
     tx_rec = __get_a_record(Qry.get('SRC_TX').format(tx=tx))
-    block = __get_a_record(Qry.get('SRC_BLOCK').format(bk=tx_rec[1]))
+    block = __get_a_record(Qry.get('SRC_BLOCK').format(bk=tx_rec[1]))  # ! not 'b_id'
     cur = __get_records(Qry.get('SRC_VINS').format(tx=tx, limit=PAGE_SIZE, offset=(page-1) * PAGE_SIZE))
     return render_template('src_vins.html', block=block, tx=tx_rec, data=cur, pager=(page, pages))
 
@@ -124,7 +131,7 @@ def src_vouts(tx: int):
     if (page := request.args.get('page', 1, type=int)) > pages:
         page = pages
     tx_rec = __get_a_record(Qry.get('SRC_TX').format(tx=tx))
-    block = __get_a_record(Qry.get('SRC_BLOCK').format(bk=tx_rec[1]))
+    block = __get_a_record(Qry.get('SRC_BLOCK').format(bk=tx_rec[1]))  # ! not 'b_id'
     cur = __get_records(Qry.get('SRC_VOUTS').format(tx=tx, limit=PAGE_SIZE, offset=(page-1) * PAGE_SIZE))
     return render_template('src_vouts.html', block=block, tx=tx_rec, data=cur, pager=(page, pages))
 

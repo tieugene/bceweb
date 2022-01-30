@@ -1,1 +1,1 @@
-SELECT COUNT(*) FROM vout WHERE a_id = {aid};
+SELECT COUNT(*) AS num FROM vout WHERE a_id = {aid};

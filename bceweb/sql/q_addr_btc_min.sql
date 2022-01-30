@@ -1,6 +1,6 @@
 SELECT
     a_id,
-    addr.name AS address,
+    addr.name AS a_name,
     itogo0,
     itogo1,
     profit

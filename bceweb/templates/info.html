@@ -4,10 +4,10 @@
 {% endblock %}
 {% block body %}
     <h1> Info </h1>
-    <p> <b> Max block: </b> #{{ data.bk[0] }} ({{ data.bk[1] }} </p>
+    <p> <b> Max block: </b> #{{ data.bk.id_max }} ({{ data.bk.datime_max }} </p>
     <p> TXO: </p>
     <table>
-        <tr> <th> Vouts: </th> <td> {{ data.txo[0] }}&hellip;{{ data.txo[1] }} </td> </tr>
-        <tr> <th> Vins:&nbsp; </th> <td> {{ data.txo[2] }}&hellip;{{ data.txo[3] }} </td> </tr>
+        <tr> <th> Vouts: </th> <td> {{ data.txo.d0_min }}&hellip;{{ data.txo.d0_max }} </td> </tr>
+        <tr> <th> Vins:&nbsp; </th> <td> {{ data.txo.d1_min }}&hellip;{{ data.txo.d1_max }} </td> </tr>
     </table>
 {% endblock %}

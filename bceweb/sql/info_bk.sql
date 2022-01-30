@@ -1,1 +1,1 @@
-SELECT MAX(id), MAX(datime) FROM bk;
+SELECT MAX(id) AS id_max, MAX(datime) AS datime_max FROM bk;

@@ -1,23 +1,15 @@
 # TODO
 
 ## common
-- [ ] named query results:
-
-   ```python
-   from psycopg2.extras import NamedTupleCursor
-   # or .NamedTupleConnection
-   with conn.cursor(cursor_factory=NamedTupleCursor) as cur:
-       ...
-   ```
-
+- [ ] Query `txo:date0/1` &rArr; `vout:tx_id/..._in`
 - [ ] Query tree:
   1. Year + Mon/Day
   1. Blocks (of date) (+scroll date)
   1. Block (+scroll blocks): stat
   1. tx (+scroll)
   1. vins/vouts (+scroll)
-- [ ] Query `txo:date0/1` &rArr; `vout:tx_id/..._in`
 - [ ] remove blueprint
+- [ ] NamedTupleConnection
 
 ## src_
 *(None)*

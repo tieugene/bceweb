@@ -4,8 +4,8 @@ SELECT
    t_id_in,
    money,
    a_id,
-   addr.name,
-   addr.qty
+   addr.name AS a_name,
+   addr.qty AS a_num
 FROM vout
     LEFT JOIN addr ON addr.id = vout.a_id
 WHERE t_id_in = {tx}

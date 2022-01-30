@@ -5,14 +5,14 @@
 {% block body %}
     <h1> TX vouts </h1>
     <p>
-        Block # <a href="{{ url_for('bceweb.src_txs', bk=block[0]) }}"> {{ block[0] }} </a> (<a href="{{ url_for('bceweb.src_bks', d=block[1].date().isoformat()) }}"> {{ block[1] }} </a>)
-        <a href="https://www.blockchain.com/btc/block/{{ block[0] }}" target="_blank" rel="noopener noreferrer">
+        Block # <a href="{{ url_for('bceweb.src_txs', bk=block.id) }}"> {{ block.id }} </a> (<a href="{{ url_for('bceweb.src_bks', d=block.datime.date().isoformat()) }}"> {{ block[1] }} </a>)
+        <a href="https://www.blockchain.com/btc/block/{{ block.id }}" target="_blank" rel="noopener noreferrer">
             <img src="{{ url_for('static', filename='bmp/blockchain.com-16x16.png') }}"/>
         </a>
     </p>
     <p>
-        TX # {{ tx[0] }} ({{ tx[2] }}): <a href="{{ url_for('bceweb.src_vins', tx=tx[0]) }}"> vins </a> = {{ tx[3] }},  vouts = {{ tx[4] }}
-        <a href="https://www.blockchain.com/btc/tx/{{ tx[2] }}" target="_blank" rel="noopener noreferrer">
+        TX # {{ tx.id }} ({{ tx.hash }}): <a href="{{ url_for('bceweb.src_vins', tx=tx.id) }}"> vins </a> = {{ tx.vi_num }},  vouts = {{ tx.vo_num }}
+        <a href="https://www.blockchain.com/btc/tx/{{ tx.hash }}" target="_blank" rel="noopener noreferrer">
             <img src="{{ url_for('static', filename='bmp/blockchain.com-16x16.png') }}"/>
         </a>
     </p>
@@ -22,18 +22,18 @@
     <thead><tr><th> n </th><th> t_id_in </th><th> &#8383; </th><th> a_id </th><th> addr </th><th title="Addresses number"> qty </th></tr></thead>
     {% for rec in data %}
         <tr>
-            <td class="right"> {{ rec[1] }} </td>
-            <td class="right"> {% if rec[2] %}  <a href="{{ url_for('bceweb.src_vins', tx=rec[2]) }}"> {{ rec[2] }} </a> {% endif %} </td>
-            <td class="right"> {{ rec[3]|sa2btc }} </td>
-            <td class="right"> {% if rec[4] %} <a href="{{ url_for('bceweb.src_addr', aid=rec[4]) }}"> {{ rec[4] }} </a> {% endif %} </td>
-            <td>{% if rec[4] %}
-                {{ rec[5] }}
-                <a href="https://www.blockchain.com/btc/address/{{ rec[5] }}" target="_blank" rel="noopener noreferrer">
+            <td class="right"> {{ rec.n }} </td>
+            <td class="right"> {% if rec.t_id_in %}  <a href="{{ url_for('bceweb.src_vins', tx=rec.t_id_in) }}"> {{ rec.t_id_in }} </a> {% endif %} </td>
+            <td class="right"> {{ rec.money|sa2btc }} </td>
+            <td class="right"> {% if rec.a_id %} <a href="{{ url_for('bceweb.src_addr', aid=rec.a_id) }}"> {{ rec.a_id }} </a> {% endif %} </td>
+            <td>{% if rec.a_id %}
+                {{ rec.a_name }}
+                <a href="https://www.blockchain.com/btc/address/{{ rec.a_name }}" target="_blank" rel="noopener noreferrer">
                     <img src="{{ url_for('static', filename='bmp/blockchain.com-16x16.png') }}"/>
                 </a>
                 {% endif %}
             </td>
-            <td class="right">{% if rec[4] %} {{ rec[6] }} {% endif %}</td>
+            <td class="right">{% if rec.a_id %} {{ rec.a_num }} {% endif %}</td>
         </tr>
     {% endfor %}
     </table>

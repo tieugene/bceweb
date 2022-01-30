@@ -5,8 +5,8 @@
 {% block body %}
     <h1> Block TXs </h1>
     <p>
-        Block # {{ block[0] }} (<a href="{{ url_for('bceweb.src_bks', d=block[1].date().isoformat()) }}"> {{ block[1] }})
-        <a href="https://www.blockchain.com/btc/block/{{ block[0] }}" target="_blank" rel="noopener noreferrer">
+        Block # {{ block.id }} (<a href="{{ url_for('bceweb.src_bks', d=block.datime.date().isoformat()) }}"> {{ block.datime }})
+        <a href="https://www.blockchain.com/btc/block/{{ block.id }}" target="_blank" rel="noopener noreferrer">
             <img src="{{ url_for('static', filename='bmp/blockchain.com-16x16.png') }}"/>
         </a>
     </p>
@@ -17,15 +17,15 @@
     <tbody>
     {% for rec in data %}
         <tr>
-            <td class="right"> {{ rec[0] }} </td>
-            <td> {{ rec[2] }}
-                <a href="https://www.blockchain.com/btc/tx/{{ rec[2] }}" target="_blank" rel="noopener noreferrer">
+            <td class="right"> {{ rec.id }} </td>
+            <td> {{ rec.hash }}
+                <a href="https://www.blockchain.com/btc/tx/{{ rec.hash }}" target="_blank" rel="noopener noreferrer">
                     <img src="{{ url_for('static', filename='bmp/blockchain.com-16x16.png') }}"/>
                 </a>
             </td>
-            <td class="right"> {% if rec[3] %} <a href="{{ url_for('bceweb.src_vins', tx=rec[0]) }}"> {{ rec[3] }} </a> {% else %} {{ rec[3] }} {% endif %}</td>
-            <td class="right"> <a href="{{ url_for('bceweb.src_vouts', tx=rec[0]) }}"> {{ rec[4] }} </a> </td>
-            <td class="right"> {{ rec[5]|sa2btc }} </td>
+            <td class="right"> {% if rec.vi_num %} <a href="{{ url_for('bceweb.src_vins', tx=rec.id) }}"> {{ rec.vi_num }} </a> {% else %} {{ rec.vi_num }} {% endif %}</td>
+            <td class="right"> <a href="{{ url_for('bceweb.src_vouts', tx=rec.id) }}"> {{ rec.vo_num }} </a> </td>
+            <td class="right"> {{ rec.money|sa2btc }} </td>
         </tr>
     {% endfor %}
     </tbody>

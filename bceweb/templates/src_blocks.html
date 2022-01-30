@@ -11,13 +11,13 @@
     {% for rec in data %}
         <tr>
             <td class="right">
-                <a href="{{ url_for('bceweb.src_txs', bk=rec[0]) }}"> {{ rec[0] }} </a>
-                <a href="https://www.blockchain.com/btc/block/{{ rec[0] }}" target="_blank" rel="noopener noreferrer">
+                <a href="{{ url_for('bceweb.src_txs', bk=rec.id) }}"> {{ rec.id }} </a>
+                <a href="https://www.blockchain.com/btc/block/{{ rec.id }}" target="_blank" rel="noopener noreferrer">
                     <img src="{{ url_for('static', filename='bmp/blockchain.com-16x16.png') }}"/>
                 </a>
             </td>
-            <td> {{ rec[1] }} </td>
-            <td class="right"> {{ rec[2] }} </td>
+            <td> {{ rec.datime }} </td>
+            <td class="right"> {{ rec.tx_num }} </td>
         </tr>
     {% endfor %}
     </table>
