@@ -88,8 +88,8 @@ def src_dates():
     return render_template('src_dates.html', data=cur, pager=(page, pages))
 
 
-@bp.route('/src/bks/<d>', methods=['GET'])
-def src_bks(d: str):
+@bp.route('/src/date/<d>/bks', methods=['GET'])
+def src_date_bks(d: str):
     """List blocks of date"""
     # date = datetime.date.fromisoformat(d)
     pages = math.ceil(__get_a_value(Qry.get('SRC_BLOCKS_COUNT').format(date=d)) / PAGE_SIZE)
@@ -99,8 +99,8 @@ def src_bks(d: str):
     return render_template('src_blocks.html', date=d, data=cur, pager=(page, pages))
 
 
-@bp.route('/src/txs/<int:bk>', methods=['GET'])
-def src_txs(bk: int):
+@bp.route('/src/bk/<int:bk>/txs', methods=['GET'])
+def src_bk_txs(bk: int):
     """List txs of block"""
     pages = math.ceil(__get_a_value(Qry.get('SRC_TXS_COUNT').format(bk=bk)) / PAGE_SIZE)
     if (page := request.args.get('page', 1, type=int)) > pages:
@@ -110,8 +110,8 @@ def src_txs(bk: int):
     return render_template('src_txs.html', block=block, data=cur, pager=(page, pages))
 
 
-@bp.route('/src/vins/<int:tx>', methods=['GET'])
-def src_vins(tx: int):
+@bp.route('/src/tx/<int:tx>/vins', methods=['GET'])
+def src_tx_vins(tx: int):
     """List vins of tx"""
     if (pages := math.ceil(__get_a_value(Qry.get('SRC_VINS_COUNT').format(tx=tx)) / PAGE_SIZE)) == 0:
         pages = 1
@@ -123,8 +123,8 @@ def src_vins(tx: int):
     return render_template('src_vins.html', block=block, tx=tx_rec, data=cur, pager=(page, pages))
 
 
-@bp.route('/src/vouts/<int:tx>', methods=['GET'])
-def src_vouts(tx: int):
+@bp.route('/src/tx/<int:tx>/vouts', methods=['GET'])
+def src_tx_vouts(tx: int):
     """List vouts of tx"""
     if (pages := math.ceil(__get_a_value(Qry.get('SRC_VOUTS_COUNT').format(tx=tx)) / PAGE_SIZE)) == 0:
         pages = 1
