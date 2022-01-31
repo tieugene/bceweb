@@ -69,7 +69,7 @@ def __get_records(q: str, data: dict = None):
 @bp.add_app_template_filter
 def sa2btc(sat: int) -> str:
     """Convert satoshi to btc."""
-    return "{:.8f}".format(sat/100000000)
+    return "{:,.8f}".format(sat/100000000).replace(',', ' ')
 
 
 # routes
