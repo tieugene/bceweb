@@ -21,7 +21,7 @@
         </tr></table>
 	</form>
     {% if data %}
-        <table border="1">
+        <table class="thick">
         <caption>
             Query times: {{ times[0] }} &hellip; {{ times[1] }} &rArr; {{ times[1] - times[0] }}
             <a href="{{ url_for('bceweb.get_xl', xl_id=xl_id) }}">

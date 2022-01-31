@@ -42,6 +42,15 @@ img.svg32 {
     width: 32px;
 }
 
+table.thick {
+    border-collapse: collapse;
+}
+
+table.thick th, td {
+    border: 1px solid grey;
+    padding: 0 0.2em;
+}
+
 td {
     min-width: 0;
 }

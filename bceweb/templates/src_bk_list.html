@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %} Blocks {% endblock %}
+{% block head %}
+{% endblock %}
+{% block body %}
+    <h1> Blocks </h1>
+    {% include 'pager.html' %}
+    <table class="thick">
+    <thead><tr>
+        <th> Block </th>
+        <th> DateTime </th>
+        <th> TXs </th>
+        <th> Vins </th>
+        <th> Vouts </th>
+        <th> STXO </th>
+        <th> Loop </th>
+        <th> UTXO </th>
+        <th> TXs </th>
+        <th> Vins </th>
+        <th> Vouts </th>
+        <th> STXO </th>
+        <th> Loop </th>
+        <th> UTXO </th>
+    </tr></thead>
+    {% for rec in data %}
+        <tr>
+            <td class="right">
+                <a href="{{ url_for('bceweb.src_bk', bk=rec.id) }}"> {{ rec.id }} </a>
+                <a href="https://www.blockchain.com/btc/block/{{ rec.id }}" target="_blank" rel="noopener noreferrer">
+                    <img alt="blockchain.com" src="{{ url_for('static', filename='bmp/blockchain.com-16x16.png') }}"/>
+                </a>
+            </td>
+            <td> {{ rec.datime }} </td>
+            <td class="right"> {{ rec.tx_num }} </td>
+            <td class="right"> {{ rec.vi_num }} </td>
+            <td class="right"> {{ rec.vo_num }} </td>
+            <td class="right"> {{ rec.so_num }} </td>
+            <td class="right"> {{ rec.lo_num }} </td>
+            <td class="right"> {{ rec.uo_num }} </td>
+            <td class="right"> {{ rec.tx_num_inc }} </td>
+            <td class="right"> {{ rec.vi_num_inc }} </td>
+            <td class="right"> {{ rec.vo_num_inc }} </td>
+            <td class="right"> {{ rec.so_num_inc }} </td>
+            <td class="right"> {{ rec.lo_num_inc }} </td>
+            <td class="right"> {{ rec.uo_num_inc }} </td>
+        </tr>
+    {% endfor %}
+    </table>
+{% endblock %}

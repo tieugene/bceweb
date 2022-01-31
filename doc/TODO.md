@@ -1,5 +1,7 @@
 # TODO
 
+*Test: 200k enough*
+
 ## common
 - [ ] Query `txo:date0/1` &rArr; `vout:tx_id/..._in`
 - [ ] Query tree:
@@ -9,7 +11,7 @@
   1. tx (+scroll)
   1. vins/vouts (+scroll)
 - [ ] remove blueprint
-- [ ] NamedTupleConnection
+- [ ] NamedTupleConnection &sum;
 
 ## src_
 *(None)*

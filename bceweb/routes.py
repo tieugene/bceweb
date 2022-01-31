@@ -79,13 +79,23 @@ def index():
 
 
 @bp.route('/src/dates', methods=['GET'])
-def src_dates():
+def src_date_list():
     """Dates available"""
-    pages = math.ceil(__get_a_value(Qry.get('SRC_DATES_COUNT')) / PAGE_SIZE)
+    pages = math.ceil(__get_a_value(Qry.get('SRC_DATE_LIST_COUNT')) / PAGE_SIZE)
     if (page := request.args.get('page', 1, type=int)) > pages:
         page = pages
-    cur = __get_records(Qry.get('SRC_DATES').format(limit=PAGE_SIZE, offset=(page-1) * PAGE_SIZE))
-    return render_template('src_dates.html', data=cur, pager=(page, pages))
+    cur = __get_records(Qry.get('SRC_DATE_LIST').format(limit=PAGE_SIZE, offset=(page-1) * PAGE_SIZE))
+    return render_template('src_date_list.html', data=cur, pager=(page, pages))
+
+
+@bp.route('/src/bks', methods=['GET'])
+def src_bk_list():
+    """Blocks available"""
+    pages = math.ceil(__get_a_value(Qry.get('SRC_BK_MAX')) / PAGE_SIZE)
+    if (page := request.args.get('page', 1, type=int)) > pages:
+        page = pages
+    data = __get_records(Qry.get('SRC_BK_LIST').format(limit=PAGE_SIZE, offset=(page-1) * PAGE_SIZE))
+    return render_template('src_bk_list.html', data=data, pager=(page, pages))
 
 
 @bp.route('/src/date/<d>/bks', methods=['GET'])
@@ -102,11 +112,10 @@ def src_date_bks(d: str):
 @bp.route('/src/bk/<int:bk>', methods=['GET'])
 def src_bk(bk: int):
     """Block info (stat)"""
-    pages = math.ceil(__get_a_value(Qry.get('SRC_BK_MAX')) / PAGE_SIZE)  # ??? bk_max <> bk_count
-    if (page := request.args.get('page', 1, type=int)) > pages:
-        page = pages
+    bk_max = __get_a_value(Qry.get('SRC_BK_MAX'))  # ??? bk_max <> bk_count
+    # TODO: check bk <= bk_max
     block = __get_a_record(Qry.get('SRC_BK_STAT').format(bk=bk))
-    return render_template('src_bk_stat.html', block=block, pager=(page, pages))
+    return render_template('src_bk_stat.html', block=block, bk_max=bk_max)
 
 
 @bp.route('/src/bk/<int:bk>/txs', methods=['GET'])

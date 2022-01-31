@@ -13,15 +13,24 @@
             <img alt="blockchain.com" src="{{ url_for('static', filename='bmp/blockchain.com-16x16.png') }}"/>
         </a>
     </p>
-    {# include 'pager.html' #}
-    <table border="1">
+    <!-- pager -->
+    <p>
+        <button type="button"> {% if block.id > 0 %} <a href="{{ url_for('bceweb.src_bk', bk=0) }}"> &larrb; </a> {% else %} &larrb; {% endif %} </button>
+        <button type="button"> {% if block.id > 0 %} <a href="{{ url_for('bceweb.src_bk', bk=block.id-1) }}"> &larr; {% else %} &larr; {% endif %} </a> </button>
+        Page {{ block.id }} / {{ bk_max }}
+        <button type="button"> {% if block.id < bk_max %} <a href="{{ url_for('bceweb.src_bk', bk=block.id+1) }}"> &rarr; </a> {% else %} &rarr; {% endif %} </button>
+        <button type="button"> {% if block.id < bk_max %} <a href="{{ url_for('bceweb.src_bk', bk=bk_max) }}"> &rarrb; </a> {% else %} &rarrb; {% endif %} </button>
+    </p>
+    <!-- /pager -->
+    <table class="thick">
         <thead>
             <tr><th rowspan="2"> Attribute </th><th colspan="2"> All </th> <th colspan="2"> Job </th> <th colspan="2"> &Delta; </th></tr>
             <tr><th> # </th> <th> &#8383; </th><th> # </th> <th> &#8383; </th><th> # </th> <th> &#8383; </th></tr>
         </thead>
     <tbody>
-        <tr> <th> TXs: </th> <td> {{ block.tx_num }} </td> <td colspan="5"/> </tr>
+        <tr> <th> TXs: </th> <td class="right"> {{ block.tx_num }} </td> <td colspan="5"/> </tr>
         <tr> <th> Price </th> <td/> <td class="right"> {{ block.price|sa2btc }} </td> <td colspan="4"/> </tr>
+        <tr> <th> Total </th> <td/> <td class="right"> {{ block.total|sa2btc }} </td> <td colspan="4"/> </tr>
     <!-- vi/vo/si/lo/uo x _num/_num_job, sum/_sum_job -->
         <tr>
             <th> Vins </th>
@@ -78,6 +87,77 @@
             <td class="right"> {{ (block.uo_sum - block.uo_sum_job)|sa2btc }} </td>
         </tr>
     <!-- +_inc -->
+        <tr> <th colspan="7"> &sum;: </th> </tr>
+        <tr> <th> TXs: </th> <td> {{ block.tx_num_inc }} </td> <td colspan="5"/> </tr>
+        <tr> <th> Price </th> <td/> <td class="right"> {{ block.price_inc|sa2btc }} </td> <td colspan="4"/> </tr>
+        <tr>
+            <th> Vins </th>
+            <td class="right"> {{ block.vi_num_inc }} </td>
+            <td class="right"> {{ block.vi_sum_inc|sa2btc }} </td>
+            <td class="right"> {{ block.vi_num_job_inc }} </td>
+            <td class="right"> {{ block.vi_sum_job_inc|sa2btc }} </td>
+            <td class="right"> {{ block.vi_num_inc - block.vi_num_job_inc }} </td>
+            <td class="right"> {{ (block.vi_sum_inc - block.vi_sum_job_inc)|sa2btc }} </td>
+        </tr>
+        <tr>
+            <th> Vouts </th>
+            <td class="right"> {{ block.vo_num_inc }} </td>
+            <td class="right"> {{ block.vo_sum_inc|sa2btc }} </td>
+            <td class="right"> {{ block.vo_num_job_inc }} </td>
+            <td class="right"> {{ block.vo_sum_job_inc|sa2btc }} </td>
+            <td class="right"> {{ block.vo_num_inc - block.vo_num_job_inc }} </td>
+            <td class="right"> {{ (block.vo_sum_inc - block.vo_sum_job_inc)|sa2btc }} </td>
+        </tr>
+        <tr>
+            <th> Vo-Vi </th>
+            <td/>
+            <td class="right"> {{ (block.vo_sum_inc - block.vi_sum_inc)|sa2btc }} </td>
+            <td/>
+            <td class="right"> {{ (block.vo_sum_job_inc - block.vi_sum_job_inc)|sa2btc }} </td>
+            <td/>
+            <td class="right"> {{ ((block.vo_sum_inc - block.vi_sum_inc) - (block.vo_sum_job_inc - block.vi_sum_job_inc))|sa2btc }} </td>
+        </tr>
+        <tr>
+            <th> STXO </th>
+            <td class="right"> {{ block.so_num_inc }} </td>
+            <td class="right"> {{ block.so_sum_inc|sa2btc }} </td>
+            <td class="right"> {{ block.so_num_job_inc }} </td>
+            <td class="right"> {{ block.so_sum_job_inc|sa2btc }} </td>
+            <td class="right"> {{ block.so_num_inc - block.so_num_job_inc }} </td>
+            <td class="right"> {{ (block.so_sum_inc - block.so_sum_job_inc)|sa2btc }} </td>
+        </tr>
+        <tr>
+            <th> Loops </th>
+            <td class="right"> {{ block.lo_num_inc }} </td>
+            <td class="right"> {{ block.lo_sum_inc|sa2btc }} </td>
+            <td class="right"> {{ block.lo_num_job_inc }} </td>
+            <td class="right"> {{ block.lo_sum_job_inc|sa2btc }} </td>
+            <td class="right"> {{ block.lo_num_inc - block.lo_num_job_inc }} </td>
+            <td class="right"> {{ (block.lo_sum_inc - block.lo_sum_job_inc)|sa2btc }} </td>
+        </tr>
+        <tr>
+            <th> UTXO </th>
+            <td class="right"> {{ block.uo_num_inc }} </td>
+            <td class="right"> {{ block.uo_sum_inc|sa2btc }} </td>
+            <td class="right"> {{ block.uo_num_job_inc }} </td>
+            <td class="right"> {{ block.uo_sum_job_inc|sa2btc }} </td>
+            <td class="right"> {{ block.uo_num_inc - block.uo_num_job_inc }} </td>
+            <td class="right"> {{ (block.uo_sum_inc - block.uo_sum_job_inc)|sa2btc }} </td>
+        </tr>
+    <!-- checks -->
+        <tr> <th colspan="7"> Check </th></tr>
+        <tr>
+            <th> Total-&sum;(price) </th>
+            <td/>
+            <td class="right"> {{ (block.total - block.price_inc)|sa2btc }} </td>
+            <td colspan="4"/>
+        </tr>
+        <tr>
+            <th> &sum;(price)-&sum;(Vo-Vi) </th>
+            <td/>
+            <td class="right"> {{ (block.price_inc - (block.vo_sum_inc - block.vi_sum_inc))|sa2btc }} </td>
+            <td colspan="4"/>
+        </tr>
     </tbody>
     </table>
 {% endblock %}

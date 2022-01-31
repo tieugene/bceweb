@@ -3,10 +3,12 @@
 {% block head %}
 {% endblock %}
 {% block body %}
-    <h1> Src dates </h1>
+    <h1>
+        Dates
+        (<a href="{{ url_for('bceweb.src_bk_list') }}"> blocks </a>)
+    </h1>
     {% include 'pager.html' %}
-    <table border="1">
-    <col/><col align="right"/>
+    <table class="thick">
     <thead><tr><th> Date </th><th> Blocks </th></tr></thead>
     {% for rec in data %}
         <tr>
