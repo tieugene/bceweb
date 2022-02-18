@@ -5,6 +5,8 @@ import io
 import math
 
 # 2. 3rd
+import sys
+
 import psycopg2
 import psycopg2.extras
 from flask import Blueprint, render_template, request, send_file, g, current_app
@@ -188,7 +190,7 @@ def get_xl(xl_id: int):
 
 
 # diffs: head:list, title:str, query
-def __q_addr_x_y(formclass, title: str, head: tuple, qry_name: str, tpl_name: str, btc_cols: set = {}):
+def __q_addr_x_y(formclass, title: str, head: tuple, qry_name: str, tpl_name: str, btc_cols: set = frozenset):
     form = formclass()
     data = []
     times = None
@@ -268,6 +270,93 @@ def q_addr_gt():
         "Адреса с балансом > {num} sat. на {date1}",
         ("a_id", "Адрес", "Баланс, ₿"),
         'Q_ADDR_GT',
+        'q_addr_gt.html',
+        {2}
+    )
+
+
+def __q_addr_x_y_tx(formclass, title: str, head: tuple, qry_name: str, tpl_name: str, btc_cols: set = frozenset):
+    form = formclass()
+    data = []
+    times = None
+    xl_id = 0
+    if form.validate_on_submit():
+        num = form.num.data
+        date0 = form.date0.data if 'date0' in form.data else None
+        date1 = form.date1.data
+        # TODO: dates to txs
+        txs = __get_a_record(Qry.get('SRC_TXS_BY_DATES').format(date0=date0 or date1, date1=date1))
+        time0 = __now()
+        cur = __get_records(Qry.get(qry_name).format(num=num, tid0=txs[0], tid1=txs[1]))
+        data = cur.fetchall()
+        time1 = __now()
+        times = (time0, time1)
+        title = title.format(num=num, date0=date0, date1=date1)
+        meta = {'title': title, 'subject': '', 'created': time1, 'comments': ''}
+        xl_id = xlstore.mk_xlsx(meta, head, data, btc_cols)
+    return render_template(tpl_name, title=title, head=head, data=data, form=form, times=times, xl_id=xl_id)
+
+
+@bp.route('/q/addr_btc_max_tx', methods=['GET', 'POST'])
+def q_addr_btc_max_tx():
+    """Top [num] addresses by gain (₿) in period [fromdate]...[todate]"""
+    return __q_addr_x_y_tx(
+        forms.ND0D1Form,
+        "Топ {num} адресов по увеличению баланса (₿) за {date0}...{date1}",
+        ('a_id', 'Адрес', 'Было', 'Стало', 'Profit'),
+        'Q_ADDR_BTC_MAX_TX',
+        'q_addr_btc_.html',
+        {2, 3, 4}
+    )
+
+
+@bp.route('/q/addr_btc_min_tx', methods=['GET', 'POST'])
+def q_addr_btc_min_tx():
+    """Top [num] addresses by lost (₿) in period [fromdate]...[todate]"""
+    return __q_addr_x_y_tx(
+        forms.ND0D1Form,
+        "Топ {num} адресов по уменьшению баланса (₿) за {date0}...{date1}",
+        ('a_id', 'Адрес', 'Было', 'Стало', 'Profit'),
+        'Q_ADDR_BTC_MIN_TX',
+        'q_addr_btc_.html',
+        {2, 3, 4}
+    )
+
+
+@bp.route('/q/addr_cnt_max_tx', methods=['GET', 'POST'])
+def q_addr_cnt_max_tx():
+    """Top [num] addresses by gain (%) in period [fromdate]...[todate]"""
+    return __q_addr_x_y_tx(
+        forms.ND0D1Form,
+        "Топ {num} адресов по увеличению баланса (%) за {date0}...{date1}",
+        ('a_id', 'Адрес', 'Было', 'Стало', 'Рост, %'),
+        'Q_ADDR_CNT_MAX_TX',
+        'q_addr_cnt_.html',
+        {2, 3}
+    )
+
+
+@bp.route('/q/addr_cnt_min_tx', methods=['GET', 'POST'])
+def q_addr_cnt_min_tx():
+    """Top [num] addresses by lost (%) in period [fromdate]...[todate]"""
+    return __q_addr_x_y_tx(
+        forms.ND0D1Form,
+        "Топ {num} адресов по уменьшению баланса (%) за {date0}...{date1}",
+        ('a_id', 'Адрес', 'Было', 'Стало', 'Рост, %'),
+        'Q_ADDR_CNT_MIN_TX',
+        'q_addr_cnt_.html',
+        {2, 3}
+    )
+
+
+@bp.route('/q/addr_gt_tx', methods=['GET', 'POST'])
+def q_addr_gt_tx():
+    """Addresses with balance > [num] sat. on [date]"""
+    return __q_addr_x_y_tx(
+        forms.ND1Form,
+        "Адреса с балансом > {num} sat. на {date1}",
+        ("a_id", "Адрес", "Баланс, ₿"),
+        'Q_ADDR_GT_TX',
         'q_addr_gt.html',
         {2}
     )
