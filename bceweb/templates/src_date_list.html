@@ -9,7 +9,7 @@
     </h1>
     {% include 'pager.html' %}
     <table class="thick">
-    <thead><tr><th> Date </th><th> Blocks </th></tr></thead>
+    <thead> <tr> <th> Date </th> <th> Blocks </th> </tr> </thead>
     {% for rec in data %}
         <tr>
             <td> <a href="{{ url_for('bceweb.src_date', y=rec.date.year, m=rec.date.month, d=rec.date.day) }}"> {{ rec.date }} </a> </td>

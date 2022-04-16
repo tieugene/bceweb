@@ -10,7 +10,7 @@
     <table class="thick">
     {% for m in data.months %}
         {% set mon = loop.index %}
-        <tr><th><a href="{{ url_for('bceweb.src_month', y=y, m=mon) }}">{{ "%02d" | format(mon) }}</a></th>
+        <tr><th><a href="{{ url_for('bceweb.src_month', y=data.year, m=mon) }}">{{ "%02d" | format(mon) }}</a></th>
         {% for d in m %}
             <td>
                 {% if d %}

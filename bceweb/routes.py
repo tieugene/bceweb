@@ -1,5 +1,6 @@
 """Main router"""
 # 1. std
+from typing import Optional
 import datetime
 import io
 import math
@@ -70,9 +71,15 @@ def __get_records(q: str, data: dict = None):
 
 # filters
 @bp.add_app_template_filter
-def sa2btc(sat: int) -> str:
+def intorna(i: Optional[int]) -> str:
+    """Convert int to str or 'n/a'."""
+    return str(i) if i is not None else 'n/a'
+
+
+@bp.add_app_template_filter
+def sa2btc(sat: Optional[int]) -> str:
     """Convert satoshi to btc."""
-    return "{:,.8f}".format(sat/100000000).replace(',', ' ')
+    return "{:,.8f}".format(sat/100000000).replace(',', ' ') if sat is not None else 'n/a'
 
 
 # routes
@@ -85,7 +92,7 @@ def index():
 def src_years():
     # TODO: redirect
     max_year = int(__get_a_value(Qry.get('SRC_MAX_YEAR')))  # FIXME: what if None
-    return render_template('src_years.html', data=max_year)
+    return render_template('src_years.html', data={'max_year': max_year})
 
 
 @bp.route('/y/<y>/', methods=['GET'])
@@ -93,6 +100,8 @@ def src_year(y: int):
     """Year calendar.
     :param y: Year (2009+)
     :note: Special: 2009 (2009-01-03, 2009-01-09+)
+    :todo: chk year by DB
+    :todo: fix if max_doy(2009) < '2009-01-31'
     """
     max_year = int(__get_a_value(Qry.get('SRC_MAX_YEAR')))
     iy = int(y)
@@ -104,7 +113,6 @@ def src_year(y: int):
         months.append([d+1 for d in range(calendar.monthrange(iy, m+1)[1])])
     months.append([d+1 for d in range(max_doy.day)])
     if iy == 2009:  # special case
-        # FIXME: max_doy(9) < '2009-01-31'
         months[0][0:8] = [None, None, 3, None, None, None, None, None]
     # for m in data:
     #    print(m)
@@ -116,8 +124,22 @@ def src_month(y: int, m: int):
     """Month calendar.
     :param y: Year (2009+)
     :param m: Month (1..12)
+    :todo: chk y in DB & m == 1..12
     """
+    iy = int(y)
+    im = int(m)
     max_year = int(__get_a_value(Qry.get('SRC_MAX_YEAR')))
+    max_month = int(__get_a_value(Qry.get('SRC_MAX_MOY').format(year=iy)))
+    qry = Qry.get('SRC_DOM_LIST').format(year=iy, month=im)
+    print(qry)
+    dom_list = __get_records(qry)
+    return render_template('src_month.html', data={
+        'max_year': max_year,
+        'year': iy,
+        'max_month': max_month,
+        'month': im,
+        'dates': dom_list
+    })
 
 
 @bp.route('/d/<y>/<m>/<d>/', methods=['GET'])
@@ -125,7 +147,8 @@ def src_date(y: int, m: int, d: int):
     """Date's blocks.
     :param y: Year (2009+)
     :param m: Month (1..12)
-    :param d: Day of mont (1..31)
+    :param d: Day of month (1..31)
+    :todo: chk y (in db), m (1..12 and in DB), d (1..31 and in month and in DB)
     """
     date = datetime.date(int(y), int(m), int(d))
     pages = math.ceil(__get_a_value(Qry.get('SRC_DATE_BKS_COUNT').format(date=date)) / PAGE_SIZE)
