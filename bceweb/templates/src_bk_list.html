@@ -6,22 +6,24 @@
     <h1> Blocks </h1>
     {% include 'pager.html' %}
     <table class="thick">
-    <thead><tr>
-        <th> Block </th>
-        <th> DateTime </th>
-        <th> TXs </th>
-        <th> Vins </th>
-        <th> Vouts </th>
-        <th> STXO </th>
-        <th> Loop </th>
-        <th> UTXO </th>
-        <th> TXs </th>
-        <th> Vins </th>
-        <th> Vouts </th>
-        <th> STXO </th>
-        <th> Loop </th>
-        <th> UTXO </th>
-    </tr></thead>
+    <thead>
+        <tr>
+            <th rowspan="2"> Block </th>
+            <th rowspan="2"> DateTime </th>
+            <th colspan="4"> Per block </th>
+            <th colspan="4"> Cumulative </th>
+        </tr>
+        <tr>
+            <th> TXs </th>
+            <th> STXO </th>
+            <th> Loop </th>
+            <th> UTXO </th>
+            <th> TXs </th>
+            <th> STXO </th>
+            <th> Loop </th>
+            <th> UTXO </th>
+        </tr>
+    </thead>
     {% for rec in data %}
         <tr>
             <td class="right">
@@ -32,14 +34,10 @@
             </td>
             <td> {{ rec.datime }} </td>
             <td class="right"> {{ rec.tx_num }} </td>
-            <td class="right"> {{ rec.vi_num }} </td>
-            <td class="right"> {{ rec.vo_num }} </td>
             <td class="right"> {{ rec.so_num }} </td>
             <td class="right"> {{ rec.lo_num }} </td>
             <td class="right"> {{ rec.uo_num }} </td>
             <td class="right"> {{ rec.tx_num_inc }} </td>
-            <td class="right"> {{ rec.vi_num_inc }} </td>
-            <td class="right"> {{ rec.vo_num_inc }} </td>
             <td class="right"> {{ rec.so_num_inc }} </td>
             <td class="right"> {{ rec.lo_num_inc }} </td>
             <td class="right"> {{ rec.uo_num_inc }} </td>

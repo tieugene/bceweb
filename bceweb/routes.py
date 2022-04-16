@@ -165,12 +165,14 @@ def src_date(y: int, m: int, d: int):
 
 @bp.route('/b/', methods=['GET'])
 def src_bk_list():
-    """Blocks available"""
+    """Blocks available.
+    :todo: rm?
+    """
     pages = math.ceil(__get_a_value(Qry.get('SRC_BK_MAX')) / PAGE_SIZE)
     if (page := request.args.get('page', 1, type=int)) > pages:
         page = pages
     data = __get_records(Qry.get('SRC_BK_LIST').format(limit=PAGE_SIZE, offset=(page-1) * PAGE_SIZE))
-    return render_template('src_bk_list.html', data=data, pager=(page, pages))
+    return render_template('src_bk_list.html', pager=(page, pages), data=data)
 
 
 @bp.route('/b/<int:bk>/', methods=['GET'])
