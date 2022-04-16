@@ -22,6 +22,9 @@
         <button type="button"> {% if block.id < bk_max %} <a href="{{ url_for('bceweb.src_bk', bk=bk_max) }}"> &rarrb; </a> {% else %} &rarrb; {% endif %} </button>
     </p>
     <!-- /pager -->
+    {% if block.tx_num is none %}
+    <h2> Stat n/a </h2>
+    {% else %}
     <table class="thick">
         <thead>
             <tr>
@@ -107,4 +110,5 @@
         </tr>
     </tbody>
     </table>
+    {% endif %}
 {% endblock %}
