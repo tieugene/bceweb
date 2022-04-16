@@ -142,16 +142,6 @@ def src_month(y: int, m: int):
     })
 
 
-@bp.route('/d/', methods=['GET'])
-def src_date_list():
-    """Dates available"""
-    pages = math.ceil(__get_a_value(Qry.get('SRC_DATE_LIST_COUNT')) / PAGE_SIZE)
-    if (page := request.args.get('page', 1, type=int)) > pages:
-        page = pages
-    cur = __get_records(Qry.get('SRC_DATE_LIST').format(limit=PAGE_SIZE, offset=(page-1) * PAGE_SIZE))
-    return render_template('src_date_list.html', data=cur, pager=(page, pages))
-
-
 @bp.route('/d/<y>/<m>/<d>/', methods=['GET'])
 def src_date(y: int, m: int, d: int):
     """Date's blocks.
