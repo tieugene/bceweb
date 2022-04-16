@@ -5,7 +5,8 @@
 {% block body %}
     <h1> TX vouts </h1>
     <p>
-        Block # <a href="{{ url_for('bceweb.src_bk_txs', bk=block.id) }}"> {{ block.id }} </a> (<a href="{{ url_for('bceweb.src_date', d=block.datime.date().isoformat()) }}"> {{ block[1] }} </a>)
+        Block # <a href="{{ url_for('bceweb.src_bk_txs', bk=block.id) }}"> {{ block.id }} </a>
+        (<a href="{{ url_for('bceweb.src_date', y=block.datime.date().year, m=block.datime.date().month, d=block.datime.date().day) }}"> {{ block[1] }} </a>)
         <a href="https://www.blockchain.com/btc/block/{{ block.id }}" target="_blank" rel="noopener noreferrer">
             <img alt="blockchain.com" src="{{ url_for('static', filename='bmp/blockchain.com-16x16.png') }}"/>
         </a>

@@ -91,7 +91,7 @@ def src_years():
 @bp.route('/y/<y>/', methods=['GET'])
 def src_year(y: int):
     """Year calendar.
-    :param y: Year as 'yyyy'
+    :param y: Year (2009+)
     :note: Special: 2009 (2009-01-03, 2009-01-09+)
     """
     max_year = int(__get_a_value(Qry.get('SRC_MAX_YEAR')))
@@ -114,23 +114,25 @@ def src_year(y: int):
 @bp.route('/m/<y>/<m>/', methods=['GET'])
 def src_month(y: int, m: int):
     """Month calendar.
-    :param y: Year as 'yyyy'
-    :param m: Month as 'mm'
+    :param y: Year (2009+)
+    :param m: Month (1..12)
     """
     max_year = int(__get_a_value(Qry.get('SRC_MAX_YEAR')))
 
 
-@bp.route('/d/<d>/', methods=['GET'])
-def src_date(d: str):
+@bp.route('/d/<y>/<m>/<d>/', methods=['GET'])
+def src_date(y: int, m: int, d: int):
     """Date's blocks.
-    :param d: Date as 'yyyy-mm-dd'
+    :param y: Year (2009+)
+    :param m: Month (1..12)
+    :param d: Day of mont (1..31)
     """
-    # date = datetime.date.fromisoformat(d)
-    pages = math.ceil(__get_a_value(Qry.get('SRC_DATE_BKS_COUNT').format(date=d)) / PAGE_SIZE)
+    date = datetime.date(int(y), int(m), int(d))
+    pages = math.ceil(__get_a_value(Qry.get('SRC_DATE_BKS_COUNT').format(date=date)) / PAGE_SIZE)
     if (page := request.args.get('page', 1, type=int)) > pages:
         page = pages
-    cur = __get_records(Qry.get('SRC_DATE_BKS').format(date=d, limit=PAGE_SIZE, offset=(page-1) * PAGE_SIZE))
-    return render_template('src_date.html', date=d, data=cur, pager=(page, pages))
+    cur = __get_records(Qry.get('SRC_DATE_BKS').format(date=date, limit=PAGE_SIZE, offset=(page-1) * PAGE_SIZE))
+    return render_template('src_date.html', date=date, data=cur, pager=(page, pages))
 
 
 @bp.route('/src/dates/', methods=['GET'])

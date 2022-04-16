@@ -9,9 +9,15 @@
     {% endfor %}
     <table class="thick">
     {% for m in data.months %}
-        <tr><th><a href="{{ url_for('bceweb.src_month', y=y, m=loop.index) }}">{{ "%02d" | format(loop.index) }}</a></th>
+        {% set mon = loop.index %}
+        <tr><th><a href="{{ url_for('bceweb.src_month', y=y, m=mon) }}">{{ "%02d" | format(mon) }}</a></th>
         {% for d in m %}
-            <td> {% if d %} {{ "%02d" | format(d) }} {% else %} - {% endif %} </td>
+            <td>
+                {% if d %}
+                    <a href="{{ url_for('bceweb.src_date', y=data.year, m=mon, d=d) }}"> {{ "%02d" | format(d) }} </a>
+                {% else %} -
+                {% endif %}
+            </td>
         {% endfor %}
         </tr>
     {% endfor %}

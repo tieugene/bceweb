@@ -12,7 +12,7 @@
     <thead><tr><th> Date </th><th> Blocks </th></tr></thead>
     {% for rec in data %}
         <tr>
-            <td> <a href="{{ url_for('bceweb.src_date', d=rec.date) }}"> {{ rec.date }} </a> </td>
+            <td> <a href="{{ url_for('bceweb.src_date', y=rec.date.year, m=rec.date.month, d=rec.date.day) }}"> {{ rec.date }} </a> </td>
             <td class="right"> {{ rec.num }} </td>
         </tr>
     {% endfor %}
