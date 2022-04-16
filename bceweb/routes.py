@@ -95,7 +95,7 @@ def src_years():
     return render_template('src_years.html', data={'max_year': max_year})
 
 
-@bp.route('/y/<y>/', methods=['GET'])
+@bp.route('/y/<int:y>/', methods=['GET'])
 def src_year(y: int):
     """Year calendar.
     :param y: Year (2009+)
@@ -119,7 +119,7 @@ def src_year(y: int):
     return render_template('src_year.html', data={'max_year': max_year, 'year': iy, 'months': months})
 
 
-@bp.route('/m/<y>/<m>/', methods=['GET'])
+@bp.route('/m/<int:y>/<int:m>/', methods=['GET'])
 def src_month(y: int, m: int):
     """Month calendar.
     :param y: Year (2009+)
@@ -142,7 +142,7 @@ def src_month(y: int, m: int):
     })
 
 
-@bp.route('/d/<y>/<m>/<d>/', methods=['GET'])
+@bp.route('/d/<int:y>/<int:m>/<int:d>/', methods=['GET'])
 def src_date(y: int, m: int, d: int):
     """Date's blocks.
     :param y: Year (2009+)
@@ -158,7 +158,7 @@ def src_date(y: int, m: int, d: int):
     return render_template('src_date.html', date=date, data=cur, pager=(page, pages))
 
 
-@bp.route('/src/bks', methods=['GET'])
+@bp.route('/b/', methods=['GET'])
 def src_bk_list():
     """Blocks available"""
     pages = math.ceil(__get_a_value(Qry.get('SRC_BK_MAX')) / PAGE_SIZE)
@@ -168,7 +168,7 @@ def src_bk_list():
     return render_template('src_bk_list.html', data=data, pager=(page, pages))
 
 
-@bp.route('/src/bk/<int:bk>', methods=['GET'])
+@bp.route('/b/<int:bk>/', methods=['GET'])
 def src_bk(bk: int):
     """Block info (stat)"""
     bk_max = __get_a_value(Qry.get('SRC_BK_MAX'))  # ??? bk_max <> bk_count
@@ -177,7 +177,7 @@ def src_bk(bk: int):
     return render_template('src_bk_stat.html', block=block, bk_max=bk_max)
 
 
-@bp.route('/src/bk/<int:bk>/txs', methods=['GET'])
+@bp.route('/b/<int:bk>/t/', methods=['GET'])
 def src_bk_txs(bk: int):
     """Block's TXs"""
     pages = math.ceil(__get_a_value(Qry.get('SRC_BK_TXS_COUNT').format(bk=bk)) / PAGE_SIZE)
@@ -188,7 +188,7 @@ def src_bk_txs(bk: int):
     return render_template('src_bk_txs.html', block=block, data=cur, pager=(page, pages))
 
 
-@bp.route('/src/tx/<int:tx>/vins', methods=['GET'])
+@bp.route('/t/<int:tx>/i/', methods=['GET'])
 def src_tx_vins(tx: int):
     """TX's vins"""
     if (pages := math.ceil(__get_a_value(Qry.get('SRC_TX_VINS_COUNT').format(tx=tx)) / PAGE_SIZE)) == 0:
@@ -201,7 +201,7 @@ def src_tx_vins(tx: int):
     return render_template('src_tx_vins.html', block=block, tx=tx_rec, data=cur, pager=(page, pages))
 
 
-@bp.route('/src/tx/<int:tx>/vouts', methods=['GET'])
+@bp.route('/t/<int:tx>/o/', methods=['GET'])
 def src_tx_vouts(tx: int):
     """TX's vouts"""
     if (pages := math.ceil(__get_a_value(Qry.get('SRC_TX_VOUTS_COUNT').format(tx=tx)) / PAGE_SIZE)) == 0:
@@ -214,7 +214,7 @@ def src_tx_vouts(tx: int):
     return render_template('src_tx_vouts.html', block=block, tx=tx_rec, data=cur, pager=(page, pages))
 
 
-@bp.route('/src/addr/<int:aid>', methods=['GET'])
+@bp.route('/a/<int:aid>/', methods=['GET'])
 def src_addr(aid: int):
     """Address' operations"""
     pages = math.ceil(__get_a_value(Qry.get('SRC_ADDR_MOVES_COUNT').format(aid=aid)) / PAGE_SIZE)
@@ -225,7 +225,7 @@ def src_addr(aid: int):
     return render_template('src_addr.html', addr=addr, data=cur, pager=(page, pages))
 
 
-@bp.route('/info', methods=['GET'])
+@bp.route('/i/', methods=['GET'])
 def info():
     data = dict()
     data['bk'] = __get_a_record(Qry.get('INFO_BK'))
@@ -233,13 +233,13 @@ def info():
     return render_template('info.html', data=data)
 
 
-@bp.route('/q', methods=['GET'])
+@bp.route('/q/', methods=['GET'])
 def q_index():
     """List of queries"""
     return render_template('q_index.html')
 
 
-@bp.route('/xl/<int:xl_id>', methods=['GET'])
+@bp.route('/xl/<int:xl_id>/', methods=['GET'])
 def get_xl(xl_id: int):
     """Get previously created XLSX"""
     if data := xlstore.Store.get(xl_id):
@@ -267,7 +267,7 @@ def __q_addr_x_y(formclass, title: str, head: tuple, qry_name: str, tpl_name: st
     return render_template(tpl_name, title=title, head=head, data=data, form=form, times=times, xl_id=xl_id)
 
 
-@bp.route('/q/addr_btc_max', methods=['GET', 'POST'])
+@bp.route('/q/addr_btc_max/', methods=['GET', 'POST'])
 def q_addr_btc_max():
     """Top [num] addresses by gain (₿) in period [fromdate]...[todate]"""
     return __q_addr_x_y(
@@ -280,7 +280,7 @@ def q_addr_btc_max():
     )
 
 
-@bp.route('/q/addr_btc_min', methods=['GET', 'POST'])
+@bp.route('/q/addr_btc_min/', methods=['GET', 'POST'])
 def q_addr_btc_min():
     """Top [num] addresses by lost (₿) in period [fromdate]...[todate]"""
     return __q_addr_x_y(
@@ -293,7 +293,7 @@ def q_addr_btc_min():
     )
 
 
-@bp.route('/q/addr_cnt_max', methods=['GET', 'POST'])
+@bp.route('/q/addr_cnt_max/', methods=['GET', 'POST'])
 def q_addr_cnt_max():
     """Top [num] addresses by gain (%) in period [fromdate]...[todate]"""
     return __q_addr_x_y(
@@ -306,7 +306,7 @@ def q_addr_cnt_max():
     )
 
 
-@bp.route('/q/addr_cnt_min', methods=['GET', 'POST'])
+@bp.route('/q/addr_cnt_min/', methods=['GET', 'POST'])
 def q_addr_cnt_min():
     """Top [num] addresses by lost (%) in period [fromdate]...[todate]"""
     return __q_addr_x_y(
@@ -319,7 +319,7 @@ def q_addr_cnt_min():
     )
 
 
-@bp.route('/q/addr_gt', methods=['GET', 'POST'])
+@bp.route('/q/addr_gt/', methods=['GET', 'POST'])
 def q_addr_gt():
     """Addresses with balance > [num] sat. on [date]"""
     return __q_addr_x_y(
@@ -354,7 +354,7 @@ def __q_addr_x_y_tx(formclass, title: str, head: tuple, qry_name: str, tpl_name:
     return render_template(tpl_name, title=title, head=head, data=data, form=form, times=times, xl_id=xl_id)
 
 
-@bp.route('/q/addr_btc_max_tx', methods=['GET', 'POST'])
+@bp.route('/q/addr_btc_max_tx/', methods=['GET', 'POST'])
 def q_addr_btc_max_tx():
     """Top [num] addresses by gain (₿) in period [fromdate]...[todate]"""
     return __q_addr_x_y_tx(
@@ -367,7 +367,7 @@ def q_addr_btc_max_tx():
     )
 
 
-@bp.route('/q/addr_btc_min_tx', methods=['GET', 'POST'])
+@bp.route('/q/addr_btc_min_tx/', methods=['GET', 'POST'])
 def q_addr_btc_min_tx():
     """Top [num] addresses by lost (₿) in period [fromdate]...[todate]"""
     return __q_addr_x_y_tx(
@@ -380,7 +380,7 @@ def q_addr_btc_min_tx():
     )
 
 
-@bp.route('/q/addr_cnt_max_tx', methods=['GET', 'POST'])
+@bp.route('/q/addr_cnt_max_tx/', methods=['GET', 'POST'])
 def q_addr_cnt_max_tx():
     """Top [num] addresses by gain (%) in period [fromdate]...[todate]"""
     return __q_addr_x_y_tx(
@@ -393,7 +393,7 @@ def q_addr_cnt_max_tx():
     )
 
 
-@bp.route('/q/addr_cnt_min_tx', methods=['GET', 'POST'])
+@bp.route('/q/addr_cnt_min_tx/', methods=['GET', 'POST'])
 def q_addr_cnt_min_tx():
     """Top [num] addresses by lost (%) in period [fromdate]...[todate]"""
     return __q_addr_x_y_tx(
@@ -406,7 +406,7 @@ def q_addr_cnt_min_tx():
     )
 
 
-@bp.route('/q/addr_gt_tx', methods=['GET', 'POST'])
+@bp.route('/q/addr_gt_tx/', methods=['GET', 'POST'])
 def q_addr_gt_tx():
     """Addresses with balance > [num] sat. on [date]"""
     return __q_addr_x_y_tx(
