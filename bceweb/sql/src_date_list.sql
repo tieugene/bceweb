@@ -1,6 +1,6 @@
 SELECT DISTINCT
     DATE(datime) AS date,
-    COUNT(*) AS num
+    COUNT(*) AS bk_num
 FROM bk
 GROUP BY date
 ORDER BY date

@@ -13,7 +13,7 @@
     {% for rec in data %}
         <tr>
             <td> <a href="{{ url_for('bceweb.src_date', y=rec.date.year, m=rec.date.month, d=rec.date.day) }}"> {{ rec.date }} </a> </td>
-            <td class="right"> {{ rec.num }} </td>
+            <td class="right"> {{ rec.bk_num }} </td>
         </tr>
     {% endfor %}
     </table>
