@@ -6,7 +6,7 @@
     <h1> Date
         <button type="button"> {% if data.date.day > 1 %} <a href="{{ url_for('bceweb.src_date', y=data.date.year, m=data.date.month, d=1) }}"> &larrb; </a> {% else %} &larrb; {% endif %} </button>
         <button type="button"> {% if data.date.day > 1 %} <a href="{{ url_for('bceweb.src_date', y=data.date.year, m=data.date.month, d=data.date.day - 1) }}"> &larr; {% else %} &larr; {% endif %} </a> </button>
-        <a href="{{ url_for('bceweb.src_year', y=data.date.year) }}">{{ data.date.year }}</a>-<a href="{{ url_for('bceweb.src_month', y=data.date.year, m=data.date.month) }}">{{ "%02d" | format(data.date.month) }}</a>-{{ "%02d" | format(data.date.day) }}
+        <a class="button mono" href="{{ url_for('bceweb.src_year', y=data.date.year) }}">{{ data.date.year }}</a>-<a class="button mono" href="{{ url_for('bceweb.src_month', y=data.date.year, m=data.date.month) }}">{{ "%02d" | format(data.date.month) }}</a>-{{ "%02d" | format(data.date.day) }}
         <button type="button"> {% if data.date.day < data.max_dom %} <a href="{{ url_for('bceweb.src_date', y=data.date.year, m=data.date.month, d=data.date.day + 1) }}"> &rarr; </a> {% else %} &rarr; {% endif %} </button>
         <button type="button"> {% if data.date.day < data.max_dom %} <a href="{{ url_for('bceweb.src_date', y=data.date.year, m=data.date.month, d=data.max_dom) }}"> &rarrb; </a> {% else %} &rarrb; {% endif %} </button>
     </h1>

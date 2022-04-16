@@ -3,8 +3,7 @@
 {% block head %}
 {% endblock %}
 {% block body %}
-    <h1> Years </h1>
     {% for y in range(2009, data.max_year + 1) %}
-        <a href="{{ url_for('bceweb.src_year', y=y) }}"> {{ y }} </a>
+        <a class="button mono" href="{{ url_for('bceweb.src_year', y=y) }}">{{ y }}</a>
     {% endfor %}
 {% endblock %}

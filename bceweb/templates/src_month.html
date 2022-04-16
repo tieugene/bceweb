@@ -3,13 +3,15 @@
 {% block head %}
 {% endblock %}
 {% block body %}
+    <p>
     {% for y in range(2009, data.max_year + 1) %}
-        <a href="{{ url_for('bceweb.src_year', y=y) }}"> {{ y }} </a>
+        <a class="button mono" href="{{ url_for('bceweb.src_year', y=y) }}">{{ y }}</a>
     {% endfor %}
+    </p>
     <h1>
         <button type="button"> {% if data.month > 1 %} <a href="{{ url_for('bceweb.src_month', y=data.year, m=1) }}"> &larrb; </a> {% else %} &larrb; {% endif %} </button>
         <button type="button"> {% if data.month > 1 %} <a href="{{ url_for('bceweb.src_month', y=data.year, m=data.month - 1) }}"> &larr; {% else %} &larr; {% endif %} </a> </button>
-        Month <a href="{{ url_for('bceweb.src_year', y=data.year) }}">{{ data.year }}</a>-{{ "%02d" | format(data.month) }}
+        Month <a class="button mono" href="{{ url_for('bceweb.src_year', y=data.year) }}">{{ data.year }}</a>-{{ "%02d" | format(data.month) }}
         <button type="button"> {% if data.month < data.max_month %} <a href="{{ url_for('bceweb.src_month', y=data.year, m=data.month + 1) }}"> &rarr; </a> {% else %} &rarr; {% endif %} </button>
         <button type="button"> {% if data.month < data.max_month %} <a href="{{ url_for('bceweb.src_month', y=data.year, m=data.max_month) }}"> &rarrb; </a> {% else %} &rarrb; {% endif %} </button>
     </h1>

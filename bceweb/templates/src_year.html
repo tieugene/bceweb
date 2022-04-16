@@ -3,18 +3,20 @@
 {% block head %}
 {% endblock %}
 {% block body %}
-    <h1> Year {{ data.year }} </h1>
+    <p>
     {% for y in range(2009, data.max_year + 1) %}
-        <a href="{{ url_for('bceweb.src_year', y=y) }}"> {{ y }} </a>
+        <a class="button mono" href="{{ url_for('bceweb.src_year', y=y) }}">{{ y }}</a>
     {% endfor %}
+    </p>
+    <h1> Year {{ data.year }} </h1>
     <table class="thick">
     {% for m in data.months %}
         {% set mon = loop.index %}
-        <tr><th><a href="{{ url_for('bceweb.src_month', y=data.year, m=mon) }}">{{ "%02d" | format(mon) }}</a></th>
+        <tr><th><a class="mono" href="{{ url_for('bceweb.src_month', y=data.year, m=mon) }}">{{ "%02d" | format(mon) }}</a></th>
         {% for d in m %}
             <td>
                 {% if d %}
-                    <a href="{{ url_for('bceweb.src_date', y=data.year, m=mon, d=d) }}"> {{ "%02d" | format(d) }} </a>
+                    <a class="mono" href="{{ url_for('bceweb.src_date', y=data.year, m=mon, d=d) }}"> {{ "%02d" | format(d) }} </a>
                 {% else %} -
                 {% endif %}
             </td>
