@@ -31,55 +31,79 @@
             </tr>
         </thead>
     <tbody>
-        <tr> <th> TXs: </th> <td class="right"> {{ block.tx_num }} </td> <td/> </tr>
-        <tr> <th> Price </th> <td/> <td class="right"> {{ block.price|sa2btc }} </td> </tr>
-        <tr> <th> Total </th> <td/> <td class="right"> {{ block.total|sa2btc }} </td> </tr>
-    <!-- si/lo/uo x _num, sum-->
         <tr>
-            <th> STXO </th>
+            <th> Tx: </th>
+            <td class="right"> {{ block.tx_num }} </td>
+            <td/>
+        </tr>
+        <tr>
+            <th> So </th>
             <td class="right"> {{ block.so_num }} </td>
             <td class="right"> {{ block.so_sum|sa2btc }} </td>
         </tr>
         <tr>
-            <th> Loops </th>
+            <th> Lo </th>
             <td class="right"> {{ block.lo_num }} </td>
             <td class="right"> {{ block.lo_sum|sa2btc }} </td>
         </tr>
         <tr>
-            <th> UTXO </th>
+            <th> Uo </th>
             <td class="right"> {{ block.uo_num }} </td>
             <td class="right"> {{ block.uo_sum|sa2btc }} </td>
         </tr>
+        <tr>
+            <th> &Delta; </th>
+            <td/>
+            <td class="right"> {{ (block.uo_sum - block.so_sum)|sa2btc }} </td>
+        </tr>
     <!-- +_inc -->
         <tr> <th colspan="3"> &sum;: </th> </tr>
-        <tr> <th> TXs: </th> <td> {{ block.tx_num_inc }} </td> <td/> </tr>
-        <tr> <th> Price </th> <td/> <td class="right"> {{ block.price_inc|sa2btc }} </td> </tr>
         <tr>
-            <th> STXO </th>
+            <th> Tx: </th>
+            <td class="right"> {{ block.tx_num_inc }} </td>
+            <td/>
+        </tr>
+        <tr>
+            <th> So </th>
             <td class="right"> {{ block.so_num_inc }} </td>
             <td class="right"> {{ block.so_sum_inc|sa2btc }} </td>
         </tr>
         <tr>
-            <th> Loops </th>
+            <th> Lo </th>
             <td class="right"> {{ block.lo_num_inc }} </td>
             <td class="right"> {{ block.lo_sum_inc|sa2btc }} </td>
         </tr>
         <tr>
-            <th> UTXO </th>
+            <th> Uo </th>
             <td class="right"> {{ block.uo_num_inc }} </td>
             <td class="right"> {{ block.uo_sum_inc|sa2btc }} </td>
         </tr>
     <!-- checks -->
         <tr> <th colspan="3"> Check </th></tr>
         <tr>
-            <th> Total-&sum;(price) </th>
-            <td/>
-            <td class="right"> {{ (block.total - block.price_inc)|sa2btc }} </td>
+            <th title="u+l"> TxO </th>
+            <td class="right"> {{ block.uo_num_inc + block.lo_num_inc }}
+            <td class="right"> {{ (block.uo_sum_inc + block.lo_sum_inc)|sa2btc }} </td>
         </tr>
         <tr>
-            <th> &sum;(price)-&sum;(Vo-Vi) </th>
+            <th title="s+l"> STxO </th>
+            <td class="right"> {{ block.so_num_inc + block.lo_num_inc }}
+            <td class="right"> {{ (block.so_sum_inc + block.lo_sum_inc)|sa2btc }} </td>
+        </tr>
+        <tr>
+            <th title="u-s"> UTxO </th>
+            <td class="right"> {{ block.uo_num_inc - block.so_num_inc }}
+            <td class="right"> {{ (block.uo_sum_inc - block.so_sum_inc)|sa2btc }} </td>
+        </tr>
+        <tr>
+            <th> Must </th>
             <td/>
-            <td class="right"> {# (block.price_inc - (block.vo_sum_inc - block.vi_sum_inc))|sa2btc #} </td>
+            <td class="right"> {{ mustb|sa2btc }} </td>
+        </tr>
+        <tr>
+            <th> &Delta; </th>
+            <td/>
+            <td class="right"> {{ (mustb - (block.uo_sum_inc - block.so_sum_inc))|sa2btc }} </td>
         </tr>
     </tbody>
     </table>

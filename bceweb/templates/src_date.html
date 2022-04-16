@@ -17,7 +17,7 @@
             <th rowspan="2"> Block </th>
             <th rowspan="2"> Time </th>
             <th colspan="4"> # </th>
-            <th colspan="5"> &#8383; </th>
+            <th colspan="3"> &#8383; </th>
         </tr>
         <tr>
             <th> TXs </th>
@@ -27,8 +27,6 @@
             <th> So </th>
             <th> Lo </th>
             <th> Uo </th>
-            <th> Price </th>
-            <th> Total </th>
         </tr>
     </thead>
     {% for rec in data.blocks %}
@@ -47,8 +45,6 @@
             <td class="right"> {{ rec.so_sum|sa2btc }} </td>
             <td class="right"> {{ rec.lo_sum|sa2btc }} </td>
             <td class="right"> {{ rec.uo_sum|sa2btc }} </td>
-            <td class="right"> {{ rec.price|sa2btc }} </td>
-            <td class="right"> {{ rec.total|sa2btc }} </td>
         </tr>
     {% endfor %}
     </table>

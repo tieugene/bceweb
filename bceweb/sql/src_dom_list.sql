@@ -1,3 +1,4 @@
+-- Dates of month data
 SELECT
     dates.d AS date,
     bk_num,

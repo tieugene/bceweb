@@ -2,7 +2,6 @@ SELECT DISTINCT
   bk.*,
   t_stat_bk.*,
   SUM(tx_num) OVER w AS tx_num_inc,
-  SUM(price) OVER w AS price_inc,
   SUM(so_num) OVER w AS so_num_inc,
   SUM(lo_num) OVER w AS lo_num_inc,
   SUM(uo_num) OVER w AS uo_num_inc,

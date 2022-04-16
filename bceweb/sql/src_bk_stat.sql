@@ -1,8 +1,8 @@
+-- block data with cumulatives
 SELECT * FROM (
 SELECT DISTINCT
   bk.*,
   t_stat_bk.*,
-  SUM(price) OVER w AS price_inc,
   SUM(tx_num) OVER w AS tx_num_inc,
   SUM(so_num) OVER w AS so_num_inc,
   SUM(so_sum) OVER w AS so_sum_inc,

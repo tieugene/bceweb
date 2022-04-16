@@ -1,3 +1,4 @@
+-- Date blocks (paged)
 SELECT
    id,
    datime,
@@ -7,9 +8,7 @@ SELECT
    lo_num,
    lo_sum,
    uo_num,
-   uo_sum,
-   price,
-   total
+   uo_sum
 FROM (
     SELECT * FROM bk
     WHERE DATE(datime) = '{date}'

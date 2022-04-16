@@ -1,3 +1,4 @@
+-- Max day of month
 SELECT
     MAX(EXTRACT (DAY FROM datime))
 FROM bk

@@ -79,7 +79,7 @@ def intorna(i: Optional[int]) -> str:
 @bp.add_app_template_filter
 def sa2btc(sat: Optional[int]) -> str:
     """Convert satoshi to btc."""
-    return "{:,.8f}".format(sat/100000000).replace(',', ' ') if sat is not None else 'n/a'
+    return "{:,.8f}".format(sat / 100000000).replace(',', ' ') if sat is not None else 'n/a'
 
 
 # routes
@@ -110,8 +110,8 @@ def src_year(y: int):
     months = []
     for m in range(max_doy.month - 1):
         # print(calendar.monthrange(int(y), m+1))
-        months.append([d+1 for d in range(calendar.monthrange(iy, m+1)[1])])
-    months.append([d+1 for d in range(max_doy.day)])
+        months.append([d + 1 for d in range(calendar.monthrange(iy, m + 1)[1])])
+    months.append([d + 1 for d in range(max_doy.day)])
     if iy == 2009:  # special case
         months[0][0:8] = [None, None, 3, None, None, None, None, None]
     # for m in data:
@@ -155,7 +155,7 @@ def src_date(y: int, m: int, d: int):
     pages = math.ceil(__get_a_value(Qry.get('SRC_DATE_BKS_COUNT').format(date=date)) / PAGE_SIZE)
     if (page := request.args.get('page', 1, type=int)) > pages:
         page = pages
-    blocks = __get_records(Qry.get('SRC_DATE_BKS').format(date=date, limit=PAGE_SIZE, offset=(page-1) * PAGE_SIZE))
+    blocks = __get_records(Qry.get('SRC_DATE_BKS').format(date=date, limit=PAGE_SIZE, offset=(page - 1) * PAGE_SIZE))
     return render_template('src_date.html', pager=(page, pages), data={
         'max_dom': max_dom,
         'date': date,
@@ -171,17 +171,23 @@ def src_bk_list():
     pages = math.ceil(__get_a_value(Qry.get('SRC_BK_MAX')) / PAGE_SIZE)
     if (page := request.args.get('page', 1, type=int)) > pages:
         page = pages
-    data = __get_records(Qry.get('SRC_BK_LIST').format(limit=PAGE_SIZE, offset=(page-1) * PAGE_SIZE))
+    data = __get_records(Qry.get('SRC_BK_LIST').format(limit=PAGE_SIZE, offset=(page - 1) * PAGE_SIZE))
     return render_template('src_bk_list.html', pager=(page, pages), data=data)
 
 
 @bp.route('/b/<int:bk>/', methods=['GET'])
 def src_bk(bk: int):
-    """Block info (stat)"""
+    """Block info (stat).
+    :todo: check bk <= bk_max & in DB
+    """
+
+    def mustb(i):
+        return (((1 << ((i // 210000) + 1)) - 2) * 210000 + (i % 210000) + 1) * (5000000000 >> (i // 210000))
+
+    ibk = int(bk)
     bk_max = __get_a_value(Qry.get('SRC_BK_MAX'))  # ??? bk_max <> bk_count
-    # TODO: check bk <= bk_max
     block = __get_a_record(Qry.get('SRC_BK_STAT').format(bk=bk))
-    return render_template('src_bk_stat.html', block=block, bk_max=bk_max)
+    return render_template('src_bk_stat.html', block=block, bk_max=bk_max, mustb=mustb(ibk))
 
 
 @bp.route('/b/<int:bk>/t/', methods=['GET'])
@@ -191,7 +197,7 @@ def src_bk_txs(bk: int):
     if (page := request.args.get('page', 1, type=int)) > pages:
         page = pages
     block = __get_a_record(Qry.get('SRC_BK').format(bk=bk))
-    cur = __get_records(Qry.get('SRC_BK_TXS').format(bk=bk, limit=PAGE_SIZE, offset=(page-1) * PAGE_SIZE))
+    cur = __get_records(Qry.get('SRC_BK_TXS').format(bk=bk, limit=PAGE_SIZE, offset=(page - 1) * PAGE_SIZE))
     return render_template('src_bk_txs.html', block=block, data=cur, pager=(page, pages))
 
 
@@ -204,7 +210,7 @@ def src_tx_vins(tx: int):
         page = pages
     tx_rec = __get_a_record(Qry.get('SRC_TX').format(tx=tx))
     block = __get_a_record(Qry.get('SRC_BK').format(bk=tx_rec[1]))  # ! not 'b_id'
-    cur = __get_records(Qry.get('SRC_TX_VINS').format(tx=tx, limit=PAGE_SIZE, offset=(page-1) * PAGE_SIZE))
+    cur = __get_records(Qry.get('SRC_TX_VINS').format(tx=tx, limit=PAGE_SIZE, offset=(page - 1) * PAGE_SIZE))
     return render_template('src_tx_vins.html', block=block, tx=tx_rec, data=cur, pager=(page, pages))
 
 
@@ -217,7 +223,7 @@ def src_tx_vouts(tx: int):
         page = pages
     tx_rec = __get_a_record(Qry.get('SRC_TX').format(tx=tx))
     block = __get_a_record(Qry.get('SRC_BK').format(bk=tx_rec[1]))  # ! not 'b_id'
-    cur = __get_records(Qry.get('SRC_TX_VOUTS').format(tx=tx, limit=PAGE_SIZE, offset=(page-1) * PAGE_SIZE))
+    cur = __get_records(Qry.get('SRC_TX_VOUTS').format(tx=tx, limit=PAGE_SIZE, offset=(page - 1) * PAGE_SIZE))
     return render_template('src_tx_vouts.html', block=block, tx=tx_rec, data=cur, pager=(page, pages))
 
 
@@ -228,7 +234,7 @@ def src_addr(aid: int):
     if (page := request.args.get('page', 1, type=int)) > pages:
         page = pages
     addr = __get_a_record(Qry.get('SRC_ADDR').format(aid=aid))
-    cur = __get_records(Qry.get('SRC_ADDR_MOVES').format(aid=aid, limit=PAGE_SIZE, offset=(page-1) * PAGE_SIZE))
+    cur = __get_records(Qry.get('SRC_ADDR_MOVES').format(aid=aid, limit=PAGE_SIZE, offset=(page - 1) * PAGE_SIZE))
     return render_template('src_addr.html', addr=addr, data=cur, pager=(page, pages))
 
 
