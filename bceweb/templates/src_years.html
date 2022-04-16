@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %} Years {% endblock %}
+{% block head %}
+{% endblock %}
+{% block body %}
+    <h1> Years </h1>
+    {% for y in range(2009, data + 1) %}
+        <a href="{{ url_for('bceweb.src_year', y=y) }}"> {{ y }} </a>
+    {% endfor %}
+{% endblock %}

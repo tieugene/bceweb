@@ -22,18 +22,28 @@
                 <img class="svg" alt="Home" src="{{ url_for('static', filename='svg/home.svg') }}"/>
             </button>
         </a>
+        <a href="{{ url_for('bceweb.src_years') }}">
+            <button type="button" title="Years">
+                <img class="svg" alt="Years" src="{{ url_for('static', filename='svg/trash.svg') }}"/>
+            </button>
+        </a>
         <a href="{{ url_for('bceweb.src_date_list') }}">
-            <button type="button" title="Blockchain explorer">
-                <img class="svg" alt="BTC crowler" src="{{ url_for('static', filename='svg/sitemap.svg') }}"/>
+            <button type="button" title="Dates">
+                <img class="svg" alt="Dates" src="{{ url_for('static', filename='svg/calendar.svg') }}"/>
+            </button>
+        </a>
+        <a href="{{ url_for('bceweb.src_bk_list') }}">
+            <button type="button" title="Blocks">
+                <img class="svg" alt="Blocks" src="{{ url_for('static', filename='svg/sitemap.svg') }}"/>
             </button>
         </a>
         <a href="{{ url_for('bceweb.q_index') }}">
             <button type="button" title="Queries">
-                <img class="svg" alt="BTC" src="{{ url_for('static', filename='svg/btc.svg') }}"/>
+                <img class="svg" alt="Queries" src="{{ url_for('static', filename='svg/calculator.svg') }}"/>
             </button>
         </a>
         <a href="{{ url_for('bceweb.info') }}">
-            <button type="button" title="System info (TODO)">
+            <button type="button" title="Info (TODO)">
                 <img class="svg" alt="Info" src="{{ url_for('static', filename='svg/info.svg') }}"/>
             </button>
         </a>

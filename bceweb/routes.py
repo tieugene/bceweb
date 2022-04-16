@@ -3,7 +3,8 @@
 import datetime
 import io
 import math
-
+import calendar
+import pprint
 # 2. 3rd
 import sys
 
@@ -44,7 +45,7 @@ def __get_db():
     return db
 
 
-def __get_a_value(q: str) -> int:
+def __get_a_value(q: str) -> (int, datetime.date):
     """Get single value from query.
     :param q: query text to execute
     :return: value get
@@ -80,7 +81,59 @@ def index():
     return render_template('index.html')
 
 
-@bp.route('/src/dates', methods=['GET'])
+@bp.route('/y/', methods=['GET'])
+def src_years():
+    # TODO: redirect
+    max_year = int(__get_a_value(Qry.get('SRC_MAX_YEAR')))  # FIXME: what if None
+    return render_template('src_years.html', data=max_year)
+
+
+@bp.route('/y/<y>/', methods=['GET'])
+def src_year(y: int):
+    """Year calendar.
+    :param y: Year as 'yyyy'
+    :note: Special: 2009 (2009-01-03, 2009-01-09+)
+    """
+    max_year = int(__get_a_value(Qry.get('SRC_MAX_YEAR')))
+    iy = int(y)
+    max_doy: datetime.date = __get_a_value(Qry.get('SRC_MAX_DOY').format(year=iy))
+    # print(max_doy)
+    months = []
+    for m in range(max_doy.month - 1):
+        # print(calendar.monthrange(int(y), m+1))
+        months.append([d+1 for d in range(calendar.monthrange(iy, m+1)[1])])
+    months.append([d+1 for d in range(max_doy.day)])
+    if iy == 2009:  # special case
+        # FIXME: max_doy(9) < '2009-01-31'
+        months[0][0:8] = [None, None, 3, None, None, None, None, None]
+    # for m in data:
+    #    print(m)
+    return render_template('src_year.html', data={'max_year': max_year, 'year': iy, 'months': months})
+
+
+@bp.route('/m/<y>/<m>/', methods=['GET'])
+def src_month(y: int, m: int):
+    """Month calendar.
+    :param y: Year as 'yyyy'
+    :param m: Month as 'mm'
+    """
+    max_year = int(__get_a_value(Qry.get('SRC_MAX_YEAR')))
+
+
+@bp.route('/d/<d>/', methods=['GET'])
+def src_date(d: str):
+    """Date's blocks.
+    :param d: Date as 'yyyy-mm-dd'
+    """
+    # date = datetime.date.fromisoformat(d)
+    pages = math.ceil(__get_a_value(Qry.get('SRC_DATE_BKS_COUNT').format(date=d)) / PAGE_SIZE)
+    if (page := request.args.get('page', 1, type=int)) > pages:
+        page = pages
+    cur = __get_records(Qry.get('SRC_DATE_BKS').format(date=d, limit=PAGE_SIZE, offset=(page-1) * PAGE_SIZE))
+    return render_template('src_date.html', date=d, data=cur, pager=(page, pages))
+
+
+@bp.route('/src/dates/', methods=['GET'])
 def src_date_list():
     """Dates available"""
     pages = math.ceil(__get_a_value(Qry.get('SRC_DATE_LIST_COUNT')) / PAGE_SIZE)
@@ -98,17 +151,6 @@ def src_bk_list():
         page = pages
     data = __get_records(Qry.get('SRC_BK_LIST').format(limit=PAGE_SIZE, offset=(page-1) * PAGE_SIZE))
     return render_template('src_bk_list.html', data=data, pager=(page, pages))
-
-
-@bp.route('/src/date/<d>/bks', methods=['GET'])
-def src_date_bks(d: str):
-    """Date's blocks"""
-    # date = datetime.date.fromisoformat(d)
-    pages = math.ceil(__get_a_value(Qry.get('SRC_DATE_BKS_COUNT').format(date=d)) / PAGE_SIZE)
-    if (page := request.args.get('page', 1, type=int)) > pages:
-        page = pages
-    cur = __get_records(Qry.get('SRC_DATE_BKS').format(date=d, limit=PAGE_SIZE, offset=(page-1) * PAGE_SIZE))
-    return render_template('src_date_bks.html', date=d, data=cur, pager=(page, pages))
 
 
 @bp.route('/src/bk/<int:bk>', methods=['GET'])

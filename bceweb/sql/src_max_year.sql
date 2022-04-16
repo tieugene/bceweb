@@ -1,0 +1,1 @@
+SELECT MAX(EXTRACT (YEAR FROM datime)) FROM bk;

@@ -1,5 +1,32 @@
 # Timing
 
+## 220303
+Test 4_tx_suco_tmp - count/sum via interim qid table.  
+Stand: Alex, 2016-12-31 (bk 446017, tx 183758064..183759444)
+
+- [x] mk table: 1'12" (13219096 rows)
+- [x] +idx: 1'25" (+13")
+- [x] +Addr_Num: 1'30" (+5") &check;
+- [x] +Addr_Sum: 3'15" (+2') &check;
+- [x] +Addr_Num_Active: 4'57 &check;
+- [ ] mk_idx: 4'53"
+- [x] +Vout_Num: 4'53" &check;
+- [x] +Vout_Sum: 4'51"
+- [x] +Vin_Sum: 4'53"
+- [ ] +Vloop_Num: 4'52"
+
+## 220301
+
+Count/Sum by buratinity.
+Stands:
+- host002, 450k, Cut-off: 2016-12-31 (bk 446017, tx 183759444), 12M addrs:
+  - txo/date:   40" ( 373620064 rows (  12"))
+  - vout/tx:  4'40" ( 530923560 rows (3'35"))
+- alex (700k), Cut-off: 2020-12-31 (bk 663886, tx 601532548), 33M addrs
+  - txo/date: 1'33" ( 312140824 rows (   6"))
+  - vout/tx:  2'59" (1850391428 rows (  45"))
+  - vout/tx:  1'34" (tx=183759444)
+
 ## `refresh_bk_stat.sql`
 
 Alex:
@@ -9,7 +36,7 @@ Alex:
 100|  | 02:07:38
 450|  | 07:00:00
 
-## q_addr_x:
+## q\_addr\_x:
 - PR: date=2016-12-01..2016-12-31, num=20/10^12
 - Alex: date=2020-12-01..2020-12-31, num=20/10^12
 

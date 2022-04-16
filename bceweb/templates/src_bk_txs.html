@@ -8,7 +8,7 @@
         (<a href="{{ url_for('bceweb.src_bk', bk=block.id) }}"> info </a>)
     </h1>
     <p>
-        Block # {{ block.id }} (<a href="{{ url_for('bceweb.src_date_bks', d=block.datime.date().isoformat()) }}"> {{ block.datime }} </a>)
+        Block # {{ block.id }} (<a href="{{ url_for('bceweb.src_date', d=block.datime.date().isoformat()) }}"> {{ block.datime }} </a>)
         <a href="https://www.blockchain.com/btc/block/{{ block.id }}" target="_blank" rel="noopener noreferrer">
             <img alt="blockchain.com" src="{{ url_for('static', filename='bmp/blockchain.com-16x16.png') }}"/>
         </a>

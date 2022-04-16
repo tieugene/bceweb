@@ -1,0 +1,22 @@
+digraph bceweb {
+
+  h [label="/"];
+  y [label="/y/"];
+  Y [label="/y/YY/"];
+  M [label="/m/YYMM/"];
+  D [label="/d/YYMMDD/"];
+  b [label="/b/"];
+  B [label="/b/BBBBBB/"];
+  q [label="/q/"];
+  Q [label="/q/QQ/"];
+  i [label="/i/"];
+
+  h -> {y, b, q, i};
+  y -> Y;
+  Y -> {Y, M, D};
+  M -> {Y, M, D};
+  D -> {Y, M, D, B};
+  B -> {Y, M, D, B};
+  b -> B -> b;
+  q -> Q -> q;
+}

@@ -5,7 +5,7 @@
 {% block body %}
     <h1> TX vins </h1>
     <p>
-        Block # <a href="{{ url_for('bceweb.src_bk_txs', bk=block.id) }}"> {{ block.id }} </a> (<a href="{{ url_for('bceweb.src_date_bks', d=block.datime.date().isoformat()) }}"> {{ block.datime }} </a>)
+        Block # <a href="{{ url_for('bceweb.src_bk_txs', bk=block.id) }}"> {{ block.id }} </a> (<a href="{{ url_for('bceweb.src_date', d=block.datime.date().isoformat()) }}"> {{ block.datime }} </a>)
         <a href="https://www.blockchain.com/btc/block/{{ block.id }}" target="_blank" rel="noopener noreferrer">
             <img alt="blockchain.com" src="{{ url_for('static', filename='bmp/blockchain.com-16x16.png') }}"/>
         </a>

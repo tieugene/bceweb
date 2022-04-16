@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %} Year {{ data.year }} {% endblock %}
+{% block head %}
+{% endblock %}
+{% block body %}
+    <h1> Year {{ data.year }} </h1>
+    {% for y in range(2009, data.max_year + 1) %}
+        <a href="{{ url_for('bceweb.src_year', y=y) }}"> {{ y }} </a>
+    {% endfor %}
+    <table class="thick">
+    {% for m in data.months %}
+        <tr><th><a href="{{ url_for('bceweb.src_month', y=y, m=loop.index) }}">{{ "%02d" | format(loop.index) }}</a></th>
+        {% for d in m %}
+            <td> {% if d %} {{ "%02d" | format(d) }} {% else %} - {% endif %} </td>
+        {% endfor %}
+        </tr>
+    {% endfor %}
+    </table>
+{% endblock %}
