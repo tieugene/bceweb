@@ -1,8 +1,19 @@
 SELECT
    id,
    datime,
-   (SELECT COUNT(*) FROM tx WHERE tx.b_id = bk.id GROUP BY bk.id) AS tx_num
-FROM bk
-WHERE DATE(datime) = '{date}'
+   tx_num,
+   so_num,
+   so_sum,
+   lo_num,
+   lo_sum,
+   uo_num,
+   uo_sum,
+   price,
+   total
+FROM (
+    SELECT * FROM bk
+    WHERE DATE(datime) = '{date}'
+) AS blocks
+LEFT JOIN t_stat_bk ON t_stat_bk.b_id = blocks.id
 ORDER BY id
 OFFSET {offset} LIMIT {limit};

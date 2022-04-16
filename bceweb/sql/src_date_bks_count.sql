@@ -1,1 +1,1 @@
-SELECT COUNT(*) AS num FROM bk WHERE DATE(datime) = '{date}';
+SELECT COUNT(*) FROM bk WHERE DATE(datime) = '{date}';

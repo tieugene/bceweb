@@ -3,20 +3,52 @@
 {% block head %}
 {% endblock %}
 {% block body %}
-    <h1> Blocks on {{ date }} </h1>
+    <h1> Date
+        <button type="button"> {% if data.date.day > 1 %} <a href="{{ url_for('bceweb.src_date', y=data.date.year, m=data.date.month, d=1) }}"> &larrb; </a> {% else %} &larrb; {% endif %} </button>
+        <button type="button"> {% if data.date.day > 1 %} <a href="{{ url_for('bceweb.src_date', y=data.date.year, m=data.date.month, d=data.date.day - 1) }}"> &larr; {% else %} &larr; {% endif %} </a> </button>
+        <a href="{{ url_for('bceweb.src_year', y=data.date.year) }}">{{ data.date.year }}</a>-<a href="{{ url_for('bceweb.src_month', y=data.date.year, m=data.date.month) }}">{{ "%02d" | format(data.date.month) }}</a>-{{ "%02d" | format(data.date.day) }}
+        <button type="button"> {% if data.date.day < data.max_dom %} <a href="{{ url_for('bceweb.src_date', y=data.date.year, m=data.date.month, d=data.date.day + 1) }}"> &rarr; </a> {% else %} &rarr; {% endif %} </button>
+        <button type="button"> {% if data.date.day < data.max_dom %} <a href="{{ url_for('bceweb.src_date', y=data.date.year, m=data.date.month, d=data.max_dom) }}"> &rarrb; </a> {% else %} &rarrb; {% endif %} </button>
+    </h1>
     {% include 'pager.html' %}
     <table class="thick">
-    <thead><tr><th> Block </th><th> DateTime </th><th> TXs </th></tr></thead>
-    {% for rec in data %}
+    <thead>
+        <tr>
+            <th rowspan="2"> Block </th>
+            <th rowspan="2"> Time </th>
+            <th colspan="4"> # </th>
+            <th colspan="5"> &#8383; </th>
+        </tr>
+        <tr>
+            <th> TXs </th>
+            <th> So </th>
+            <th> Lo </th>
+            <th> Uo </th>
+            <th> So </th>
+            <th> Lo </th>
+            <th> Uo </th>
+            <th> Price </th>
+            <th> Total </th>
+        </tr>
+    </thead>
+    {% for rec in data.blocks %}
         <tr>
             <td class="right">
                 <a href="{{ url_for('bceweb.src_bk', bk=rec.id) }}"> {{ rec.id }} </a>
                 <a href="https://www.blockchain.com/btc/block/{{ rec.id }}" target="_blank" rel="noopener noreferrer">
-                    <img alt="blockcjain.com" src="{{ url_for('static', filename='bmp/blockchain.com-16x16.png') }}"/>
+                    <img alt="blockchain.com" src="{{ url_for('static', filename='bmp/blockchain.com-16x16.png') }}"/>
                 </a>
             </td>
-            <td> {{ rec.datime }} </td>
-            <td class="right"> {{ rec.tx_num }} </td>
+            <td> {{ rec.datime.time() }} </td>
+            <td class="right"> {{ rec.tx_num|intorna }} </td>
+            <td class="right"> {{ rec.so_num|intorna }} </td>
+            <td class="right"> {{ rec.lo_num|intorna }} </td>
+            <td class="right"> {{ rec.uo_num|intorna }} </td>
+            <td class="right"> {{ rec.so_sum|sa2btc }} </td>
+            <td class="right"> {{ rec.lo_sum|sa2btc }} </td>
+            <td class="right"> {{ rec.uo_sum|sa2btc }} </td>
+            <td class="right"> {{ rec.price|sa2btc }} </td>
+            <td class="right"> {{ rec.total|sa2btc }} </td>
         </tr>
     {% endfor %}
     </table>

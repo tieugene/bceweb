@@ -130,9 +130,7 @@ def src_month(y: int, m: int):
     im = int(m)
     max_year = int(__get_a_value(Qry.get('SRC_MAX_YEAR')))
     max_month = int(__get_a_value(Qry.get('SRC_MAX_MOY').format(year=iy)))
-    qry = Qry.get('SRC_DOM_LIST').format(year=iy, month=im)
-    print(qry)
-    dom_list = __get_records(qry)
+    dom_list = __get_records(Qry.get('SRC_DOM_LIST').format(year=iy, month=im))
     return render_template('src_month.html', data={
         'max_year': max_year,
         'year': iy,
@@ -150,12 +148,19 @@ def src_date(y: int, m: int, d: int):
     :param d: Day of month (1..31)
     :todo: chk y (in db), m (1..12 and in DB), d (1..31 and in month and in DB)
     """
-    date = datetime.date(int(y), int(m), int(d))
+    iy = int(y)
+    im = int(m)
+    date = datetime.date(iy, im, int(d))
+    max_dom = int(__get_a_value(Qry.get('SRC_MAX_DOM').format(year=iy, month=im)))
     pages = math.ceil(__get_a_value(Qry.get('SRC_DATE_BKS_COUNT').format(date=date)) / PAGE_SIZE)
     if (page := request.args.get('page', 1, type=int)) > pages:
         page = pages
-    cur = __get_records(Qry.get('SRC_DATE_BKS').format(date=date, limit=PAGE_SIZE, offset=(page-1) * PAGE_SIZE))
-    return render_template('src_date.html', date=date, data=cur, pager=(page, pages))
+    blocks = __get_records(Qry.get('SRC_DATE_BKS').format(date=date, limit=PAGE_SIZE, offset=(page-1) * PAGE_SIZE))
+    return render_template('src_date.html', pager=(page, pages), data={
+        'max_dom': max_dom,
+        'date': date,
+        'blocks': blocks
+    })
 
 
 @bp.route('/b/', methods=['GET'])
