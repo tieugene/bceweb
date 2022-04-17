@@ -1,27 +1,34 @@
 {% extends "base.html" %}
-{% block title %} Block {{ block.id }}: TXs {% endblock %}
+{% block title %} Block {{ block.id }}: Info {% endblock %}
 {% block head %}
 {% endblock %}
 {% block body %}
+    <h3>
+        <a href="{{ url_for('bceweb.src_year', y=block.datime.year) }}">{{ block.datime.year }}</a>-<a href="{{ url_for('bceweb.src_month', y=block.datime.year, m=block.datime.month) }}">{{ "%02d" | format(block.datime.month) }}</a>-<a href="{{ url_for('bceweb.src_date', y=block.datime.year, m=block.datime.month, d=block.datime.day) }}">{{ "%02d" | format(block.datime.day) }}</a>
+        {{ block.datime.time().isoformat() }}
+    </h3>
     <h1>
-        Block {{ block.id }} info
-        (<a href="{{ url_for('bceweb.src_bk_txs', bk=block.id) }}"> TXs </a>)
-    </h1>
-    <p>
-        Block # {{ block.id }} (<a href="{{ url_for('bceweb.src_date', y=block.datime.year, m=block.datime.month, d=block.datime.day) }}"> {{ block.datime }} </a> {{ block.datime.time().isoformat() }})
+        Block:
+        {% if block.id > 0 %}
+            <a href="{{ url_for('bceweb.src_bk', bk=0) }}"> <img class="svg button" alt="Start" src="{{ url_for('static', filename='svg/fast-backward.svg') }}"/> </a>
+            <a href="{{ url_for('bceweb.src_bk', bk=block.id - 1) }}"> <img class="svg button" alt="Start" src="{{ url_for('static', filename='svg/step-backward.svg') }}"/> </a>
+        {% else %}
+            <img class="svg" alt="Start" src="{{ url_for('static', filename='svg/fast-backward.svg') }}"/>
+            <img class="svg" alt="Start" src="{{ url_for('static', filename='svg/step-backward.svg') }}"/>
+        {% endif %}
+        {{ block.id }}
         <a href="https://www.blockchain.com/btc/block/{{ block.id }}" target="_blank" rel="noopener noreferrer">
             <img alt="blockchain.com" src="{{ url_for('static', filename='bmp/blockchain.com-16x16.png') }}"/>
         </a>
-    </p>
-    <!-- pager -->
-    <p>
-        <button type="button"> {% if block.id > 0 %} <a href="{{ url_for('bceweb.src_bk', bk=0) }}"> &larrb; </a> {% else %} &larrb; {% endif %} </button>
-        <button type="button"> {% if block.id > 0 %} <a href="{{ url_for('bceweb.src_bk', bk=block.id-1) }}"> &larr; {% else %} &larr; {% endif %} </a> </button>
-        Page {{ block.id }} / {{ bk_max }}
-        <button type="button"> {% if block.id < bk_max %} <a href="{{ url_for('bceweb.src_bk', bk=block.id+1) }}"> &rarr; </a> {% else %} &rarr; {% endif %} </button>
-        <button type="button"> {% if block.id < bk_max %} <a href="{{ url_for('bceweb.src_bk', bk=bk_max) }}"> &rarrb; </a> {% else %} &rarrb; {% endif %} </button>
-    </p>
-    <!-- /pager -->
+        {% if block.id < bk_max %}
+            <a href="{{ url_for('bceweb.src_bk', bk=block.id+1) }}"> <img class="svg button" alt="Start" src="{{ url_for('static', filename='svg/step-forward.svg') }}"/> </a>
+            <a href="{{ url_for('bceweb.src_bk', bk=bk_max) }}"> <img class="svg button" alt="Start" src="{{ url_for('static', filename='svg/fast-forward.svg') }}"/> </a>
+        {% else %}
+            <img class="svg" alt="Start" src="{{ url_for('static', filename='svg/step-forward.svg') }}"/>
+            <img class="svg" alt="Start" src="{{ url_for('static', filename='svg/fast-forward.svg') }}"/>
+        {% endif %}
+    /<sub>{{ bk_max }}</sub> </h1>
+    <h2> Info (<a href="{{ url_for('bceweb.src_bk_txs', bk=block.id) }}">TXs</a>) </h2>
     {% if block.tx_num is none %}
     <h2> Stat n/a </h2>
     {% else %}

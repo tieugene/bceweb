@@ -18,29 +18,19 @@
 	{% endwith %}
     <p>
         <a href="{{ url_for('bceweb.index') }}">
-            <button type="button" title="Home">
-                <img class="svg" alt="Home" src="{{ url_for('static', filename='svg/home.svg') }}"/>
-            </button>
+            <img class="svg button" alt="Home" src="{{ url_for('static', filename='svg/home.svg') }}"/>
         </a>
         <a href="{{ url_for('bceweb.src_years') }}">
-            <button type="button" title="Years">
-                <img class="svg" alt="Years" src="{{ url_for('static', filename='svg/calendar.svg') }}"/>
-            </button>
+            <img class="svg button" alt="Years" src="{{ url_for('static', filename='svg/calendar.svg') }}"/>
         </a>
         <a href="{{ url_for('bceweb.src_bk_list') }}">
-            <button type="button" title="Blocks">
-                <img class="svg" alt="Blocks" src="{{ url_for('static', filename='svg/sitemap.svg') }}"/>
-            </button>
+            <img class="svg button" alt="Blocks" src="{{ url_for('static', filename='svg/sitemap.svg') }}"/>
         </a>
         <a href="{{ url_for('bceweb.q_index') }}">
-            <button type="button" title="Queries">
-                <img class="svg" alt="Queries" src="{{ url_for('static', filename='svg/calculator.svg') }}"/>
-            </button>
+            <img class="svg button" alt="Queries" src="{{ url_for('static', filename='svg/calculator.svg') }}"/>
         </a>
         <a href="{{ url_for('bceweb.info') }}">
-            <button type="button" title="Info (TODO)">
-                <img class="svg" alt="Info" src="{{ url_for('static', filename='svg/info.svg') }}"/>
-            </button>
+            <img class="svg button" alt="Info" src="{{ url_for('static', filename='svg/info.svg') }}"/>
         </a>
     </p>
     {% block body %}{% endblock %}

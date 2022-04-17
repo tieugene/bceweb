@@ -2,9 +2,9 @@ digraph bceweb {
 
   h [label="/"];
   y [label="/y/"];
-  Y [label="/y/YY/"];
-  M [label="/m/YYMM/"];
-  D [label="/d/YYMMDD/"];
+  Y [label="/y/YYYY/"];
+  M [label="/m/YYYY/MM/"];
+  D [label="/d/YYYY/MM/DD/"];
   b [label="/b/"];
   B [label="/b/BBBBBB/"];
   q [label="/q/"];
@@ -18,5 +18,9 @@ digraph bceweb {
   D -> {Y, M, D, B};
   B -> {Y, M, D, B};
   b -> B -> b;
+  B -> Bt -> B;
+  Bt -> {ti, to} -> Bt;
+  ti -> to -> ti;
+  {ti, to} -> a -> {ti, to};
   q -> Q -> q;
 }

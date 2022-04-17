@@ -8,7 +8,10 @@
         <a class="button mono" href="{{ url_for('bceweb.src_year', y=y) }}">{{ y }}</a>
     {% endfor %}
     </p>
-    <h1> Year {{ data.year }} </h1>
+    <h1>
+        Year:
+        {{ data.year }}
+    </h1>
     <table class="thick">
     {% for m in data.months %}
         {% set mon = loop.index %}

@@ -9,11 +9,21 @@
     {% endfor %}
     </p>
     <h1>
-        <button type="button"> {% if data.month > 1 %} <a href="{{ url_for('bceweb.src_month', y=data.year, m=1) }}"> &larrb; </a> {% else %} &larrb; {% endif %} </button>
-        <button type="button"> {% if data.month > 1 %} <a href="{{ url_for('bceweb.src_month', y=data.year, m=data.month - 1) }}"> &larr; {% else %} &larr; {% endif %} </a> </button>
-        Month <a class="button mono" href="{{ url_for('bceweb.src_year', y=data.year) }}">{{ data.year }}</a>-{{ "%02d" | format(data.month) }}
-        <button type="button"> {% if data.month < data.max_month %} <a href="{{ url_for('bceweb.src_month', y=data.year, m=data.month + 1) }}"> &rarr; </a> {% else %} &rarr; {% endif %} </button>
-        <button type="button"> {% if data.month < data.max_month %} <a href="{{ url_for('bceweb.src_month', y=data.year, m=data.max_month) }}"> &rarrb; </a> {% else %} &rarrb; {% endif %} </button>
+         {% if data.month > 1 %}
+             <a href="{{ url_for('bceweb.src_month', y=data.year, m=1) }}"> <img class="svg button" alt="Start" src="{{ url_for('static', filename='svg/fast-backward.svg') }}"/> </a>
+             <a href="{{ url_for('bceweb.src_month', y=data.year, m=data.month - 1) }}"> <img class="svg button" alt="Start" src="{{ url_for('static', filename='svg/step-backward.svg') }}"/> </a>
+        {% else %}
+            <img class="svg" alt="Start" src="{{ url_for('static', filename='svg/fast-backward.svg') }}"/>
+            <img class="svg" alt="Start" src="{{ url_for('static', filename='svg/step-backward.svg') }}"/>
+        {% endif %}
+        Month <a href="{{ url_for('bceweb.src_year', y=data.year) }}">{{ data.year }}</a>-{{ "%02d" | format(data.month) }}
+        {% if data.month < data.max_month %}
+            <a href="{{ url_for('bceweb.src_month', y=data.year, m=data.month + 1) }}"> <img class="svg button" alt="Start" src="{{ url_for('static', filename='svg/step-forward.svg') }}"/> </a>
+            <a href="{{ url_for('bceweb.src_month', y=data.year, m=data.max_month) }}"> <img class="svg button" alt="Start" src="{{ url_for('static', filename='svg/fast-forward.svg') }}"/> </a>
+        {% else %}
+            <img class="svg" alt="Next" src="{{ url_for('static', filename='svg/step-forward.svg') }}"/>
+            <img class="svg" alt="End" src="{{ url_for('static', filename='svg/fast-forward.svg') }}"/>
+        {% endif %}
     </h1>
     <table class="thick">
     <thead>

@@ -22,24 +22,29 @@ button:hover {
 button {
     text-align: center;
     vertical-align: middle;
-    border-style: solid;
+    border: 1px solid silver;
+    border-radius: 5px;
     cursor: pointer;
     text-decoration: none;
-    border-color: silver;
     background-color: Transparent;  // #F8
 }
 
 button > img {
-    margin-left: auto;
-    margin-right: auto;
+    margin: 0;
 }
 
 img.svg {
+    padding: 3px 5px;
     width: 16px;
 }
 
 img.svg32 {
     width: 32px;
+}
+
+img.button {
+    border: 1px solid silver;
+    border-radius: 5px;
 }
 
 table.thick {
@@ -80,6 +85,10 @@ a.button {
     background-color: whitesmoke;
     // margin: 1px;
     padding: 1px 2px;
+}
+
+a:hover > img {
+    background-color: greenyellow;
 }
 
 .mono {

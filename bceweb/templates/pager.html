@@ -1,7 +1,17 @@
 <p>
-    <button type="button"> {% if pager[0] > 1 %} <a href="?page=1"> &larrb; </a> {% else %} &larrb; {% endif %} </button>
-    <button type="button"> {% if pager[0] > 1 %} <a href="?page={{ pager[0] - 1 }}"> &larr; {% else %} &larr; {% endif %} </a> </button>
-    Page {{ pager[0] }} / {{ pager[1] }}
-    <button type="button"> {% if pager[0] < pager[1] %} <a href="?page={{ pager[0] + 1 }}"> &rarr; </a> {% else %} &rarr; {% endif %} </button>
-    <button type="button"> {% if pager[0] < pager[1] %} <a href="?page={{ pager[1] }}"> &rarrb; </a> {% else %} &rarrb; {% endif %} </button>
+    {% if pager[0] > 1 %}
+        <a href="?page=1"> <img class="svg button" alt="Start" src="{{ url_for('static', filename='svg/fast-backward.svg') }}"/> </a>
+        <a href="?page={{ pager[0] - 1 }}"> <img class="svg button" alt="Prev" src="{{ url_for('static', filename='svg/step-backward.svg') }}"/> </a>
+    {% else %}
+        <img class="svg" alt="Start" src="{{ url_for('static', filename='svg/fast-backward.svg') }}"/>
+        <img class="svg" alt="Prev" src="{{ url_for('static', filename='svg/step-backward.svg') }}"/>
+    {% endif %}
+    Page: {{ pager[0] }} / {{ pager[1] }}
+    {% if pager[0] < pager[1] %}
+        <a href="?page={{ pager[0] + 1 }}"> <img class="svg button" alt="Start" src="{{ url_for('static', filename='svg/step-forward.svg') }}"/> </a>
+        <a href="?page={{ pager[1] }}"> <img class="svg button" alt="Start" src="{{ url_for('static', filename='svg/fast-forward.svg') }}"/> </a>
+    {% else %}
+        <img class="svg" alt="Start" src="{{ url_for('static', filename='svg/step-forward.svg') }}"/>
+        <img class="svg" alt="Start" src="{{ url_for('static', filename='svg/fast-forward.svg') }}"/>
+    {% endif %}
 </p>
