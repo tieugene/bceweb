@@ -21,7 +21,7 @@
             <img alt="blockchain.com" src="{{ url_for('static', filename='bmp/blockchain.com-16x16.png') }}"/>
         </a>
         {% if block.id < bk_max %}
-            <a href="{{ url_for('bceweb.src_bk', bk=block.id+1) }}"> <img class="svg button" alt="Start" src="{{ url_for('static', filename='svg/step-forward.svg') }}"/> </a>
+            <a href="{{ url_for('bceweb.src_bk', bk=block.id + 1) }}"> <img class="svg button" alt="Start" src="{{ url_for('static', filename='svg/step-forward.svg') }}"/> </a>
             <a href="{{ url_for('bceweb.src_bk', bk=bk_max) }}"> <img class="svg button" alt="Start" src="{{ url_for('static', filename='svg/fast-forward.svg') }}"/> </a>
         {% else %}
             <img class="svg" alt="Start" src="{{ url_for('static', filename='svg/step-forward.svg') }}"/>

@@ -1,3 +1,4 @@
+{# Calendar of year #}
 {% extends "base.html" %}
 {% block title %} Year {{ data.year }} {% endblock %}
 {% block head %}
@@ -10,7 +11,21 @@
     </p>
     <h1>
         Year:
+        {% if data.year > 2009 %}
+            <a href="{{ url_for('bceweb.src_year', y=2009) }}"> {% include "img/to-beg.html" %} </a>
+            <a href="{{ url_for('bceweb.src_year', y=data.year - 1) }}"> {% include "img/to-prev.html" %} </a>
+        {% else %}
+            {% include "img/to-beg.html" %}
+            {% include "img/to-prev.html" %}
+        {% endif %}
         {{ data.year }}
+        {% if data.year < data.max_year %}
+            <a href="{{ url_for('bceweb.src_year', y=data.year + 1) }}"> {% include "img/to-next.html" %} </a>
+            <a href="{{ url_for('bceweb.src_year', y=data.max_year) }}"> {% include "img/to-end.html" %} </a>
+        {% else %}
+            {% include "img/to-next.html" %}
+            {% include "img/to-end.html" %}
+        {% endif %}
     </h1>
     <table class="thick">
     {% for m in data.months %}

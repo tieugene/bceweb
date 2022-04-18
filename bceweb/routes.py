@@ -73,7 +73,7 @@ def __get_records(q: str, data: dict = None):
 @bp.add_app_template_filter
 def intorna(i: Optional[int]) -> str:
     """Convert int to str or 'n/a'."""
-    return str(i) if i is not None else 'n/a'
+    return "{:,}".format(i).replace(',', ' ') if i is not None else 'n/a'
 
 
 @bp.add_app_template_filter
