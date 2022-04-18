@@ -10,7 +10,7 @@
         <tr>
             <th rowspan="2"> Block </th>
             <th rowspan="2"> DateTime </th>
-            <th colspan="4"> Per block </th>
+            <th colspan="4"> Current </th>
             <th colspan="4"> Cumulative </th>
         </tr>
         <tr>
@@ -33,14 +33,14 @@
                 </a>
             </td>
             <td> {{ rec.datime }} </td>
-            <td class="right"> {{ rec.tx_num }} </td>
-            <td class="right"> {{ rec.so_num }} </td>
-            <td class="right"> {{ rec.lo_num }} </td>
-            <td class="right"> {{ rec.uo_num }} </td>
-            <td class="right"> {{ rec.tx_num_inc }} </td>
-            <td class="right"> {{ rec.so_num_inc }} </td>
-            <td class="right"> {{ rec.lo_num_inc }} </td>
-            <td class="right"> {{ rec.uo_num_inc }} </td>
+            <td class="right"> {{ rec.tx_num|intorna }} </td>
+            <td class="right"> {{ rec.so_num|intorna }} </td>
+            <td class="right"> {{ rec.lo_num|intorna }} </td>
+            <td class="right"> {{ rec.uo_num|intorna }} </td>
+            <td class="right"> {{ rec.tx_num_inc|intorna }} </td>
+            <td class="right"> {{ rec.so_num_inc|intorna }} </td>
+            <td class="right"> {{ rec.lo_num_inc|intorna }} </td>
+            <td class="right"> {{ rec.uo_num_inc|intorna }} </td>
         </tr>
     {% endfor %}
     </table>
