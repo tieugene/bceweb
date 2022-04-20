@@ -246,9 +246,7 @@ def src_addr(aid: int):
 
 @bp.route('/i/', methods=['GET'])
 def info():
-    data = dict()
-    data['bk'] = __get_a_record(Qry.get('INFO_BK'))
-    data['stat_bk'] = __get_a_record(Qry.get('INFO_STAT_BK'))
+    data = __get_a_record(Qry.get('INFO'))
     return render_template('info.html', data=data)
 
 
