@@ -11,13 +11,15 @@ import sys
 
 import psycopg2
 import psycopg2.extras
-from flask import Blueprint, render_template, request, send_file, g, current_app
+from flask import Blueprint, render_template, request, send_file, g, current_app, session, redirect, url_for
 
 # 3. local
 from . import forms, xlstore
 from .queries import Qry
 
+# consts
 PAGE_SIZE = 25
+COOKEY_YEAR = 'year'
 
 bp = Blueprint('bceweb', __name__)
 
@@ -92,7 +94,9 @@ def index():
 def src_years():
     # TODO: redirect
     max_year = int(__get_a_value(Qry.get('SRC_MAX_YEAR')))  # FIXME: what if None
-    return render_template('src_years.html', data={'max_year': max_year})
+    if COOKEY_YEAR not in session or (y := session.get(COOKEY_YEAR)) > max_year:
+        y = 2009
+    return redirect(url_for('bceweb.src_year', y=y))
 
 
 @bp.route('/y/<int:y>/', methods=['GET'])
@@ -105,6 +109,8 @@ def src_year(y: int):
     """
     max_year = int(__get_a_value(Qry.get('SRC_MAX_YEAR')))
     iy = int(y)
+    if COOKEY_YEAR in session and session.get(COOKEY_YEAR) != iy:
+        session[COOKEY_YEAR] = iy
     max_doy: datetime.date = __get_a_value(Qry.get('SRC_MAX_DOY').format(year=iy))
     # print(max_doy)
     months = []
