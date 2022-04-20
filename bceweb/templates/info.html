@@ -4,10 +4,10 @@
 {% endblock %}
 {% block body %}
     <h1> Info </h1>
-    <p> <b> Max block: </b> #{{ data.bk.id_max }} ({{ data.bk.datime_max }} </p>
-    <p> Stat_BK: </p>
     <table>
-        <tr> <th> Vouts: </th> <td> {# data.txo.d0_min }}&hellip;{{ data.txo.d0_max #} </td> </tr>
-        <tr> <th> Vins:&nbsp; </th> <td> {# data.txo.d1_min }}&hellip;{{ data.txo.d1_max #} </td> </tr>
+        <tr> <th> BK max: </th> <td> {{ data.bk_id_max }} ({{ data.bk_datime_max }}) </td> </tr>
+        <tr> <th> Stat_BK max: </th> <td> {{ data.stat_bk_max }} </td> </tr>
+        <tr> <th> Stat_Date max: </th> <td> {{ data.stat_date_max }} </td> </tr>
+        <tr> <th> Tail: </th> <td> {{ data.tail_date_min }}&hellip;{{ data.tail_date_max }} </td> </tr>
     </table>
 {% endblock %}

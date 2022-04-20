@@ -11,13 +11,15 @@ import sys
 
 import psycopg2
 import psycopg2.extras
-from flask import Blueprint, render_template, request, send_file, g, current_app
+from flask import Blueprint, render_template, request, send_file, g, current_app, session, redirect, url_for
 
 # 3. local
 from . import forms, xlstore
 from .queries import Qry
 
+# consts
 PAGE_SIZE = 25
+COOKEY_YEAR = 'year'
 
 bp = Blueprint('bceweb', __name__)
 
@@ -92,7 +94,9 @@ def index():
 def src_years():
     # TODO: redirect
     max_year = int(__get_a_value(Qry.get('SRC_MAX_YEAR')))  # FIXME: what if None
-    return render_template('src_years.html', data={'max_year': max_year})
+    if COOKEY_YEAR not in session or (y := session.get(COOKEY_YEAR)) > max_year:
+        y = 2009
+    return redirect(url_for('bceweb.src_year', y=y))
 
 
 @bp.route('/y/<int:y>/', methods=['GET'])
@@ -105,6 +109,8 @@ def src_year(y: int):
     """
     max_year = int(__get_a_value(Qry.get('SRC_MAX_YEAR')))
     iy = int(y)
+    if COOKEY_YEAR in session and session.get(COOKEY_YEAR) != iy:
+        session[COOKEY_YEAR] = iy
     max_doy: datetime.date = __get_a_value(Qry.get('SRC_MAX_DOY').format(year=iy))
     # print(max_doy)
     months = []
@@ -152,15 +158,20 @@ def src_date(y: int, m: int, d: int):
     im = int(m)
     date = datetime.date(iy, im, int(d))
     max_dom = int(__get_a_value(Qry.get('SRC_MAX_DOM').format(year=iy, month=im)))
+    return render_template('src_date.html', data={'max_dom': max_dom, 'date': date})
+
+
+@bp.route('/d/<int:y>/<int:m>/<int:d>/b/', methods=['GET'])
+def src_date_blocks(y: int, m: int, d: int):
+    iy = int(y)
+    im = int(m)
+    date = datetime.date(iy, im, int(d))
+    max_dom = int(__get_a_value(Qry.get('SRC_MAX_DOM').format(year=iy, month=im)))
     pages = math.ceil(__get_a_value(Qry.get('SRC_DATE_BKS_COUNT').format(date=date)) / PAGE_SIZE)
     if (page := request.args.get('page', 1, type=int)) > pages:
         page = pages
     blocks = __get_records(Qry.get('SRC_DATE_BKS').format(date=date, limit=PAGE_SIZE, offset=(page - 1) * PAGE_SIZE))
-    return render_template('src_date.html', pager=(page, pages), data={
-        'max_dom': max_dom,
-        'date': date,
-        'blocks': blocks
-    })
+    return render_template('src_date_frame.html', pager=(page, pages), data={'blocks': blocks})
 
 
 @bp.route('/b/', methods=['GET'])
@@ -240,9 +251,7 @@ def src_addr(aid: int):
 
 @bp.route('/i/', methods=['GET'])
 def info():
-    data = dict()
-    data['bk'] = __get_a_record(Qry.get('INFO_BK'))
-    data['stat_bk'] = __get_a_record(Qry.get('INFO_STAT_BK'))
+    data = __get_a_record(Qry.get('INFO'))
     return render_template('info.html', data=data)
 
 
@@ -279,7 +288,8 @@ def __q_addr_x_y_tx(formclass, title: str, head: Tuple[str], qry_name: str, tpl_
         # TODO: dates to txs
         txs = __get_a_record(Qry.get('SRC_TXS_BY_DATES').format(date0=date0 or date1, date1=date1))
         time0 = __now()
-        cur = __get_records(Qry.get(qry_name).format(num=num, tid0=txs[0], tid1=txs[1]))
+        # plan B: table=tail
+        cur = __get_records(Qry.get(qry_name).format(table='vout', num=num, tid0=txs[0], tid1=txs[1]))
         data = cur.fetchall()
         time1 = __now()
         times = (time0, time1)
@@ -296,7 +306,7 @@ def q_addr_btc_max_tx():
         forms.ND0D1Form,
         "Топ {num} адресов по увеличению баланса (₿) за {date0}...{date1}",
         ('a_id', 'Адрес', 'Было', 'Стало', 'Profit'),
-        'Q_ADDR_BTC_MAX_TX',
+        'Q_ADDR_BTC_MAX',
         'q_addr_btc_.html',
         {2, 3, 4}
     )
@@ -309,7 +319,7 @@ def q_addr_btc_min_tx():
         forms.ND0D1Form,
         "Топ {num} адресов по уменьшению баланса (₿) за {date0}...{date1}",
         ('a_id', 'Адрес', 'Было', 'Стало', 'Profit'),
-        'Q_ADDR_BTC_MIN_TX',
+        'Q_ADDR_BTC_MIN',
         'q_addr_btc_.html',
         {2, 3, 4}
     )
@@ -322,7 +332,7 @@ def q_addr_cnt_max_tx():
         forms.ND0D1Form,
         "Топ {num} адресов по увеличению баланса (%) за {date0}...{date1}",
         ('a_id', 'Адрес', 'Было', 'Стало', 'Рост, %'),
-        'Q_ADDR_CNT_MAX_TX',
+        'Q_ADDR_CNT_MAX',
         'q_addr_cnt_.html',
         {2, 3}
     )
@@ -335,7 +345,7 @@ def q_addr_cnt_min_tx():
         forms.ND0D1Form,
         "Топ {num} адресов по уменьшению баланса (%) за {date0}...{date1}",
         ('a_id', 'Адрес', 'Было', 'Стало', 'Рост, %'),
-        'Q_ADDR_CNT_MIN_TX',
+        'Q_ADDR_CNT_MIN',
         'q_addr_cnt_.html',
         {2, 3}
     )
@@ -348,7 +358,7 @@ def q_addr_gt_tx():
         forms.ND1Form,
         "Адреса с балансом > {num} BTC на {date1}",
         ("a_id", "Адрес", "Баланс, ₿"),
-        'Q_ADDR_GT_TX',
+        'Q_ADDR_GT',
         'q_addr_gt.html',
         {2}
     )
