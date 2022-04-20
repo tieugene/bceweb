@@ -279,7 +279,8 @@ def __q_addr_x_y_tx(formclass, title: str, head: Tuple[str], qry_name: str, tpl_
         # TODO: dates to txs
         txs = __get_a_record(Qry.get('SRC_TXS_BY_DATES').format(date0=date0 or date1, date1=date1))
         time0 = __now()
-        cur = __get_records(Qry.get(qry_name).format(num=num, tid0=txs[0], tid1=txs[1]))
+        # plan B: table=tail
+        cur = __get_records(Qry.get(qry_name).format(table='vout', num=num, tid0=txs[0], tid1=txs[1]))
         data = cur.fetchall()
         time1 = __now()
         times = (time0, time1)

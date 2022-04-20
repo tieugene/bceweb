@@ -12,14 +12,14 @@ FROM (
         COALESCE(e.itogo, 0)-b.itogo AS profit
     FROM (
         SELECT a_id, SUM(money) AS itogo
-        FROM vout
+        FROM {table}
         WHERE
             (t_id < '{tid0}')
             AND (t_id_in >= '{tid0}' OR t_id_in IS NULL)
         GROUP BY a_id
     ) AS b LEFT JOIN (
         SELECT a_id, SUM(money) AS itogo
-        FROM vout
+        FROM {table}
         WHERE
             (t_id <= '{tid1}')
             AND (t_id_in > '{tid1}' OR t_id_in IS NULL)

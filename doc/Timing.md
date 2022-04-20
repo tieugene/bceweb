@@ -1,5 +1,18 @@
 # Timing
 
+## 220420
+
+Test queries `addr_*` @ `vout` vs `tail`.
+Limits: 50 @ 2022-02-01..03-31 or 10k @ 2022-03-31 (`gt`)
+
+Query    | vout| tail| %
+---------|-----|-----|---
+`btc_max`| 369 | 227 | 
+`btc_min`| 366 | 215 | 
+`cnt_max`| 379 | 226 | 
+`cnt_min`| --- | 228 | 
+`gt`     | 209 |  90 | 
+
 ## 220303
 Test 4_tx_suco_tmp - count/sum via interim qid table.  
 Stand: Alex, 2016-12-31 (bk 446017, tx 183758064..183759444)

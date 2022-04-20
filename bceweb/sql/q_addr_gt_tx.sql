@@ -4,7 +4,7 @@ SELECT
     itogo
 FROM (
     SELECT a_id, sum(money) as itogo
-    FROM vout
+    FROM {table}
     WHERE
         (t_id < '{tid1}')
         AND (t_id_in >= '{tid1}' OR t_id_in IS NULL)
