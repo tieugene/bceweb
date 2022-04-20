@@ -9,7 +9,7 @@ FROM (
     WHERE
         EXTRACT (YEAR FROM datime) = {year}
         AND EXTRACT (MONTH FROM datime) = {month}
-    GROUP BY d
+    GROUP BY date
 ) AS m
 LEFT JOIN t_stat_date ON t_stat_date.d = m.date
 ORDER BY date;

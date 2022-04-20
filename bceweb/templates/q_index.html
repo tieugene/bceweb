@@ -3,15 +3,6 @@
 {% block head %}
 {% endblock %}
 {% block body %}
-<h1> Queries (txo) </h1>
-<ol>
-    <li> <a href="{{ url_for('bceweb.q_addr_btc_max') }}"> Топ N адресов &uarr;&#8383; за период </a> </li>
-    <li> <a href="{{ url_for('bceweb.q_addr_btc_min') }}"> Топ N адресов &darr;&#8383; за период </a> </li>
-    <li> <a href="{{ url_for('bceweb.q_addr_cnt_max') }}"> Топ N адресов &uarr;% за период </a> </li>
-    <li> <a href="{{ url_for('bceweb.q_addr_cnt_min') }}"> Топ N адресов &darr;% за период </a> </li>
-    <li> <a href="{{ url_for('bceweb.q_addr_gt') }}"> Адреса с балансом > ₿ на дату </a> </li>
-</ol>
-<hr/>
 <h1> Queries (direct) </h1>
 <ol>
     <li> <a href="{{ url_for('bceweb.q_addr_btc_max_tx') }}"> Топ N адресов &uarr;&#8383; за период </a> </li>
