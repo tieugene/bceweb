@@ -297,7 +297,7 @@ def q_addr_btc_max_tx():
         forms.ND0D1Form,
         "Топ {num} адресов по увеличению баланса (₿) за {date0}...{date1}",
         ('a_id', 'Адрес', 'Было', 'Стало', 'Profit'),
-        'Q_ADDR_BTC_MAX_TX',
+        'Q_ADDR_BTC_MAX',
         'q_addr_btc_.html',
         {2, 3, 4}
     )
@@ -310,7 +310,7 @@ def q_addr_btc_min_tx():
         forms.ND0D1Form,
         "Топ {num} адресов по уменьшению баланса (₿) за {date0}...{date1}",
         ('a_id', 'Адрес', 'Было', 'Стало', 'Profit'),
-        'Q_ADDR_BTC_MIN_TX',
+        'Q_ADDR_BTC_MIN',
         'q_addr_btc_.html',
         {2, 3, 4}
     )
@@ -323,7 +323,7 @@ def q_addr_cnt_max_tx():
         forms.ND0D1Form,
         "Топ {num} адресов по увеличению баланса (%) за {date0}...{date1}",
         ('a_id', 'Адрес', 'Было', 'Стало', 'Рост, %'),
-        'Q_ADDR_CNT_MAX_TX',
+        'Q_ADDR_CNT_MAX',
         'q_addr_cnt_.html',
         {2, 3}
     )
@@ -336,7 +336,7 @@ def q_addr_cnt_min_tx():
         forms.ND0D1Form,
         "Топ {num} адресов по уменьшению баланса (%) за {date0}...{date1}",
         ('a_id', 'Адрес', 'Было', 'Стало', 'Рост, %'),
-        'Q_ADDR_CNT_MIN_TX',
+        'Q_ADDR_CNT_MIN',
         'q_addr_cnt_.html',
         {2, 3}
     )
@@ -349,7 +349,7 @@ def q_addr_gt_tx():
         forms.ND1Form,
         "Адреса с балансом > {num} BTC на {date1}",
         ("a_id", "Адрес", "Баланс, ₿"),
-        'Q_ADDR_GT_TX',
+        'Q_ADDR_GT',
         'q_addr_gt.html',
         {2}
     )
