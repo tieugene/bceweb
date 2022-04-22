@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %} TX {{ data.tx.id }} {% endblock %}
+{% block head %}
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+        div.two_frames {
+            flex: 1;
+            display: flex;
+            flex-direction: row;
+        }
+        div.aframe {
+            flex:  1;
+            display: flex;
+            flex-direction: column;
+        }
+        iframe {
+            width: 100%;
+            flex-grow: 1;
+        }
+    </style>
+{% endblock %}
+{% block body %}
+<h1>
+    TX:
+    {% if data.tx.id > data.bk.tx_min %}
+        <a href="{{ url_for('bceweb.src_tx', tx=data.bk.tx_min) }}"> {% include "img/to-beg.html" %} </a>
+        <a href="{{ url_for('bceweb.src_tx', tx=data.tx.id - 1) }}"> {% include "img/to-prev.html" %} </a>
+    {% else %}
+        {% include "img/to-beg.html" %}
+        {% include "img/to-prev.html" %}
+    {% endif %}
+    {{ data.tx.id }}
+    <a href="https://www.blockchain.com/btc/tx/{{ data.tx.hash }}" target="_blank" rel="noopener noreferrer">
+        {% include "img/bkchain.html" %}
+    </a>
+    {% if data.tx.id < data.bk.tx_max %}
+        <a href="{{ url_for('bceweb.src_tx', tx=data.tx.id + 1) }}"> {% include "img/to-next.html" %} </a>
+        <a href="{{ url_for('bceweb.src_tx', tx=data.bk.tx_max) }}"> {% include "img/to-end.html" %} </a>
+    {% else %}
+        {% include "img/to-next.html" %}
+        {% include "img/to-end.html" %}
+    {% endif %}
+</h1>
+<h3><i> Block
+    <a href="{{ url_for('bceweb.src_bk', bk=data.tx.b_id) }}"> {{ data.tx.b_id }} </a>
+    ({{ data.tx.datime }}), tx {{ data.bk.tx_min }}&hellip;{{ data.bk.tx_min }}
+</i></h3>
+
+<div class="two_frames">
+    <div class="aframe"><iframe src="{{ url_for('bceweb.src_tx_in', tx=data.tx.id) }}"></iframe></div>
+    <div class="aframe"><iframe src="{{ url_for('bceweb.src_tx_out', tx=data.tx.id) }}"></iframe></div>
+</div>
+
+{% endblock %}

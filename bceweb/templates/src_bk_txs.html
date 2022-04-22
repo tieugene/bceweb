@@ -6,14 +6,16 @@
     <tbody>
     {% for rec in data %}
         <tr>
-            <td class="right"> {{ rec.id }} </td>
+            <td class="right">
+                <a target="_parent" href="{{ url_for('bceweb.src_tx', tx=rec.id) }}"> {{ rec.id }} </a>
+            </td>
             <td> {{ rec.hash }}
                 <a href="https://www.blockchain.com/btc/tx/{{ rec.hash }}" target="_blank" rel="noopener noreferrer">
                     {% include "img/bkchain.html" %}
                 </a>
             </td>
-            <td class="right"> {% if rec.vi_num %} <a href="{{ url_for('bceweb.src_tx_vins', tx=rec.id) }}"> {{ rec.vi_num }} </a> {% else %} {{ rec.vi_num }} {% endif %}</td>
-            <td class="right"> <a href="{{ url_for('bceweb.src_tx_vouts', tx=rec.id) }}"> {{ rec.vo_num }} </a> </td>
+            <td class="right"> {{ rec.vi_num }} </td>
+            <td class="right"> {{ rec.vo_num }} </td>
             <td class="right"> {{ rec.money|sa2btc }} </td>
         </tr>
     {% endfor %}

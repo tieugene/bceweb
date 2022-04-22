@@ -204,7 +204,8 @@ def src_bk(bk: int):
 @bp.route('/b/<int:bk>/t/', methods=['GET'])
 def src_bk_txs(bk: int):
     """Block's TXs"""
-    pages = math.ceil(__get_a_value(Qry.get('SRC_BK_TXS_COUNT').format(bk=bk)) / PAGE_SIZE)
+    tx_stat = __get_a_record(Qry.get('SRC_BK_TXS_STAT').format(bk=bk))
+    pages = math.ceil(tx_stat.tx_num / PAGE_SIZE)
     if (page := request.args.get('page', 1, type=int)) > pages:
         page = pages
     block = __get_a_record(Qry.get('SRC_BK').format(bk=bk))
@@ -212,30 +213,33 @@ def src_bk_txs(bk: int):
     return render_template('src_bk_txs.html', block=block, data=cur, pager=(page, pages))
 
 
-@bp.route('/t/<int:tx>/i/', methods=['GET'])
-def src_tx_vins(tx: int):
-    """TX's vins"""
+@bp.route('/t/<int:tx>/', methods=['GET'])
+def src_tx(tx: int):
+    itx = int(tx)
+    tx_data = __get_a_record(Qry.get('SRC_TX').format(tx=itx))
+    tx_stat = __get_a_record(Qry.get('SRC_BK_TXS_STAT').format(bk=tx_data.b_id))
+    print(tx_stat)
+    return render_template('src_tx.html', data={'tx': tx_data, 'bk': tx_stat})
+
+
+@bp.route('/t/<int:tx>/in/', methods=['GET'])
+def src_tx_in(tx: int):
     if (pages := math.ceil(__get_a_value(Qry.get('SRC_TX_VINS_COUNT').format(tx=tx)) / PAGE_SIZE)) == 0:
         pages = 1
     if (page := request.args.get('page', 1, type=int)) > pages:
         page = pages
-    tx_rec = __get_a_record(Qry.get('SRC_TX').format(tx=tx))
-    block = __get_a_record(Qry.get('SRC_BK').format(bk=tx_rec[1]))  # ! not 'b_id'
     cur = __get_records(Qry.get('SRC_TX_VINS').format(tx=tx, limit=PAGE_SIZE, offset=(page - 1) * PAGE_SIZE))
-    return render_template('src_tx_vins.html', block=block, tx=tx_rec, data=cur, pager=(page, pages))
+    return render_template('src_tx_in.html', data=cur, pager=(page, pages))
 
 
-@bp.route('/t/<int:tx>/o/', methods=['GET'])
-def src_tx_vouts(tx: int):
-    """TX's vouts"""
+@bp.route('/t/<int:tx>/out/', methods=['GET'])
+def src_tx_out(tx: int):
     if (pages := math.ceil(__get_a_value(Qry.get('SRC_TX_VOUTS_COUNT').format(tx=tx)) / PAGE_SIZE)) == 0:
         pages = 1
     if (page := request.args.get('page', 1, type=int)) > pages:
         page = pages
-    tx_rec = __get_a_record(Qry.get('SRC_TX').format(tx=tx))
-    block = __get_a_record(Qry.get('SRC_BK').format(bk=tx_rec[1]))  # ! not 'b_id'
     cur = __get_records(Qry.get('SRC_TX_VOUTS').format(tx=tx, limit=PAGE_SIZE, offset=(page - 1) * PAGE_SIZE))
-    return render_template('src_tx_vouts.html', block=block, tx=tx_rec, data=cur, pager=(page, pages))
+    return render_template('src_tx_out.html', data=cur, pager=(page, pages))
 
 
 @bp.route('/a/<int:aid>/', methods=['GET'])

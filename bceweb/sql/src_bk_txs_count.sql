@@ -1,1 +1,0 @@
-SELECT COUNT(*) AS num FROM tx WHERE b_id = {bk};
