@@ -4,7 +4,7 @@
 }
 
 html, body {
-    height: 100%;
+    height: 100vh;
 }
 
 a {
@@ -29,6 +29,21 @@ button {
     background-color: Transparent;  // #F8
 }
 
+.button {
+    border: 1px solid silver;
+    border-radius: 5px;
+}
+
+a.button {
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    text-decoration: none;
+    background-color: whitesmoke;
+    // margin: 1px;
+    padding: 1px 2px;
+}
+
 button > img {
     margin: 0;
 }
@@ -40,11 +55,6 @@ img.svg {
 
 img.svg32 {
     width: 32px;
-}
-
-img.button {
-    border: 1px solid silver;
-    border-radius: 5px;
 }
 
 table.thick {
@@ -73,18 +83,6 @@ td.mini {
 
 td.right {
     text-align: right;
-}
-
-a.button {
-    border: 1px solid grey;
-    border-radius: 5px;
-    text-align: center;
-    vertical-align: middle;
-    cursor: pointer;
-    text-decoration: none;
-    background-color: whitesmoke;
-    // margin: 1px;
-    padding: 1px 2px;
 }
 
 a > img {

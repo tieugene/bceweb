@@ -1,18 +1,5 @@
-{% extends "base.html" %}
-{% block title %} Block {{ block.id }}: TXs {% endblock %}
-{% block head %}
-{% endblock %}
+{% extends "frame.html" %}
 {% block body %}
-    <h1>
-        Block {{ block.id }} TXs
-        (<a href="{{ url_for('bceweb.src_bk', bk=block.id) }}"> info </a>)
-    </h1>
-    <p>
-        Block # {{ block.id }} (<a href="{{ url_for('bceweb.src_date', y=block.datime.date().year, m=block.datime.date().month, d=block.datime.date().day) }}"> {{ block.datime }} </a>)
-        <a href="https://www.blockchain.com/btc/block/{{ block.id }}" target="_blank" rel="noopener noreferrer">
-            <img alt="blockchain.com" src="{{ url_for('static', filename='bmp/blockchain.com-16x16.png') }}"/>
-        </a>
-    </p>
     {% include 'pager.html' %}
     <table class="thick">
     <thead><tr><th> ID </th><th> Hash </th><th> Vins </th><th> Vouts </th><th> &#8383; </th></tr></thead>
@@ -22,7 +9,7 @@
             <td class="right"> {{ rec.id }} </td>
             <td> {{ rec.hash }}
                 <a href="https://www.blockchain.com/btc/tx/{{ rec.hash }}" target="_blank" rel="noopener noreferrer">
-                    <img alt="blockchain.com" src="{{ url_for('static', filename='bmp/blockchain.com-16x16.png') }}"/>
+                    {% include "img/bkchain.html" %}
                 </a>
             </td>
             <td class="right"> {% if rec.vi_num %} <a href="{{ url_for('bceweb.src_tx_vins', tx=rec.id) }}"> {{ rec.vi_num }} </a> {% else %} {{ rec.vi_num }} {% endif %}</td>
