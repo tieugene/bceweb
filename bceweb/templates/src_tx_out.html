@@ -6,7 +6,7 @@
     {% for rec in data %}
         <tr>
             <td class="right"> {{ rec.n }} </td>
-            <td class="right"> {% if rec.t_id_in %}  <a target="_parent" href="{{ url_for('bceweb.src_tx_vins', tx=rec.t_id_in) }}"> {{ rec.t_id_in }} </a> {% endif %} </td>
+            <td class="right"> {% if rec.t_id_in %}  <a target="_parent" href="{{ url_for('bceweb.src_tx', tx=rec.t_id_in) }}"> {{ rec.t_id_in }} </a> {% endif %} </td>
             <td class="right"> {{ rec.money|sa2btc }} </td>
             <td class="right"> {% if rec.a_id %}
                 <a target="_parent" href="{{ url_for('bceweb.src_addr', aid=rec.a_id) }}"> {{ rec.a_id }} </a>
