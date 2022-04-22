@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+{% block title %} Block {{ block.id }}: Info {% endblock %}
+{% block head %}
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+        iframe#tab_txs_content {
+            width: 100%;
+            flex-grow: 1;
+        }
+        input[type="radio"] + label {
+            background-color: gainsboro;
+        }
+        /* Navigation */
+        input[type="radio"] { display: none;}
+        input[type="radio"]:checked + label { display: none;}
+        input[type="radio"] ~ .tab_content { display: none; }
+        #tab_info:checked ~ #tab_info_content,
+        #tab_txs:checked ~ #tab_txs_content { display: block; }
+    </style>
+{% endblock %}
+{% block body %}
+<h1>
+    Block:
+    {% if block.id > 0 %}
+        <a href="{{ url_for('bceweb.src_bk', bk=0) }}"> <img class="svg button" alt="Start" src="{{ url_for('static', filename='svg/fast-backward.svg') }}"/> </a>
+        <a href="{{ url_for('bceweb.src_bk', bk=block.id - 1) }}"> <img class="svg button" alt="Start" src="{{ url_for('static', filename='svg/step-backward.svg') }}"/> </a>
+    {% else %}
+        <img class="svg" alt="Start" src="{{ url_for('static', filename='svg/fast-backward.svg') }}"/>
+        <img class="svg" alt="Start" src="{{ url_for('static', filename='svg/step-backward.svg') }}"/>
+    {% endif %}
+    {{ block.id }}
+    <a href="https://www.blockchain.com/btc/block/{{ block.id }}" target="_blank" rel="noopener noreferrer">
+        {% include "img/bkchain.html" %}
+    </a>
+    {% if block.id < bk_max %}
+        <a href="{{ url_for('bceweb.src_bk', bk=block.id + 1) }}"> <img class="svg button" alt="Start" src="{{ url_for('static', filename='svg/step-forward.svg') }}"/> </a>
+        <a href="{{ url_for('bceweb.src_bk', bk=bk_max) }}"> <img class="svg button" alt="Start" src="{{ url_for('static', filename='svg/fast-forward.svg') }}"/> </a>
+    {% else %}
+        <img class="svg" alt="Start" src="{{ url_for('static', filename='svg/step-forward.svg') }}"/>
+        <img class="svg" alt="Start" src="{{ url_for('static', filename='svg/fast-forward.svg') }}"/>
+    {% endif %}
+</h1>
+
+<input type="radio" name="tabs" class="tab_radio" id="tab_info" checked />
+<label for="tab_info"> Show Info &rArr; </label>
+<input type="radio" name="tabs" class="tab_radio" id="tab_txs" />
+<label for="tab_txs"> Show TXs &rArr; </label>
+
+<table class="tab_content thick" id="tab_info_content">
+    <tr>
+        <th> Block: </th>
+        <td colspan="2"> {{ block.id }} / {{ bk_max }} </td>
+    </tr>
+    <tr>
+        <th> DateTime: </th>
+        <td colspan="2">
+            <a href="{{ url_for('bceweb.src_year', y=block.datime.year) }}">{{ block.datime.year }}</a>-<a href="{{ url_for('bceweb.src_month', y=block.datime.year, m=block.datime.month) }}">{{ "%02d" | format(block.datime.month) }}</a>-<a href="{{ url_for('bceweb.src_date', y=block.datime.year, m=block.datime.month, d=block.datime.day) }}">{{ "%02d" | format(block.datime.day) }}</a>
+            {{ block.datime.time().isoformat() }}
+        </td>
+    </tr>
+    {% if block.tx_num is none %}
+    <tr> <th colspan="3"> Stat n/a </th></tr>
+    {% else %}
+    <tr>
+        <th> Attribute </th>
+        <th> # </th>
+        <th> &#8383; </th>
+    </tr>
+    <tr>
+        <th> Tx: </th>
+        <td class="right"> {{ block.tx_num }} </td>
+        <td></td>
+    </tr>
+    <tr>
+        <th> So </th>
+        <td class="right"> {{ block.so_num }} </td>
+        <td class="right"> {{ block.so_sum|sa2btc }} </td>
+    </tr>
+    <tr>
+        <th> Lo </th>
+        <td class="right"> {{ block.lo_num }} </td>
+        <td class="right"> {{ block.lo_sum|sa2btc }} </td>
+    </tr>
+    <tr>
+        <th> Uo </th>
+        <td class="right"> {{ block.uo_num }} </td>
+        <td class="right"> {{ block.uo_sum|sa2btc }} </td>
+    </tr>
+    <tr>
+        <th> &Delta; </th>
+        <td></td>
+        <td class="right"> {{ (block.uo_sum - block.so_sum)|sa2btc }} </td>
+    </tr>
+<!-- +_inc -->
+    <tr> <th colspan="3"> &sum;: </th> </tr>
+    <tr>
+        <th> Tx: </th>
+        <td class="right"> {{ block.tx_num_inc }} </td>
+        <td></td>
+    </tr>
+    <tr>
+        <th> So </th>
+        <td class="right"> {{ block.so_num_inc }} </td>
+        <td class="right"> {{ block.so_sum_inc|sa2btc }} </td>
+    </tr>
+    <tr>
+        <th> Lo </th>
+        <td class="right"> {{ block.lo_num_inc }} </td>
+        <td class="right"> {{ block.lo_sum_inc|sa2btc }} </td>
+    </tr>
+    <tr>
+        <th> Uo </th>
+        <td class="right"> {{ block.uo_num_inc }} </td>
+        <td class="right"> {{ block.uo_sum_inc|sa2btc }} </td>
+    </tr>
+<!-- checks -->
+    <tr> <th colspan="3"> Check </th></tr>
+    <tr>
+        <th title="u+l"> TxO </th>
+        <td class="right"> {{ block.uo_num_inc + block.lo_num_inc }}
+        <td class="right"> {{ (block.uo_sum_inc + block.lo_sum_inc)|sa2btc }} </td>
+    </tr>
+    <tr>
+        <th title="s+l"> STxO </th>
+        <td class="right"> {{ block.so_num_inc + block.lo_num_inc }}
+        <td class="right"> {{ (block.so_sum_inc + block.lo_sum_inc)|sa2btc }} </td>
+    </tr>
+    <tr>
+        <th title="u-s"> UTxO </th>
+        <td class="right"> {{ block.uo_num_inc - block.so_num_inc }}
+        <td class="right"> {{ (block.uo_sum_inc - block.so_sum_inc)|sa2btc }} </td>
+    </tr>
+    <tr>
+        <th> Must </th>
+        <td></td>
+        <td class="right"> {{ mustb|sa2btc }} </td>
+    </tr>
+    <tr>
+        <th> &Delta; </th>
+        <td></td>
+        <td class="right"> {{ (mustb - (block.uo_sum_inc - block.so_sum_inc))|sa2btc }} </td>
+    </tr>
+{% endif %}
+</table>
+
+<iframe
+    class="tab_content"
+    id="tab_txs_content"
+    name="frame"
+    width="100%"
+    src="{{ url_for('bceweb.src_bk_txs', bk=block.id) }}">
+</iframe>
+
+{% endblock %}

@@ -1,6 +1,16 @@
 {% extends "base.html" %}
 {% block title %} Date blocks {% endblock %}
 {% block head %}
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+        iframe {
+            width: 100%;
+            flex-grow: 1;
+        }
+    </style>
 {% endblock %}
 {% block body %}
     <h1> Date:
@@ -20,6 +30,7 @@
             {% include "img/to-end.html" %}
         {% endif %}
     </h1>
-    <iframe name="frame" width="100%" height="100%" scrolling="no"
-            src="{{ url_for('bceweb.src_date_blocks', y=data.date.year, m=data.date.month, d=data.date.day) }}"></iframe>
+    <iframe name="frame" width="100%"
+        src="{{ url_for('bceweb.src_date_blocks', y=data.date.year, m=data.date.month, d=data.date.day) }}">
+    </iframe>
 {% endblock %}

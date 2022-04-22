@@ -171,7 +171,7 @@ def src_date_blocks(y: int, m: int, d: int):
     if (page := request.args.get('page', 1, type=int)) > pages:
         page = pages
     blocks = __get_records(Qry.get('SRC_DATE_BKS').format(date=date, limit=PAGE_SIZE, offset=(page - 1) * PAGE_SIZE))
-    return render_template('src_date_frame.html', pager=(page, pages), data={'blocks': blocks})
+    return render_template('src_date_blocks.html', pager=(page, pages), data={'blocks': blocks})
 
 
 @bp.route('/b/', methods=['GET'])
@@ -198,7 +198,7 @@ def src_bk(bk: int):
     ibk = int(bk)
     bk_max = __get_a_value(Qry.get('SRC_BK_MAX'))  # ??? bk_max <> bk_count
     block = __get_a_record(Qry.get('SRC_BK_STAT').format(bk=bk))
-    return render_template('src_bk_stat.html', block=block, bk_max=bk_max, mustb=mustb(ibk))
+    return render_template('src_bk.html', block=block, bk_max=bk_max, mustb=mustb(ibk))
 
 
 @bp.route('/b/<int:bk>/t/', methods=['GET'])
