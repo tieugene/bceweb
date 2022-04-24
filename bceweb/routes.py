@@ -1,6 +1,6 @@
 """Main router"""
 # 1. std
-from typing import Optional, Tuple
+from typing import Optional, Tuple, Type
 import datetime
 import io
 import math
@@ -14,6 +14,8 @@ import psycopg2.extras
 from flask import Blueprint, render_template, request, send_file, g, current_app, session, redirect, url_for
 
 # 3. local
+from flask_wtf import FlaskForm
+
 from . import forms, xlstore
 from .queries import Qry
 
@@ -272,7 +274,8 @@ def get_xl(xl_id: int):
         return send_file(io.BytesIO(data), download_name=f"{xl_id}.xlsx")
 
 
-def __q_addr_x_y_tx(formclass, title: str, head: Tuple[str], qry_name: str, tpl_name: str, btc_cols: set = frozenset):
+def __q_addr_x_y_tx(formclass: Type, title: str, head: Tuple, qry_name: str, tpl_name: str,
+                    btc_cols: set = frozenset[int], use_tail: bool = False):
     """Old queries.
     :param formclass: Form to handle parms
     :param title: Title of auery
@@ -280,6 +283,7 @@ def __q_addr_x_y_tx(formclass, title: str, head: Tuple[str], qry_name: str, tpl_
     :param qry_name: 'sql/q_*' filename
     :param tpl_name: HTML template filename
     :param btc_cols: columns to represent as BTC (devide by 10^-8)
+    :param use_tail: Do use 'tail' table to query (default 'vout')
     """
     form = formclass()
     data = []
@@ -292,12 +296,12 @@ def __q_addr_x_y_tx(formclass, title: str, head: Tuple[str], qry_name: str, tpl_
         # TODO: dates to txs
         txs = __get_a_record(Qry.get('SRC_TXS_BY_DATES').format(date0=date0 or date1, date1=date1))
         time0 = __now()
-        # plan B: table=tail
-        cur = __get_records(Qry.get(qry_name).format(table='vout', num=num, tid0=txs[0], tid1=txs[1]))
+        table = ('vout', 'tail')[int(use_tail)]
+        cur = __get_records(Qry.get(qry_name).format(table=table, num=num, tid0=txs[0], tid1=txs[1]))
         data = cur.fetchall()
         time1 = __now()
         times = (time0, time1)
-        title = title.format(num=num, date0=date0, date1=date1)
+        title = title.format(num=num, date0=date0, date1=date1, table=table)
         meta = {'title': title, 'subject': '', 'created': time1, 'comments': ''}
         xl_id = xlstore.mk_xlsx(meta, head, data, btc_cols)
     return render_template(tpl_name, title=title, head=head, data=data, form=form, times=times, xl_id=xl_id)
@@ -308,11 +312,12 @@ def q_addr_btc_max_tx():
     """Top [num] addresses by gain (₿) in period [fromdate]...[todate]"""
     return __q_addr_x_y_tx(
         forms.ND0D1Form,
-        "Топ {num} адресов по увеличению баланса (₿) за {date0}...{date1}",
+        "Топ {num} адресов по увеличению баланса (₿) за {date0}...{date1} (using {table})",
         ('a_id', 'Адрес', 'Было', 'Стало', 'Profit'),
         'Q_ADDR_BTC_MAX',
         'q_addr_btc_.html',
-        {2, 3, 4}
+        {2, 3, 4},
+        request.args.get('tail') is not None
     )
 
 
@@ -321,11 +326,12 @@ def q_addr_btc_min_tx():
     """Top [num] addresses by lost (₿) in period [fromdate]...[todate]"""
     return __q_addr_x_y_tx(
         forms.ND0D1Form,
-        "Топ {num} адресов по уменьшению баланса (₿) за {date0}...{date1}",
+        "Топ {num} адресов по уменьшению баланса (₿) за {date0}...{date1} (using {table})",
         ('a_id', 'Адрес', 'Было', 'Стало', 'Profit'),
         'Q_ADDR_BTC_MIN',
         'q_addr_btc_.html',
-        {2, 3, 4}
+        {2, 3, 4},
+        request.args.get('tail') is not None
     )
 
 
@@ -334,11 +340,12 @@ def q_addr_cnt_max_tx():
     """Top [num] addresses by gain (%) in period [fromdate]...[todate]"""
     return __q_addr_x_y_tx(
         forms.ND0D1Form,
-        "Топ {num} адресов по увеличению баланса (%) за {date0}...{date1}",
+        "Топ {num} адресов по увеличению баланса (%) за {date0}...{date1} (using {table})",
         ('a_id', 'Адрес', 'Было', 'Стало', 'Рост, %'),
         'Q_ADDR_CNT_MAX',
         'q_addr_cnt_.html',
-        {2, 3}
+        {2, 3},
+        request.args.get('tail') is not None
     )
 
 
@@ -347,11 +354,12 @@ def q_addr_cnt_min_tx():
     """Top [num] addresses by lost (%) in period [fromdate]...[todate]"""
     return __q_addr_x_y_tx(
         forms.ND0D1Form,
-        "Топ {num} адресов по уменьшению баланса (%) за {date0}...{date1}",
+        "Топ {num} адресов по уменьшению баланса (%) за {date0}...{date1} (using {table})",
         ('a_id', 'Адрес', 'Было', 'Стало', 'Рост, %'),
         'Q_ADDR_CNT_MIN',
         'q_addr_cnt_.html',
-        {2, 3}
+        {2, 3},
+        request.args.get('tail') is not None
     )
 
 
@@ -360,9 +368,10 @@ def q_addr_gt_tx():
     """Addresses with balance > [num] sat. on [date]"""
     return __q_addr_x_y_tx(
         forms.ND1Form,
-        "Адреса с балансом > {num} BTC на {date1}",
+        "Адреса с балансом > {num} BTC на {date1} (using {table})",
         ("a_id", "Адрес", "Баланс, ₿"),
         'Q_ADDR_GT',
         'q_addr_gt.html',
-        {2}
+        {2},
+        request.args.get('tail') is not None
     )
