@@ -5,8 +5,8 @@
 {% block body %}
     <h1> Info </h1>
     <table>
-        <tr> <th> BK max: </th> <td> {{ data.bk_id_max }} ({{ data.bk_datime_max }}) </td> </tr>
-        <tr> <th> Stat_BK max: </th> <td> {{ data.stat_bk_max }} </td> </tr>
+        <tr> <th> BK max: </th> <td> <a href="{{ url_for('bceweb.src_bk', bk=data.bk_id_max) }}"> {{ data.bk_id_max }} </a> ({{ data.bk_datime_max }}) </td> </tr>
+        <tr> <th> Stat_BK max: </th> <td> <a href="{{ url_for('bceweb.src_bk', bk=data.stat_bk_max) }}"> {{ data.stat_bk_max }} </a> </td> </tr>
         <tr> <th> Stat_Date max: </th> <td> {{ data.stat_date_max }} </td> </tr>
         <tr> <th> Tail: </th> <td> {{ data.tail_date_min }}&hellip;{{ data.tail_date_max }} </td> </tr>
     </table>
