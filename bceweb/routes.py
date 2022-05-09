@@ -159,8 +159,9 @@ def src_date(y: int, m: int, d: int):
     iy = int(y)
     im = int(m)
     date = datetime.date(iy, im, int(d))
+    stat = __get_a_record(Qry.get('SRC_DATE_STAT').format(date=date.isoformat()))
     max_dom = int(__get_a_value(Qry.get('SRC_MAX_DOM').format(year=iy, month=im)))
-    return render_template('src_date.html', data={'max_dom': max_dom, 'date': date})
+    return render_template('src_date.html', data={'max_dom': max_dom, 'date': date, 'stat': stat})
 
 
 @bp.route('/d/<int:y>/<int:m>/<int:d>/b/', methods=['GET'])

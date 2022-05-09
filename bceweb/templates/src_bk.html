@@ -43,11 +43,14 @@
         {% include "img/to-beg.html" %}
     {% endif %}
 </h1>
+
+<!-- Tab switcher -->
 <input type="radio" name="tabs" class="tab_radio" id="tab_info" checked />
 <label for="tab_info"> &lArr; Show Info </label>
 <input type="radio" name="tabs" class="tab_radio" id="tab_txs" />
 <label for="tab_txs"> Show TXs &rArr; </label>
 
+<!-- Tab 1: Info -->
 <table class="tab_content thick" id="tab_info_content">
     <tr>
         <th> Block: </th>
@@ -89,7 +92,7 @@
         <td class="right"> {{ block.uo_sum|sa2btc }} </td>
     </tr>
     <tr>
-        <th> &Delta; </th>
+        <th title="Uo - So"> &Delta; </th>
         <td></td>
         <td class="right"> {{ (block.uo_sum - block.so_sum)|sa2btc }} </td>
     </tr>
@@ -145,6 +148,7 @@
 {% endif %}
 </table>
 
+<!-- Tab 2: TXs -->
 <iframe
     class="tab_content"
     id="tab_txs_content"
