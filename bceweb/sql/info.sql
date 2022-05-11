@@ -4,5 +4,7 @@ SELECT
     (SELECT MAX(b_id) FROM t_stat_bk) AS stat_bk_max,
     (SELECT MAX(d) FROM t_stat_date) AS stat_date_max,
     (SELECT DATE(bk.datime) FROM (SELECT MIN(t_id_in) AS t_id FROM tail) AS v INNER JOIN tx ON v.t_id = tx.id INNER JOIN bk ON bk.id = tx.b_id) AS tail_date_min,
-    (SELECT DATE(bk.datime) FROM (SELECT MAX(t_id) AS t_id FROM tail) AS v INNER JOIN tx ON v.t_id = tx.id INNER JOIN bk ON bk.id = tx.b_id) AS tail_date_max
+    (SELECT DATE(bk.datime) FROM (SELECT MAX(t_id) AS t_id FROM tail) AS v INNER JOIN tx ON v.t_id = tx.id INNER JOIN bk ON bk.id = tx.b_id) AS tail_date_max,
+    (SELECT MIN(d) FROM t_1a_date) AS q1a_date_min,
+    (SELECT MAX(d) FROM t_1a_date) AS q1a_date_max
 ;

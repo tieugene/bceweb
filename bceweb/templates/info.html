@@ -9,5 +9,6 @@
         <tr> <th> Stat_BK max: </th> <td> <a href="{{ url_for('bceweb.src_bk', bk=data.stat_bk_max) }}"> {{ data.stat_bk_max }} </a> </td> </tr>
         <tr> <th> Stat_Date max: </th> <td> {{ data.stat_date_max }} </td> </tr>
         <tr> <th> Tail: </th> <td> {{ data.tail_date_min }}&hellip;{{ data.tail_date_max }} </td> </tr>
+        <tr> <th> Q1A: </th> <td> {{ data.q1a_date_min }}&hellip;{{ data.q1a_date_max }} </td> </tr>
     </table>
 {% endblock %}
