@@ -1,0 +1,151 @@
+<table class="tab_content thick" id="tab_info_content">
+    <tr>
+        <th rowspan="2"> Attribute </th>
+        <th colspan="2"> Per item </th>
+        <th colspan="2"> Cummulative </th>
+    </tr>
+    <tr>
+        <th> # </th>
+        <th> &#8383; </th>
+        <th> # </th>
+        <th> &#8383; </th>
+    </tr>
+    <tr>
+        <th> BKs: </th>
+        <td class="right"> <i>(TODO)</i> </td>
+        <td></td>
+        <td class="right"> <i>(TODO)</i> </td>
+        <td></td>
+    </tr>
+    <tr>
+        <th> So </th>
+        <td class="right"> {{ data.stat.so_num }} </td>
+        <td class="right"> {{ data.stat.so_sum|sa2btc }} </td>
+        <td class="right"> {{ data.stat.so_num_inc }} </td>
+        <td class="right"> {{ data.stat.so_sum_inc|sa2btc }} </td>
+    </tr>
+    <tr>
+        <th> Lo </th>
+        <td class="right"> {{ data.stat.lo_num }} </td>
+        <td class="right"> {{ data.stat.lo_sum|sa2btc }} </td>
+        <td class="right"> {{ data.stat.lo_num_inc }} </td>
+        <td class="right"> {{ data.stat.lo_sum_inc|sa2btc }} </td>
+    </tr>
+    <tr>
+        <th> Uo </th>
+        <td class="right"> {{ data.stat.uo_num }} </td>
+        <td class="right"> {{ data.stat.uo_sum|sa2btc }} </td>
+        <td class="right"> {{ data.stat.uo_num_inc }} </td>
+        <td class="right"> {{ data.stat.uo_sum_inc|sa2btc }} </td>
+    </tr>
+    <tr> <th colspan="5"> Check </th></tr>
+    <tr>
+        <th title="Uo + Lo"> TxO </th>
+        <td class="right"> {{ data.stat.uo_num + data.stat.lo_num }}
+        <td class="right"> {{ (data.stat.uo_sum + data.stat.lo_sum)|sa2btc }} </td>
+        <td class="right"> {{ data.stat.uo_num_inc + data.stat.lo_num_inc }}
+        <td class="right"> {{ (data.stat.uo_sum_inc + data.stat.lo_sum_inc)|sa2btc }} </td>
+    </tr>
+    <tr>
+        <th title="So + Lo"> STxO </th>
+        <td class="right"> {{ data.stat.so_num + data.stat.lo_num }}
+        <td class="right"> {{ (data.stat.so_sum + data.stat.lo_sum)|sa2btc }} </td>
+        <td class="right"> {{ data.stat.so_num_inc + data.stat.lo_num_inc }}
+        <td class="right"> {{ (data.stat.so_sum_inc + data.stat.lo_sum_inc)|sa2btc }} </td>
+    </tr>
+    <tr>
+        <th title="Uo - So"> UTxO </th>
+        <td class="right"> {{ (data.stat.uo_num - data.stat.so_num) }} </td>
+        <td class="right"> {{ (data.stat.uo_sum - data.stat.so_sum)|sa2btc }} </td>
+        <td class="right"> {{ data.stat.uo_num_inc - data.stat.so_num_inc }}
+        <td class="right"> {{ (data.stat.uo_sum_inc - data.stat.so_sum_inc)|sa2btc }} </td>
+    </tr>
+    <tr> <th colspan="5"> В том числе: </th> </tr>
+    <tr> <th colspan="5"> Job: </th> </tr>
+    <tr>
+        <th> So </th>
+        <td class="right"> {{ data.stat.so_j_num }} </td>
+        <td class="right"> {{ data.stat.so_j_sum|sa2btc }} </td>
+        <td class="right"> {{ data.stat.so_j_num_inc }} </td>
+        <td class="right"> {{ data.stat.so_j_sum_inc|sa2btc }} </td>
+    </tr>
+    <tr>
+        <th> Lo </th>
+        <td class="right"> {{ data.stat.lo_j_num }} </td>
+        <td class="right"> {{ data.stat.lo_j_sum|sa2btc }} </td>
+        <td class="right"> {{ data.stat.lo_j_num_inc }} </td>
+        <td class="right"> {{ data.stat.lo_j_sum_inc|sa2btc }} </td>
+    </tr>
+    <tr>
+        <th> Uo </th>
+        <td class="right"> {{ data.stat.uo_j_num }} </td>
+        <td class="right"> {{ data.stat.uo_j_sum|sa2btc }} </td>
+        <td class="right"> {{ data.stat.uo_j_num_inc }} </td>
+        <td class="right"> {{ data.stat.uo_j_sum_inc|sa2btc }} </td>
+    </tr>
+    <tr>
+        <th title="Uo - So"> UTxO </th>
+        <td class="right"> {{ (data.stat.uo_j_num - data.stat.so_j_num) }} </td>
+        <td class="right"> {{ (data.stat.uo_j_sum - data.stat.so_j_sum)|sa2btc }} </td>
+        <td class="right"> {{ (data.stat.uo_j_num_inc - data.stat.so_j_num_inc) }} </td>
+        <td class="right"> {{ (data.stat.uo_j_sum_inc - data.stat.so_j_sum_inc)|sa2btc }} </td>
+    </tr>
+    <tr> <th colspan="5"> Unknown: </th> </tr>
+    <tr>
+        <th> So </th>
+        <td class="right"> {{ data.stat.so_num - data.stat.so_j_num - data.stat.so_0_num }} </td>
+        <td class="right"> {{ (data.stat.so_sum - data.stat.so_j_sum)|sa2btc }} </td>
+        <td class="right"> {{ data.stat.so_num_inc - data.stat.so_j_num_inc - data.stat.so_0_num_inc }} </td>
+        <td class="right"> {{ (data.stat.so_sum_inc - data.stat.so_j_sum_inc)|sa2btc }} </td>
+    </tr>
+    <tr>
+        <th> Lo </th>
+        <td class="right"> {{ data.stat.lo_num - data.stat.lo_j_num - data.stat.lo_0_num }} </td>
+        <td class="right"> {{ (data.stat.lo_sum - data.stat.lo_j_sum)|sa2btc }} </td>
+        <td class="right"> {{ data.stat.lo_num_inc - data.stat.lo_j_num_inc - data.stat.lo_0_num_inc }} </td>
+        <td class="right"> {{ (data.stat.lo_sum_inc - data.stat.lo_j_sum_inc)|sa2btc }} </td>
+    </tr>
+    <tr>
+        <th> Uo </th>
+        <td class="right"> {{ data.stat.uo_num - data.stat.uo_j_num - data.stat.uo_0_num }} </td>
+        <td class="right"> {{ (data.stat.uo_sum - data.stat.uo_j_sum)|sa2btc }} </td>
+        <td class="right"> {{ data.stat.uo_num_inc - data.stat.uo_j_num_inc - data.stat.uo_0_num_inc }} </td>
+        <td class="right"> {{ (data.stat.uo_sum_inc - data.stat.uo_j_sum_inc)|sa2btc }} </td>
+    </tr>
+    <tr>
+        <th title="Uo - So"> UTxO </th>
+        <td class="right"> {{ ((data.stat.uo_num - data.stat.uo_j_num - data.stat.uo_0_num) - (data.stat.so_num - data.stat.so_j_num - data.stat.so_0_num)) }} </td>
+        <td class="right"> {{ ((data.stat.uo_sum - data.stat.uo_j_sum) - (data.stat.so_sum - data.stat.so_j_sum))|sa2btc }} </td>
+        <td class="right"> {{ ((data.stat.uo_num_inc - data.stat.uo_j_num_inc - data.stat.uo_0_num_inc) - (data.stat.so_num_inc - data.stat.so_j_num_inc - data.stat.so_0_num_inc)) }} </td>
+        <td class="right"> {{ ((data.stat.uo_sum_inc - data.stat.uo_j_sum_inc) - (data.stat.so_sum_inc - data.stat.so_j_sum_inc))|sa2btc }} </td>
+    </tr>
+    <tr> <th colspan="5"> &empty;: </th> </tr>
+    <tr>
+        <th> So </th>
+        <td class="right"> {{ data.stat.so_0_num }} </td>
+        <td></td>
+        <td class="right"> {{ data.stat.so_0_num_inc }} </td>
+        <td></td>
+    </tr>
+    <tr>
+        <th> Lo </th>
+        <td class="right"> {{ data.stat.lo_0_num }} </td>
+        <td></td>
+        <td class="right"> {{ data.stat.lo_0_num_inc }} </td>
+        <td></td>
+    </tr>
+    <tr>
+        <th> Uo </th>
+        <td class="right"> {{ data.stat.uo_0_num }} </td>
+        <td></td>
+        <td class="right"> {{ data.stat.uo_0_num_inc }} </td>
+        <td></td>
+    </tr>
+    <tr>
+        <th title="Uo - So"> UTxO </th>
+        <td class="right"> {{ (data.stat.uo_0_num - data.stat.so_0_num) }} </td>
+        <td></td>
+        <td class="right"> {{ (data.stat.uo_0_num_inc - data.stat.so_0_num_inc) }} </td>
+        <td></td>
+    </tr>
+</table>

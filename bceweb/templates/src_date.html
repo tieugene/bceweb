@@ -46,81 +46,11 @@
 <label for="tab_bks"> Show Blocks &rArr; </label>
 
 <!-- Tab 1: Info -->
-<table class="tab_content thick" id="tab_info_content">
-    {% if data.stat.d is none %}
-    <tr> <th colspan="3"> Stat n/a </th></tr>
-    {% else %}
-    <tr>
-        <th> Attribute </th>
-        <th> # </th>
-        <th> &#8383; </th>
-    </tr>
-    <tr>
-        <th> BKs: </th>
-        <td class="right"> <i>(TODO)</i> </td>
-        <td></td>
-    </tr>
-    <tr>
-        <th> So </th>
-        <td class="right"> {{ data.stat.so_num }} </td>
-        <td class="right"> {{ data.stat.so_sum|sa2btc }} </td>
-    </tr>
-    <tr>
-        <th> Lo </th>
-        <td class="right"> {{ data.stat.lo_num }} </td>
-        <td class="right"> {{ data.stat.lo_sum|sa2btc }} </td>
-    </tr>
-    <tr>
-        <th> Uo </th>
-        <td class="right"> {{ data.stat.uo_num }} </td>
-        <td class="right"> {{ data.stat.uo_sum|sa2btc }} </td>
-    </tr>
-    <tr>
-        <th title="Uo - So"> &Delta; </th>
-        <td></td>
-        <td class="right"> {{ (data.stat.uo_sum - data.stat.so_sum)|sa2btc }} </td>
-    </tr>
-<!-- +_inc -->
-    <tr> <th colspan="3"> &sum;: </th> </tr>
-    <tr>
-        <th> BKs: </th>
-        <td class="right"> <i>(TODO)</i> </td>
-        <td></td>
-    </tr>
-    <tr>
-        <th> So </th>
-        <td class="right"> {{ data.stat.so_num_inc }} </td>
-        <td class="right"> {{ data.stat.so_sum_inc|sa2btc }} </td>
-    </tr>
-    <tr>
-        <th> Lo </th>
-        <td class="right"> {{ data.stat.lo_num_inc }} </td>
-        <td class="right"> {{ data.stat.lo_sum_inc|sa2btc }} </td>
-    </tr>
-    <tr>
-        <th> Uo </th>
-        <td class="right"> {{ data.stat.uo_num_inc }} </td>
-        <td class="right"> {{ data.stat.uo_sum_inc|sa2btc }} </td>
-    </tr>
-<!-- checks -->
-    <tr> <th colspan="3"> Check </th></tr>
-    <tr>
-        <th title="u+l"> TxO </th>
-        <td class="right"> {{ data.stat.uo_num_inc + data.stat.lo_num_inc }}
-        <td class="right"> {{ (data.stat.uo_sum_inc + data.stat.lo_sum_inc)|sa2btc }} </td>
-    </tr>
-    <tr>
-        <th title="s+l"> STxO </th>
-        <td class="right"> {{ data.stat.so_num_inc + data.stat.lo_num_inc }}
-        <td class="right"> {{ (data.stat.so_sum_inc + data.stat.lo_sum_inc)|sa2btc }} </td>
-    </tr>
-    <tr>
-        <th title="u-s"> UTxO </th>
-        <td class="right"> {{ data.stat.uo_num_inc - data.stat.so_num_inc }}
-        <td class="right"> {{ (data.stat.uo_sum_inc - data.stat.so_sum_inc)|sa2btc }} </td>
-    </tr>
-    {% endif %}
-</table>
+{% if data.stat.d is none %}
+    <p> Stat: n/a </p>
+{% else %}
+{% include "src_date_info.html" %}
+{% endif %}
 
 <!-- Tab 2: BKs -->
 <iframe
