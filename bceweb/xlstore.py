@@ -1,9 +1,15 @@
 """XLSX files store"""
 # 1. std
 import io
+from enum import IntEnum
 from typing import Optional, Iterable
 # 2. 3rd
 import xlsxwriter
+
+
+class ECellType(IntEnum):
+    BTC = 1
+    Date = 2
 
 
 class Store:

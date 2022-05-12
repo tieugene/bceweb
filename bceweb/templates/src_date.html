@@ -39,6 +39,7 @@
             {% include "img/to-end.html" %}
         {% endif %}
         <a href="{{ url_for('bceweb.q1a_raw_date', y=data.date.year, m=data.date.month, d=data.date.day) }}"> {% include "img/file-csv.html" %} </a>
+        <a href="{{ url_for('bceweb.q1a_raw_date', y=data.date.year, m=data.date.month, d=data.date.day) }}?xls"> {% include "img/file-xls.html" %} </a>
     </h1>
 <!-- Tab switcher -->
 <input type="radio" name="tabs" class="tab_radio" id="tab_info" checked />

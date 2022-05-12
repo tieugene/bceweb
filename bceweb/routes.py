@@ -379,35 +379,60 @@ def q_addr_gt_tx():
     )
 
 
-def __q1a_raw(src: Iterable, suffix: str):
-    with io.StringIO() as ofile:
-        writer = csv.writer(ofile, dialect=csv.excel_tab())
-        writer.writerow(["date", "qid", "rid", "value"])
-        writer.writerows(src)
-        ofile.seek(0)
-        fname = f"q1a_{suffix}.csv"
-        return send_file(
-            io.BytesIO(ofile.read().encode()),
-            mimetype='text/csv',
-            as_attachment=True,
-            download_name=fname,
-            attachment_filename=fname
+def __q1a_raw(src: Iterable, suffix: str, xls: bool = False):
+    if xls:
+        # FIXME: date column (worksheet.write_datetime(0, 0, datetime, date_format))
+        xl_id = xlstore.mk_xlsx(
+            {'title': 'f"Q1A_{suffix}"', 'subject': '', 'created': __now(), 'comments': ''},
+            ("date", "qid", "rid", "value"),
+            src
         )
+        if data := xlstore.Store.get(xl_id):
+            return send_file(
+                io.BytesIO(data),
+                download_name=f"q1a_{suffix}.xlsx"
+            )
+    else:
+        with io.StringIO() as ofile:
+            writer = csv.writer(ofile, dialect=csv.excel_tab())
+            writer.writerow(("date", "qid", "rid", "value"))
+            writer.writerows(src)
+            ofile.seek(0)
+            fname = f"q1a_{suffix}.csv"
+            return send_file(
+                io.BytesIO(ofile.read().encode()),
+                mimetype='text/csv',
+                as_attachment=True,
+                download_name=fname,
+                attachment_filename=fname
+            )
 
 
 @bp.route('/q1a/<int:y>/<int:m>/<int:d>/', methods=['GET'])
 def q1a_raw_date(y: int, m: int, d: int):
     date = datetime.date(int(y), int(m), int(d))
-    return __q1a_raw(__get_records(Qry.get('Q1A_RAW_DATE').format(date=date)), date.isoformat())
+    return __q1a_raw(
+        __get_records(Qry.get('Q1A_RAW_DATE').format(date=date)),
+        date.isoformat(),
+        request.args.get('xls') is not None
+    )
 
 
 @bp.route('/q1a/<int:y>/<int:m>/', methods=['GET'])
 def q1a_raw_month(y: int, m: int):
     iy = int(y)
     im = int(m)
-    return __q1a_raw(__get_records(Qry.get('Q1A_RAW_MONTH').format(y=iy, m=im)), "{:d}-{:02d}".format(iy, im))
+    return __q1a_raw(
+        __get_records(Qry.get('Q1A_RAW_MONTH').format(y=iy, m=im)),
+        "{:d}-{:02d}".format(iy, im),
+        request.args.get('xls') is not None
+    )
 
 
 @bp.route('/q1a/<int:y>/', methods=['GET'])
 def q1a_raw_year(y: int):
-    return __q1a_raw(__get_records(Qry.get('Q1A_RAW_YEAR').format(y=int(y))), y)
+    return __q1a_raw(
+        __get_records(Qry.get('Q1A_RAW_YEAR').format(y=int(y))),
+        y,
+        request.args.get('xls') is not None
+    )
