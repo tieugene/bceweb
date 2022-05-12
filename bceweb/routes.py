@@ -1,6 +1,7 @@
 """Main router"""
 # 1. std
-from typing import Optional, Tuple, Type
+import csv
+from typing import Optional, Tuple, Type, Iterable
 import datetime
 import io
 import math
@@ -376,3 +377,37 @@ def q_addr_gt_tx():
         {2},
         request.args.get('tail') is not None
     )
+
+
+def __q1a_raw(src: Iterable, suffix: str):
+    with io.StringIO() as ofile:
+        writer = csv.writer(ofile, dialect=csv.excel_tab())
+        writer.writerow(["date", "qid", "rid", "value"])
+        writer.writerows(src)
+        ofile.seek(0)
+        fname = f"q1a_{suffix}.csv"
+        return send_file(
+            io.BytesIO(ofile.read().encode()),
+            mimetype='text/csv',
+            as_attachment=True,
+            download_name=fname,
+            attachment_filename=fname
+        )
+
+
+@bp.route('/q1a/<int:y>/<int:m>/<int:d>/', methods=['GET'])
+def q1a_raw_date(y: int, m: int, d: int):
+    date = datetime.date(int(y), int(m), int(d))
+    return __q1a_raw(__get_records(Qry.get('Q1A_RAW_DATE').format(date=date)), date.isoformat())
+
+
+@bp.route('/q1a/<int:y>/<int:m>/', methods=['GET'])
+def q1a_raw_month(y: int, m: int):
+    iy = int(y)
+    im = int(m)
+    return __q1a_raw(__get_records(Qry.get('Q1A_RAW_MONTH').format(y=iy, m=im)), "{:d}-{:02d}".format(iy, im))
+
+
+@bp.route('/q1a/<int:y>/', methods=['GET'])
+def q1a_raw_year(y: int):
+    return __q1a_raw(__get_records(Qry.get('Q1A_RAW_YEAR').format(y=int(y))), y)

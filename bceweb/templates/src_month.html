@@ -24,6 +24,7 @@
             {% include "img/to-next.html" %}
             {% include "img/to-end.html" %}
         {% endif %}
+        <a href="{{ url_for('bceweb.q1a_raw_month', y=data.year, m=data.month) }}"> {% include "img/file-csv.html" %} </a>
     </h1>
     <table class="thick">
     <thead>
