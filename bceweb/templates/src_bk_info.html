@@ -42,14 +42,14 @@
         <th colspan="5"> Check: </th>
     </tr>
     <tr>
-        <th title="u+l"> TxO </th>
+        <th title="Uo + Lo"> TxO </th>
         <td class="right"> {{ block.uo_num + block.lo_num }}
         <td class="right"> {{ (block.uo_sum + block.lo_sum)|sa2btc }} </td>
         <td class="right"> {{ block.uo_num_inc + block.lo_num_inc }}
         <td class="right"> {{ (block.uo_sum_inc + block.lo_sum_inc)|sa2btc }} </td>
     </tr>
     <tr>
-        <th title="s+l"> STxO </th>
+        <th title="So + Lo"> STxO </th>
         <td class="right"> {{ block.so_num + block.lo_num }}
         <td class="right"> {{ (block.so_sum + block.lo_sum)|sa2btc }} </td>
         <td class="right"> {{ block.so_num_inc + block.lo_num_inc }}
@@ -57,9 +57,9 @@
     </tr>
     <tr>
         <th title="Uo - So"> UTxO </th>
-        <td class="right"> {{ (block.uo_num - block.so_num) }} </td>
+        <td class="right"> </td>
         <td class="right"> {{ (block.uo_sum - block.so_sum)|sa2btc }} </td>
-        <td class="right"> {{ block.uo_num_inc - block.so_num_inc }} </td>
+        <td class="right"> </td>
         <td class="right"> {{ (block.uo_sum_inc - block.so_sum_inc)|sa2btc }} </td>
     </tr>
     <tr>
@@ -101,9 +101,9 @@
     </tr>
     <tr>
         <th title="Uo - So"> UTxO </th>
-        <td class="right"> {{ (block.uo_j_num - block.so_j_num) }} </td>
+        <td class="right"> </td>
         <td class="right"> {{ (block.uo_j_sum - block.so_j_sum)|sa2btc }} </td>
-        <td class="right"> {{ (block.uo_j_num_inc - block.so_j_num_inc) }} </td>
+        <td class="right"> </td>
         <td class="right"> {{ (block.uo_j_sum_inc - block.so_j_sum_inc)|sa2btc }} </td>
     </tr>
     <tr> <th colspan="5"> Unknown: </th> </tr>
@@ -130,9 +130,9 @@
     </tr>
     <tr>
         <th title="Uo - So"> UTxO </th>
-        <td class="right"> {{ ((block.uo_num - block.uo_j_num - block.uo_0_num) - (block.so_num - block.so_j_num - block.so_0_num)) }} </td>
+        <td class="right"> </td>
         <td class="right"> {{ ((block.uo_sum - block.uo_j_sum) - (block.so_sum - block.so_j_sum))|sa2btc }} </td>
-        <td class="right"> {{ ((block.uo_num_inc - block.uo_j_num_inc - block.uo_0_num_inc) - (block.so_num_inc - block.so_j_num_inc - block.so_0_num_inc)) }} </td>
+        <td class="right"> </td>
         <td class="right"> {{ ((block.uo_sum_inc - block.uo_j_sum_inc) - (block.so_sum_inc - block.so_j_sum_inc))|sa2btc }} </td>
     </tr>
     <tr> <th colspan="5"> &empty;: </th> </tr>
