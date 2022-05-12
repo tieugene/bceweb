@@ -277,14 +277,14 @@ def get_xl(xl_id: int):
 
 
 def __q_addr_x_y_tx(formclass: Type, title: str, head: Tuple, qry_name: str, tpl_name: str,
-                    btc_cols: set = frozenset[int], use_tail: bool = False):
+                    col_fmt: dict[int: xlstore.ECellType] = {}, use_tail: bool = False):
     """Old queries.
     :param formclass: Form to handle parms
     :param title: Title of auery
     :param head: Header column titles
     :param qry_name: 'sql/q_*' filename
     :param tpl_name: HTML template filename
-    :param btc_cols: columns to represent as BTC (devide by 10^-8)
+    :param col_fmt: columns to represent as BTC (devide by 10^-8)
     :param use_tail: Do use 'tail' table to query (default 'vout')
     """
     form = formclass()
@@ -305,7 +305,7 @@ def __q_addr_x_y_tx(formclass: Type, title: str, head: Tuple, qry_name: str, tpl
         times = (time0, time1)
         title = title.format(num=num, date0=date0, date1=date1, table=table)
         meta = {'title': title, 'subject': '', 'created': time1, 'comments': ''}
-        xl_id = xlstore.mk_xlsx(meta, head, data, btc_cols)
+        xl_id = xlstore.mk_xlsx(meta, head, data, col_fmt)
     return render_template(tpl_name, title=title, head=head, data=data, form=form, times=times, xl_id=xl_id)
 
 
@@ -318,7 +318,7 @@ def q_addr_btc_max_tx():
         ('a_id', 'Адрес', 'Было', 'Стало', 'Profit'),
         'Q_ADDR_BTC_MAX',
         'q_addr_btc_.html',
-        {2, 3, 4},
+        {2: xlstore.ECellType.BTC, 3: xlstore.ECellType.BTC, 4: xlstore.ECellType.BTC},
         request.args.get('tail') is not None
     )
 
@@ -332,7 +332,7 @@ def q_addr_btc_min_tx():
         ('a_id', 'Адрес', 'Было', 'Стало', 'Profit'),
         'Q_ADDR_BTC_MIN',
         'q_addr_btc_.html',
-        {2, 3, 4},
+        {2: xlstore.ECellType.BTC, 3: xlstore.ECellType.BTC, 4: xlstore.ECellType.BTC},
         request.args.get('tail') is not None
     )
 
@@ -346,7 +346,7 @@ def q_addr_cnt_max_tx():
         ('a_id', 'Адрес', 'Было', 'Стало', 'Рост, %'),
         'Q_ADDR_CNT_MAX',
         'q_addr_cnt_.html',
-        {2, 3},
+        {2: xlstore.ECellType.BTC, 3: xlstore.ECellType.BTC},
         request.args.get('tail') is not None
     )
 
@@ -360,7 +360,7 @@ def q_addr_cnt_min_tx():
         ('a_id', 'Адрес', 'Было', 'Стало', 'Рост, %'),
         'Q_ADDR_CNT_MIN',
         'q_addr_cnt_.html',
-        {2, 3},
+        {2: xlstore.ECellType.BTC, 3: xlstore.ECellType.BTC},
         request.args.get('tail') is not None
     )
 
@@ -374,7 +374,7 @@ def q_addr_gt_tx():
         ("a_id", "Адрес", "Баланс, ₿"),
         'Q_ADDR_GT',
         'q_addr_gt.html',
-        {2},
+        {2: xlstore.ECellType.BTC},
         request.args.get('tail') is not None
     )
 
@@ -385,7 +385,8 @@ def __q1a_raw(src: Iterable, suffix: str, xls: bool = False):
         xl_id = xlstore.mk_xlsx(
             {'title': 'f"Q1A_{suffix}"', 'subject': '', 'created': __now(), 'comments': ''},
             ("date", "qid", "rid", "value"),
-            src
+            src,
+            {0: xlstore.ECellType.Date}
         )
         if data := xlstore.Store.get(xl_id):
             return send_file(
