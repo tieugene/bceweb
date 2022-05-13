@@ -16,9 +16,9 @@
     <thead><tr><th> t_id </th><th> n </th><th> t_id_in </th><th> &#8383; </th></tr></thead>
     {% for rec in data %}
         <tr>
-            <td class="right"> <a href="{{ url_for('bceweb.src_tx_vouts', tx=rec.t_id) }}"> {{ rec.t_id }} </a> </td>
+            <td class="right"> <a href="{{ url_for('bceweb.src_tx', tx=rec.t_id) }}"> {{ rec.t_id }} </a> </td>
             <td class="right"> {{ rec.n }} </td>
-            <td class="right"> {% if rec.t_id_in %}  <a href="{{ url_for('bceweb.src_tx_vins', tx=rec.t_id_in) }}"> {{ rec.t_id_in }} </a> {% endif %} </td>
+            <td class="right"> {% if rec.t_id_in %}  <a href="{{ url_for('bceweb.src_tx', tx=rec.t_id_in) }}"> {{ rec.t_id_in }} </a> {% endif %} </td>
             <td class="right"> {{ rec.money|sa2btc }} </td>
         </tr>
     {% endfor %}

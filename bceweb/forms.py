@@ -16,5 +16,5 @@ class ND0D1Form(FlaskForm):
 
 class ND1Form(FlaskForm):
     """Form for N, Date"""
-    num = IntegerField("Sat.:")
+    num = IntegerField("BTC.:")
     date1 = DateField("Date:")

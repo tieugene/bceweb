@@ -1,1 +1,2 @@
-SELECT COUNT(*) AS num FROM bk WHERE DATE(datime) = '{date}';
+-- Number of date blocks
+SELECT COUNT(*) FROM bk WHERE DATE(datime) = '{date}';

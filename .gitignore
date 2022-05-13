@@ -130,4 +130,5 @@ dmypy.json
 
 # local
 /.idea/
-/bceweb/bceweb.cfg
+/bceweb/*.cfg
+/_backup/

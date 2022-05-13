@@ -1,7 +1,17 @@
 <p>
-    <button type="button"> {% if pager[0] > 1 %} <a href="?page=1"> &larrb; </a> {% else %} &larrb; {% endif %} </button>
-    <button type="button"> {% if pager[0] > 1 %} <a href="?page={{ pager[0] - 1 }}"> &larr; {% else %} &larr; {% endif %} </a> </button>
-    Page {{ pager[0] }} / {{ pager[1] }}
-    <button type="button"> {% if pager[0] < pager[1] %} <a href="?page={{ pager[0] + 1 }}"> &rarr; </a> {% else %} &rarr; {% endif %} </button>
-    <button type="button"> {% if pager[0] < pager[1] %} <a href="?page={{ pager[1] }}"> &rarrb; </a> {% else %} &rarrb; {% endif %} </button>
+    {% if pager[0] > 1 %}
+        <a href="?page=1"> {% include "img/to-beg.html" %} </a>
+        <a href="?page={{ pager[0] - 1 }}"> {% include "img/to-prev.html" %} </a>
+    {% else %}
+        {% include "img/to-beg.html" %}
+        {% include "img/to-prev.html" %}
+    {% endif %}
+    Page: {{ pager[0] }} / {{ pager[1] }}
+    {% if pager[0] < pager[1] %}
+        <a href="?page={{ pager[0] + 1 }}"> {% include "img/to-next.html" %} </a>
+        <a href="?page={{ pager[1] }}"> {% include "img/to-end.html" %} </a>
+    {% else %}
+        {% include "img/to-next.html" %}
+        {% include "img/to-end.html" %}
+    {% endif %}
 </p>

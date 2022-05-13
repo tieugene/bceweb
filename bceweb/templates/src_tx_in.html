@@ -1,0 +1,21 @@
+{% extends "frame.html" %}
+{% block body %}
+    {% include 'pager.html' %}
+    <table class="thick">
+    <thead><tr><th> t_id </th><th> n </th><th> &#8383; </th><th> a_id </th><th title="Addresses number"> qty </th></tr></thead>
+    {% for rec in data %}
+        <tr>
+            <td class="right"> <a target="_parent" href="{{ url_for('bceweb.src_tx', tx=rec.t_id) }}"> {{ rec.t_id }} </a> </td>
+            <td class="right"> {{ rec.n }} </td>
+            <td class="right"> {{ rec.money|sa2btc }} </td>
+            <td class="right">
+                <a target="_parent" href="{{ url_for('bceweb.src_addr', aid=rec.a_id) }}"> {{ rec.a_id }} </a>
+                <a href="https://www.blockchain.com/btc/address/{{ rec.a_name }}" target="_blank" rel="noopener noreferrer">
+                    {% include "img/bkchain.html" %}
+                </a>
+            </td>
+            <td class="right"> {{ rec.a_num }} </td>
+        </tr>
+    {% endfor %}
+    </table>
+{% endblock %}

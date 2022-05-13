@@ -3,6 +3,9 @@
 *Test: 200k enough*
 
 ## common
+- [ ] Invent Schrödinger blocks (2010-11-14..15):
+  - ~~91722~~ &rArr; 91880
+  - 91812 &lArr; ~~91842~~ 
 - [ ] Query `txo:date0/1` &rArr; `vout:tx_id/..._in`
 - [ ] Query tree:
   1. Year + Mon/Day
@@ -31,6 +34,7 @@
 
 ## UI
 - [ ] permanent vertical menu
+- [ ] href: &rArr; instead of {{ *.id }}
 
 ## Maintain
 - [ ] setup.py

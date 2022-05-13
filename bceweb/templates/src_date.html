@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %} Date blocks {% endblock %}
+{% block head %}
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+        iframe#tab_bks_content {
+            width: 100%;
+            flex-grow: 1;
+        }
+        input[type="radio"] + label {
+            background-color: gainsboro;
+        }
+        /* Navigation */
+        input[type="radio"] { display: none;}
+        input[type="radio"]:checked + label { display: none;}
+        input[type="radio"] ~ .tab_content { display: none; }
+        #tab_info:checked ~ #tab_info_content,
+        #tab_bks:checked ~ #tab_bks_content { display: block; }
+    </style>
+{% endblock %}
+{% block body %}
+    <h1> Date:
+        {% if data.date.day > 1 %}
+            <a href="{{ url_for('bceweb.src_date', y=data.date.year, m=data.date.month, d=1) }}"> {% include "img/to-beg.html" %} </a>
+            <a href="{{ url_for('bceweb.src_date', y=data.date.year, m=data.date.month, d=data.date.day - 1) }}"> {% include "img/to-prev.html" %} </a>
+        {% else %}
+            {% include "img/to-beg.html" %}
+            {% include "img/to-prev.html" %}
+        {% endif %}
+        <a href="{{ url_for('bceweb.src_year', y=data.date.year) }}">{{ data.date.year }}</a>-<a href="{{ url_for('bceweb.src_month', y=data.date.year, m=data.date.month) }}">{{ "%02d" | format(data.date.month) }}</a>-{{ "%02d" | format(data.date.day) }}
+        {% if data.date.day < data.max_dom %}
+            <a href="{{ url_for('bceweb.src_date', y=data.date.year, m=data.date.month, d=data.date.day + 1) }}"> {% include "img/to-next.html" %} </a>
+            <a href="{{ url_for('bceweb.src_date', y=data.date.year, m=data.date.month, d=data.max_dom) }}"> {% include "img/to-end.html" %} </a>
+        {% else %}
+            {% include "img/to-next.html" %}
+            {% include "img/to-end.html" %}
+        {% endif %}
+        <a href="{{ url_for('bceweb.q1a_raw_date', y=data.date.year, m=data.date.month, d=data.date.day) }}"> {% include "img/file-csv.html" %} </a>
+        <a href="{{ url_for('bceweb.q1a_raw_date', y=data.date.year, m=data.date.month, d=data.date.day) }}?xls"> {% include "img/file-xls.html" %} </a>
+    </h1>
+<!-- Tab switcher -->
+<input type="radio" name="tabs" class="tab_radio" id="tab_info" checked />
+<label for="tab_info"> &lArr; Show Info </label>
+<input type="radio" name="tabs" class="tab_radio" id="tab_bks" />
+<label for="tab_bks"> Show Blocks &rArr; </label>
+
+<!-- Tab 1: Info -->
+{% if data.stat.d is none %}
+    <p> Stat: n/a </p>
+{% else %}
+{% include "src_date_info.html" %}
+{% endif %}
+
+<!-- Tab 2: BKs -->
+<iframe
+    class="tab_content"
+    id="tab_bks_content"
+    name="frame"
+    width="100%"
+    src="{{ url_for('bceweb.src_date_blocks', y=data.date.year, m=data.date.month, d=data.date.day) }}">
+</iframe>
+{% endblock %}

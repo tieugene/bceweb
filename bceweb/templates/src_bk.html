@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block title %} Block {{ block.id }} {% endblock %}
+{% block head %}
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+        iframe#tab_txs_content {
+            width: 100%;
+            flex-grow: 1;
+        }
+        input[type="radio"] + label {
+            background-color: gainsboro;
+        }
+        /* Navigation */
+        input[type="radio"] { display: none;}
+        input[type="radio"]:checked + label { display: none;}
+        input[type="radio"] ~ .tab_content { display: none; }
+        #tab_info:checked ~ #tab_info_content,
+        #tab_txs:checked ~ #tab_txs_content { display: block; }
+    </style>
+{% endblock %}
+{% block body %}
+<h1>
+    Block:
+    {% if block.id > 0 %}
+        <a href="{{ url_for('bceweb.src_bk', bk=0) }}"> {% include "img/to-beg.html" %} </a>
+        <a href="{{ url_for('bceweb.src_bk', bk=block.id - 1) }}"> {% include "img/to-prev.html" %} </a>
+    {% else %}
+        {% include "img/to-beg.html" %}
+        {% include "img/to-prev.html" %}
+    {% endif %}
+    {{ block.id }}
+    <a href="https://www.blockchain.com/btc/block/{{ block.id }}" target="_blank" rel="noopener noreferrer">
+        {% include "img/bkchain.html" %}
+    </a>
+    {% if block.id < bk_max %}
+        <a href="{{ url_for('bceweb.src_bk', bk=block.id + 1) }}"> {% include "img/to-next.html" %} </a>
+        <a href="{{ url_for('bceweb.src_bk', bk=bk_max) }}"> {% include "img/to-end.html" %} </a>
+    {% else %}
+        {% include "img/to-next.html" %}
+        {% include "img/to-beg.html" %}
+    {% endif %}
+</h1>
+
+<!-- Tab switcher -->
+<input type="radio" name="tabs" class="tab_radio" id="tab_info" checked />
+<label for="tab_info"> &lArr; Show Info </label>
+<input type="radio" name="tabs" class="tab_radio" id="tab_txs" />
+<label for="tab_txs"> Show TXs &rArr; </label>
+
+<!-- Tab 1: Info -->
+    <p> Block: {{ block.id }} / {{ bk_max }} </p>
+    <p>
+        DateTime:
+        <a href="{{ url_for('bceweb.src_year', y=block.datime.year) }}">{{ block.datime.year }}</a>-<a href="{{ url_for('bceweb.src_month', y=block.datime.year, m=block.datime.month) }}">{{ "%02d" | format(block.datime.month) }}</a>-<a href="{{ url_for('bceweb.src_date', y=block.datime.year, m=block.datime.month, d=block.datime.day) }}">{{ "%02d" | format(block.datime.day) }}</a>
+        {{ block.datime.time().isoformat() }}
+    </p>
+    {% if block.tx_num is none %}
+        <p> Stat: n/a </p>
+    {% else %}
+    {% include "src_bk_info.html" %}
+    {% endif %}
+
+<!-- Tab 2: TXs -->
+<iframe
+    class="tab_content"
+    id="tab_txs_content"
+    name="frame"
+    width="100%"
+    src="{{ url_for('bceweb.src_bk_txs', bk=block.id) }}">
+</iframe>
+
+{% endblock %}

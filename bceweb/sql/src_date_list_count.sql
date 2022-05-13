@@ -1,1 +1,0 @@
-SELECT COUNT(DISTINCT DATE(datime)) AS num FROM bk;

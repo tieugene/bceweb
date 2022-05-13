@@ -1,9 +1,15 @@
 """XLSX files store"""
 # 1. std
 import io
+from enum import IntEnum
 from typing import Optional, Iterable
 # 2. 3rd
 import xlsxwriter
+
+
+class ECellType(IntEnum):
+    BTC = 1
+    Date = 2
 
 
 class Store:
@@ -34,7 +40,7 @@ class Store:
         return Store.__store.get(xl_id)
 
 
-def mk_xlsx(meta: dict, head: tuple, data: Iterable, btc_cols: set = {}) -> int:
+def mk_xlsx(meta: dict, head: tuple, data: Iterable, col_fmt: dict[int: ECellType] = {}) -> int:
     """Create xlsx file.
     :return: New file id
     """
@@ -48,6 +54,7 @@ def mk_xlsx(meta: dict, head: tuple, data: Iterable, btc_cols: set = {}) -> int:
     # formats
     head_format = workbook.add_format({'bold': True, 'align': 'center'})
     btc_format = workbook.add_format({'font_name': 'Courier', 'num_format': '# ##0.00000000'})
+    date_format = workbook.add_format({'num_format': 'yyyy-mm-dd'})
     # header
     worksheet.write_row(0, 0, head, head_format)
     worksheet.freeze_panes(1, 0)
@@ -55,8 +62,11 @@ def mk_xlsx(meta: dict, head: tuple, data: Iterable, btc_cols: set = {}) -> int:
     for row, data_row in enumerate(data):
         for col, cell in enumerate(data_row):
             if cell is not None:
-                if col in btc_cols:
-                    worksheet.write_number(row + 1, col, cell/100000000, btc_format)
+                if fmt := col_fmt.get(col):
+                    if fmt == ECellType.BTC:
+                        worksheet.write_number(row + 1, col, cell/100000000, btc_format)
+                    elif fmt == ECellType.Date:
+                        worksheet.write_datetime(row + 1, col, cell, date_format)
                 else:
                     worksheet.write(row + 1, col, cell)
     workbook.close()
