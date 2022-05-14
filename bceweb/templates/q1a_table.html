@@ -26,7 +26,7 @@
             <th colspan="12"> Abs </th>
         </tr>
         <tr>
-            </th> <th> r1 </th> <th> r2 </th> <th> r3 </th> <th> r4 </th> <th> r5 </th> <th> r6 </th> <th> r7 </th> <th> r8 </th> <th> r9 </th> <th> r10 </th> <th> r11 </th>
+            </th> <th title="≤.001"> r1 </th> <th title=".001 < x ≤.01"> r2 </th> <th title="≤.1"> r3 </th> <th title="≤1"> r4 </th> <th title="≤10"> r5 </th> <th title="≤100"> r6 </th> <th title="≤1k"> r7 </th> <th title="≤10k"> r8 </th> <th title="≤100k"> r9 </th> <th title="≤1m"> r10 </th> <th title=">1m"> r11 </th>
             </th> <th> r1 </th> <th> r2 </th> <th> r3 </th> <th> r4 </th> <th> r5 </th> <th> r6 </th> <th> r7 </th> <th> r8 </th> <th> r9 </th> <th> r10 </th> <th> r11 </th> <th> &Sum; </th>
         </tr>
         </thead>
@@ -46,7 +46,20 @@
                 <td class="right"> {{ "%.1f"|format(100*row.rid9/row.total) }} </td>
                 <td class="right"> {{ "%.1f"|format(100*row.rid10/row.total) }} </td>
                 <td class="right"> {{ "%.1f"|format(100*row.rid11/row.total) }} </td>
-
+            {% if in_btc %}
+                <td class="right"> {{ (row.rid1/100000000)|round|int }} </td>
+                <td class="right"> {{ (row.rid2/100000000)|round|int }} </td>
+                <td class="right"> {{ (row.rid3/100000000)|round|int }} </td>
+                <td class="right"> {{ (row.rid4/100000000)|round|int }} </td>
+                <td class="right"> {{ (row.rid5/100000000)|round|int }} </td>
+                <td class="right"> {{ (row.rid6/100000000)|round|int }} </td>
+                <td class="right"> {{ (row.rid7/100000000)|round|int }} </td>
+                <td class="right"> {{ (row.rid8/100000000)|round|int }} </td>
+                <td class="right"> {{ (row.rid9/100000000)|round|int }} </td>
+                <td class="right"> {{ (row.rid10/100000000)|round|int }} </td>
+                <td class="right"> {{ (row.rid11/100000000)|round|int }} </td>
+                <td class="right"> {{ (row.total/100000000)|round|int }} </td>
+            {% else %}
                 <td class="right"> {{ row.rid1 }} </td>
                 <td class="right"> {{ row.rid2 }} </td>
                 <td class="right"> {{ row.rid3 }} </td>
@@ -59,6 +72,7 @@
                 <td class="right"> {{ row.rid10 }} </td>
                 <td class="right"> {{ row.rid11 }} </td>
                 <td class="right"> {{ row.total }} </td>
+            {% endif %}
             </tr>
         {% endfor %}
         </tbody>

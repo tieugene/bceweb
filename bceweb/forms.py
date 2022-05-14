@@ -23,7 +23,7 @@ class ND1Form(FlaskForm):
 class Q1ATableForm(FlaskForm):
     qid = SelectField(
         "qid:",
-        choices=[(1, "Addr #"), (2, "Addr # Active"), (3, "Utxo #"), (4, "Utxo ∑"), (5, "Vout #"), (6, "Vout ∑")],
+        choices=[(1, "Addr, #"), (2, "Addr, # Active"), (3, "Utxo, #"), (4, "Utxo, ₿"), (5, "Vout, #"), (6, "Vout, ₿")],
         coerce=int
     )
     date0 = DateField("from:")
