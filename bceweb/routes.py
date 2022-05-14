@@ -6,9 +6,9 @@ import datetime
 import io
 import math
 import calendar
-import pprint
 # 2. 3rd
-import sys
+import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
 
 import psycopg2
 import psycopg2.extras
@@ -452,16 +452,29 @@ def q1a_table():
         data = __get_records(Qry.get('Q1A_X').format(qid=qid, date0=date0, date1=date1))
         title = f"qid={qid} for {date0}...{date1}"
         in_btc = qid in {4, 6}
-    return render_template("q1a_table.html", title=title, form=form, data=data, in_btc=in_btc)
+    return render_template("q1a_table.html", form=form, title=title, data=data, in_btc=in_btc)
+
+
+def __mk_plot(data: Iterable) -> str:
+    x = []
+    y = []
+    for row in data:
+        x.append(row.d)
+        y.append(row.val)
+    fig, ax = plt.subplots()
+    ax.plot(x, y)
+    ax.xaxis.set_major_formatter(mdates.DateFormatter("%d.%m"))
+    plt.setp(ax.get_xticklabels(), rotation=45, ha="right")
+    of = io.StringIO()
+    plt.savefig(of, format='svg')
+    return of.getvalue()
 
 
 @bp.route('/q1a/2d/date/', methods=['GET', 'POST'])
 def q1a_2d_date():
     form = forms.Q1A2DDatesForm()
-    data: Iterable = []
     title: str = ""
-    percent: bool = False
-    in_btc: bool = False
+    svg = ''
     if form.validate_on_submit():
         qid = form.qid.data
         rid = form.rid.data
@@ -471,4 +484,11 @@ def q1a_2d_date():
         data = __get_records(Qry.get('Q1A_2D_DATE').format(qid=qid, rid=rid, date0=date0, date1=date1))
         title = f"qid={qid}, rid={rid} for {date0}...{date1}"
         in_btc = qid in {4, 6}
-    return render_template("q1a_2d_date.html", title=title, form=form, data=data, percent=percent, in_btc=in_btc)
+        svg = __mk_plot(data)
+    return render_template("q1a_2d_date.html", form=form, title=title, svg=svg)
+
+
+SVG_SAMPLE = '''<svg height="100" width="100">
+<circle cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill="red" />
+Inline SVG not supported.  
+</svg>'''

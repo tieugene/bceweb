@@ -36,6 +36,7 @@ def __plot(data: list[tuple[date, int]]):
     ax.xaxis.set_major_formatter(mdates.DateFormatter("%d.%m"))
     plt.setp(ax.get_xticklabels(), rotation=45, ha="right")
     plt.show()
+    # plt.savefig("test.svg")
 
 
 def main():
