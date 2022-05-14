@@ -473,19 +473,18 @@ def __mk_plot(data: Iterable) -> str:
 @bp.route('/q1a/2d/date/', methods=['GET', 'POST'])
 def q1a_2d_date():
     form = forms.Q1A2DDatesForm()
-    title: str = ""
-    svg = ''
+    data = None
     if form.validate_on_submit():
         qid = form.qid.data
         rid = form.rid.data
         date0 = form.date0.data
         date1 = form.date1.data
         percent = form.percent.data
-        data = __get_records(Qry.get('Q1A_2D_DATE').format(qid=qid, rid=rid, date0=date0, date1=date1))
-        title = f"qid={qid}, rid={rid} for {date0}...{date1}"
         in_btc = qid in {4, 6}
-        svg = __mk_plot(data)
-    return render_template("q1a_2d_date.html", form=form, title=title, svg=svg)
+        title = f"qid={qid}, rid={rid} for {date0}...{date1}"
+        src = __get_records(Qry.get('Q1A_2D_DATE').format(qid=qid, rid=rid, date0=date0, date1=date1))
+        data = {'title': title, 'svg': __mk_plot(src)}
+    return render_template("q1a_2d_date.html", form=form, data=data)
 
 
 SVG_SAMPLE = '''<svg height="100" width="100">
