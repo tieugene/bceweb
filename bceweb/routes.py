@@ -453,3 +453,22 @@ def q1a_table():
         title = f"qid={qid} for {date0}...{date1}"
         in_btc = qid in {4, 6}
     return render_template("q1a_table.html", title=title, form=form, data=data, in_btc=in_btc)
+
+
+@bp.route('/q1a/2d/date/', methods=['GET', 'POST'])
+def q1a_2d_date():
+    form = forms.Q1A2DDatesForm()
+    data: Iterable = []
+    title: str = ""
+    percent: bool = False
+    in_btc: bool = False
+    if form.validate_on_submit():
+        qid = form.qid.data
+        rid = form.rid.data
+        date0 = form.date0.data
+        date1 = form.date1.data
+        percent = form.percent.data
+        data = __get_records(Qry.get('Q1A_2D_DATE').format(qid=qid, rid=rid, date0=date0, date1=date1))
+        title = f"qid={qid}, rid={rid} for {date0}...{date1}"
+        in_btc = qid in {4, 6}
+    return render_template("q1a_2d_date.html", title=title, form=form, data=data, percent=percent, in_btc=in_btc)
