@@ -1,5 +1,8 @@
 from flask_wtf import FlaskForm
-from wtforms import DateField, IntegerField, SelectField
+try:  # wtforms 2.x
+    from wtforms.fields.html5 import DateField, IntegerField, SelectField
+except ImportError:  # wtforms 3.x
+    from wtforms import DateField, IntegerField, SelectField
 
 
 class ND0D1Form(FlaskForm):
