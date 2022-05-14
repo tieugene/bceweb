@@ -20,23 +20,45 @@
     <table class="thick">
         <caption> {{ title }} </caption>
         <thead>
-        <tr> <th> Date </th> </th> <th> r1 </th> <th> r2 </th> <th> r3 </th> <th> r4 </th> <th> r5 </th> <th> r6 </th> <th> r7 </th> <th> r8 </th> <th> r9 </th> <th> r10 </th> <th> r10 </th> </tr>
+        <tr>
+            <th rowspan="2"> Date </th>
+            <th colspan="11"> % </th>
+            <th colspan="12"> Abs </th>
+        </tr>
+        <tr>
+            </th> <th> r1 </th> <th> r2 </th> <th> r3 </th> <th> r4 </th> <th> r5 </th> <th> r6 </th> <th> r7 </th> <th> r8 </th> <th> r9 </th> <th> r10 </th> <th> r11 </th>
+            </th> <th> r1 </th> <th> r2 </th> <th> r3 </th> <th> r4 </th> <th> r5 </th> <th> r6 </th> <th> r7 </th> <th> r8 </th> <th> r9 </th> <th> r10 </th> <th> r11 </th> <th> &Sum; </th>
+        </tr>
         </thead>
         <tbody>
         {% for row in data %}
             <tr>
                 <th> {{ row.d }} </th>
-                <td class="right"> {{ row.rid1 or 0 }} </td>
-                <td class="right"> {{ row.rid2 or 0 }} </td>
-                <td class="right"> {{ row.rid3 or 0 }} </td>
-                <td class="right"> {{ row.rid4 or 0 }} </td>
-                <td class="right"> {{ row.rid5 or 0 }} </td>
-                <td class="right"> {{ row.rid6 or 0 }} </td>
-                <td class="right"> {{ row.rid7 or 0 }} </td>
-                <td class="right"> {{ row.rid8 or 0 }} </td>
-                <td class="right"> {{ row.rid9 or 0 }} </td>
-                <td class="right"> {{ row.rid10 or 0 }} </td>
-                <td class="right"> {{ row.rid11 or 0 }} </td>
+
+                <td class="right"> {{ "%.1f"|format(100*row.rid1/row.total) }} </td>
+                <td class="right"> {{ "%.1f"|format(100*row.rid2/row.total) }} </td>
+                <td class="right"> {{ "%.1f"|format(100*row.rid3/row.total) }} </td>
+                <td class="right"> {{ "%.1f"|format(100*row.rid4/row.total) }} </td>
+                <td class="right"> {{ "%.1f"|format(100*row.rid5/row.total) }} </td>
+                <td class="right"> {{ "%.1f"|format(100*row.rid6/row.total) }} </td>
+                <td class="right"> {{ "%.1f"|format(100*row.rid7/row.total) }} </td>
+                <td class="right"> {{ "%.1f"|format(100*row.rid8/row.total) }} </td>
+                <td class="right"> {{ "%.1f"|format(100*row.rid9/row.total) }} </td>
+                <td class="right"> {{ "%.1f"|format(100*row.rid10/row.total) }} </td>
+                <td class="right"> {{ "%.1f"|format(100*row.rid11/row.total) }} </td>
+
+                <td class="right"> {{ row.rid1 }} </td>
+                <td class="right"> {{ row.rid2 }} </td>
+                <td class="right"> {{ row.rid3 }} </td>
+                <td class="right"> {{ row.rid4 }} </td>
+                <td class="right"> {{ row.rid5 }} </td>
+                <td class="right"> {{ row.rid6 }} </td>
+                <td class="right"> {{ row.rid7 }} </td>
+                <td class="right"> {{ row.rid8 }} </td>
+                <td class="right"> {{ row.rid9 }} </td>
+                <td class="right"> {{ row.rid10 }} </td>
+                <td class="right"> {{ row.rid11 }} </td>
+                <td class="right"> {{ row.total }} </td>
             </tr>
         {% endfor %}
         </tbody>

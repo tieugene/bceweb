@@ -449,5 +449,5 @@ def q1a_table():
         date0 = form.date0.data
         date1 = form.date1.data
         data = __get_records(Qry.get('Q1A_X').format(qid=qid, date0=date0, date1=date1))
-        title = f"Q1A for qid={qid} for {date0}...{date1}"
+        title = f"qid={qid} for {date0}...{date1}"
     return render_template("q1a_table.html", title=title, form=form, data=data)
