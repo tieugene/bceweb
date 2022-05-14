@@ -1,8 +1,8 @@
 from flask_wtf import FlaskForm
-try:  # 2.x
-    from wtforms.fields.html5 import DateField, IntegerField
-except ImportError:  # 3.x
-    from wtforms import DateField, IntegerField
+try:  # wtforms 2.x
+    from wtforms.fields.html5 import DateField, IntegerField, SelectField
+except ImportError:  # wtforms 3.x
+    from wtforms import DateField, IntegerField, SelectField
 
 
 class ND0D1Form(FlaskForm):
@@ -18,3 +18,13 @@ class ND1Form(FlaskForm):
     """Form for N, Date"""
     num = IntegerField("BTC.:")
     date1 = DateField("Date:")
+
+
+class Q1ATableForm(FlaskForm):
+    qid = SelectField(
+        "qid:",
+        choices=[(1, "Addr, #"), (2, "Addr, # Active"), (3, "Utxo, #"), (4, "Utxo, ₿"), (5, "Vout, #"), (6, "Vout, ₿")],
+        coerce=int
+    )
+    date0 = DateField("from:")
+    date1 = DateField("to:")
