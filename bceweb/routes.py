@@ -437,3 +437,17 @@ def q1a_raw_year(y: int):
         y,
         request.args.get('xls') is not None
     )
+
+
+@bp.route('/q1a/table/', methods=['GET', 'POST'])
+def q1a_table():
+    form = forms.Q1ATableForm()
+    data = []
+    title = ""
+    if form.validate_on_submit():
+        qid = form.qid.data
+        date0 = form.date0.data
+        date1 = form.date1.data
+        data = __get_records(Qry.get('Q1A_X').format(qid=qid, date0=date0, date1=date1))
+        title = f"Q1A for qid={qid} for {date0}...{date1}"
+    return render_template("q1a_table.html", title=title, form=form, data=data)

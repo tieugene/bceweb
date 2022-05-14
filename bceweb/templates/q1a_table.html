@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %} Q1A table {% endblock %}
+{% block body %}
+    <h1> Q1A </h1>
+    <form action="" method="post" novalidate="">
+    {{ form.csrf_token() }}
+		<table> <tr>
+        {% for field in form if field.name != "csrf_token" %}
+            <th>{{ field.label() }}</th>
+            <td>
+                <p>{{ field }}</p>
+                {% for error in field.errors %}
+                    {{ error }}<br/>
+                {% endfor %}
+            </td>
+		{% endfor %}
+            <td><input id="submit" name="submit" type="submit" value="Go"></td>
+        </tr></table>
+    </form>
+    <table class="thick">
+        <caption> {{ title }} </caption>
+        <thead>
+        <tr> <th> Date </th> </th> <th> r1 </th> <th> r2 </th> <th> r3 </th> <th> r4 </th> <th> r5 </th> <th> r6 </th> <th> r7 </th> <th> r8 </th> <th> r9 </th> <th> r10 </th> <th> r10 </th> </tr>
+        </thead>
+        <tbody>
+        {% for row in data %}
+            <tr>
+                <th> {{ row.d }} </th>
+                <td class="right"> {{ row.rid1 or 0 }} </td>
+                <td class="right"> {{ row.rid2 or 0 }} </td>
+                <td class="right"> {{ row.rid3 or 0 }} </td>
+                <td class="right"> {{ row.rid4 or 0 }} </td>
+                <td class="right"> {{ row.rid5 or 0 }} </td>
+                <td class="right"> {{ row.rid6 or 0 }} </td>
+                <td class="right"> {{ row.rid7 or 0 }} </td>
+                <td class="right"> {{ row.rid8 or 0 }} </td>
+                <td class="right"> {{ row.rid9 or 0 }} </td>
+                <td class="right"> {{ row.rid10 or 0 }} </td>
+                <td class="right"> {{ row.rid11 or 0 }} </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
