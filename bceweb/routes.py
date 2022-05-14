@@ -15,8 +15,6 @@ import psycopg2.extras
 from flask import Blueprint, render_template, request, send_file, g, current_app, session, redirect, url_for
 
 # 3. local
-from flask_wtf import FlaskForm
-
 from . import forms, xlstore
 from .queries import Qry
 
@@ -455,16 +453,7 @@ def q1a_table():
     return render_template("q1a_table.html", form=form, title=title, data=data, in_btc=in_btc)
 
 
-def __mk_plot(data: Iterable) -> str:
-    x = []
-    y = []
-    for row in data:
-        x.append(row.d)
-        y.append(row.val)
-    fig, ax = plt.subplots()
-    ax.plot(x, y)
-    ax.xaxis.set_major_formatter(mdates.DateFormatter("%d.%m"))
-    plt.setp(ax.get_xticklabels(), rotation=45, ha="right")
+def __plt2svg() -> str:
     of = io.StringIO()
     plt.savefig(of, format='svg')
     return of.getvalue()
@@ -472,6 +461,17 @@ def __mk_plot(data: Iterable) -> str:
 
 @bp.route('/q1a/2d/date/', methods=['GET', 'POST'])
 def q1a_2d_date():
+    def __mk_plot(__data: Iterable) -> str:
+        x = []
+        y = []
+        for row in __data:
+            x.append(row.d)
+            y.append(row.val)
+        fig, ax = plt.subplots()
+        ax.plot(x, y)
+        ax.xaxis.set_major_formatter(mdates.DateFormatter("%d.%m"))
+        plt.setp(ax.get_xticklabels(), rotation=45, ha="right")
+        return __plt2svg()
     form = forms.Q1A2DDatesForm()
     data = None
     if form.validate_on_submit():
@@ -479,10 +479,34 @@ def q1a_2d_date():
         rid = form.rid.data
         date0 = form.date0.data
         date1 = form.date1.data
-        percent = form.percent.data
-        in_btc = qid in {4, 6}
+        # percent = form.percent.data
+        # in_btc = qid in {4, 6}
         title = f"qid={qid}, rid={rid} for {date0}...{date1}"
         src = __get_records(Qry.get('Q1A_2D_DATE').format(qid=qid, rid=rid, date0=date0, date1=date1))
+        data = {'title': title, 'svg': __mk_plot(src)}
+    return render_template("q1a_2d_date.html", form=form, data=data)
+
+
+@bp.route('/q1a/2d/rid/', methods=['GET', 'POST'])
+def q1a_2d_rid():
+    def __mk_plot(__data: Iterable) -> str:
+        x = []
+        y = []
+        for row in __data:
+            x.append(row.rid)
+            y.append(row.val)
+        fig, ax = plt.subplots()
+        ax.plot(x, y)
+        return __plt2svg()
+    form = forms.Q1A2DRIDForm()
+    data = None
+    if form.validate_on_submit():
+        qid = form.qid.data
+        date0 = form.date0.data
+        # percent = form.percent.data
+        # in_btc = qid in {4, 6}
+        title = f"qid={qid} for {date0}"
+        src = __get_records(Qry.get('Q1A_2D_RID').format(qid=qid, date0=date0))
         data = {'title': title, 'svg': __mk_plot(src)}
     return render_template("q1a_2d_date.html", form=form, data=data)
 
