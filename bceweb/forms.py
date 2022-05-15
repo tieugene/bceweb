@@ -1,8 +1,8 @@
 from flask_wtf import FlaskForm
 try:  # wtforms 2.x
-    from wtforms.fields.html5 import DateField, IntegerField, SelectField
+    from wtforms.fields.html5 import DateField, IntegerField, SelectField, RadioField
 except ImportError:  # wtforms 3.x
-    from wtforms import DateField, IntegerField, SelectField
+    from wtforms import DateField, IntegerField, SelectField, RadioField
 
 
 class ND0D1Form(FlaskForm):
@@ -21,7 +21,7 @@ class ND1Form(FlaskForm):
 
 
 class Q1ATableForm(FlaskForm):
-    qid = SelectField(
+    qid = RadioField(
         "qid:",
         choices=[(1, "Addr, #"), (2, "Addr, # Active"), (3, "Utxo, #"), (4, "Utxo, ₿"), (5, "Vout, #"), (6, "Vout, ₿")],
         coerce=int
