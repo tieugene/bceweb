@@ -1,5 +1,35 @@
 {% extends "base.html" %}
 {% block title %} Q1A table {% endblock %}
+{% block head %}
+    <style>
+        ul#qid {
+            margin: 0;
+        }
+        ul#qid li {
+            display: inline;
+        }
+        ul#qid li input {
+            position: absolute !important;
+            clip: rect(0, 0, 0, 0);
+            height: 1px;
+            width: 1px;
+            overflow: hidden;
+        }
+        ul#qid li label {
+            text-align: center;
+            border: 1px solid gainsboro;
+            border-radius: 4px;
+            padding: 1px 5px;
+            margin: 0 1px;
+        }
+        ul#qid li label:hover {
+            cursor: pointer;
+        }
+        ul#qid li input:checked + label {
+            background-color: gainsboro;
+        }
+    </style>
+{% endblock %}
 {% block body %}
     <h1> Q1A </h1>
     <form action="" method="post" novalidate="">
@@ -7,7 +37,7 @@
 		<table> <tr>
         {% for field in form if field.name != "csrf_token" %}
             <th>{{ field.label() }}</th>
-            <td>
+            <td style="border: none;">
                 <p>{{ field }}</p>
                 {% for error in field.errors %}
                     {{ error }}<br/>
