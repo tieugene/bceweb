@@ -1,9 +1,9 @@
 from flask_wtf import FlaskForm
 try:  # wtforms 2.x
-    from wtforms.fields.html5 import BooleanField, IntegerField, DateField, SelectField, RadioField
+    from wtforms.fields.html5 import IntegerField, DateField
 except ImportError:  # wtforms 3.x
-    from wtforms import BooleanField, IntegerField, DateField, SelectField, RadioField
-
+    from wtforms import IntegerField, DateField
+from wtforms import BooleanField, SelectField, RadioField
 
 QID_LIST = ((1, "Addr, #"), (2, "Addr, # Active"), (3, "Utxo, #"), (4, "Utxo, ₿"), (5, "Vout, #"), (6, "Vout, ₿"))
 RID_LIST = ((1, "≤.001"), (2, "001….01"), (3, ".01….1"), (4, ".1…1"), (5, "1…10"), (6, "10…100"), (7, "100…1k"), (8, "1k…10k"), (9, "10k…100k"), (10, "100k…1m"), (11, ">1m"))
