@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %} Q1A table {% endblock %}
+{% block body %}
+    <h1> Q1A </h1>
+    <form action="" method="post" novalidate="">
+    {{ form.csrf_token() }}
+		<table> <tr>
+        {% for field in form if field.name != "csrf_token" %}
+            <th>{{ field.label() }}</th>
+            <td>
+                <p>{{ field }}</p>
+                {% for error in field.errors %}
+                    {{ error }}<br/>
+                {% endfor %}
+            </td>
+		{% endfor %}
+            <td><input id="submit" name="submit" type="submit" value="Go"></td>
+        </tr></table>
+    </form>
+    <hr/>
+    {% if data %}
+        <h2> {{ data.title }} </h2>
+        {{ data.svg|safe }}
+    {% endif %}
+{% endblock %}

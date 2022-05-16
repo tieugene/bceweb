@@ -28,3 +28,17 @@ class Q1ATableForm(FlaskForm):
     qid = RadioField("qid:", choices=QID_LIST, coerce=int)
     date0 = DateField("from:")
     date1 = DateField("to:")
+
+
+class Q1A2DDatesForm(FlaskForm):
+    qid = SelectField("qid:", choices=QID_LIST, coerce=int)
+    rid = SelectField("rid:", choices=RID_LIST, coerce=int)
+    date0 = DateField("from:")
+    date1 = DateField("to:")
+    percent = BooleanField("%")
+
+
+class Q1A2DRIDForm(FlaskForm):
+    qid = SelectField("qid:", choices=QID_LIST, coerce=int)
+    date0 = DateField("date:")
+    percent = BooleanField("%")
