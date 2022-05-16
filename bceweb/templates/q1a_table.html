@@ -29,6 +29,13 @@
             background-color: gainsboro;
         }
     </style>
+    <script type='text/javascript'>
+        $(document).ready(function() {
+            $('input[type=radio][name=qid]').change(function() {
+                $('input[type=submit]').click();
+            });
+        });
+    </script>
 {% endblock %}
 {% block body %}
     <h1> Q1A </h1>
