@@ -21,6 +21,10 @@ from .queries import Qry
 # consts
 PAGE_SIZE = 25
 COOKEY_YEAR = 'year'
+COOKEY_FORM_NUM = 'form_num'
+COOKEY_FORM_DATE0 = 'form_date0'
+COOKEY_FORM_DATE1 = 'form_date1'
+COOKEY_FORM_QID = 'form_qid'
 
 bp = Blueprint('bceweb', __name__)
 
@@ -110,7 +114,7 @@ def src_year(y: int):
     """
     max_year = int(__get_a_value(Qry.get('SRC_MAX_YEAR')))
     iy = int(y)
-    if COOKEY_YEAR in session and session.get(COOKEY_YEAR) != iy:
+    if COOKEY_YEAR not in session or session.get(COOKEY_YEAR) != iy:
         session[COOKEY_YEAR] = iy
     max_doy: datetime.date = __get_a_value(Qry.get('SRC_MAX_DOY').format(year=iy))
     # print(max_doy)
