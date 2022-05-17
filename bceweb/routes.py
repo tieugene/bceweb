@@ -1,7 +1,7 @@
 """Main router"""
 # 1. std
 import csv
-from typing import Optional, Tuple, Type, Iterable
+from typing import Optional, Tuple, Type, Iterable, Union
 import datetime
 import io
 import math
@@ -76,6 +76,20 @@ def __get_records(q: str, data: dict = None):
     return cur
 
 
+def __get_cookie(name: str, t: Optional[type] = None) -> Optional[Union[int, str, datetime.date]]:
+    if name in session and (val := session.get(name)) is not None:
+        return datetime.date.fromisoformat(val) if t == datetime.date else val
+
+
+def __set_cookie(name: str, val: Union[int, str, datetime.date]):
+    session[name] = val.isoformat() if isinstance(val, datetime.date) else val
+
+
+def __update_cookie(name: str, val: Union[int, str, datetime.date]):
+    if (__get_cookie(name, datetime.date) if isinstance(val, datetime.date) else __get_cookie(name)) != val:
+        __set_cookie(name, val)
+
+
 # filters
 @bp.add_app_template_filter
 def intorna(i: Optional[int]) -> str:
@@ -99,7 +113,7 @@ def index():
 def src_years():
     # TODO: redirect
     max_year = int(__get_a_value(Qry.get('SRC_MAX_YEAR')))  # FIXME: what if None
-    if COOKEY_YEAR not in session or (y := session.get(COOKEY_YEAR)) > max_year:
+    if (y := __get_cookie(COOKEY_YEAR)) is None or y > max_year:
         y = 2009
     return redirect(url_for('bceweb.src_year', y=y))
 
@@ -114,8 +128,7 @@ def src_year(y: int):
     """
     max_year = int(__get_a_value(Qry.get('SRC_MAX_YEAR')))
     iy = int(y)
-    if COOKEY_YEAR not in session or session.get(COOKEY_YEAR) != iy:
-        session[COOKEY_YEAR] = iy
+    __update_cookie(COOKEY_YEAR, iy)
     max_doy: datetime.date = __get_a_value(Qry.get('SRC_MAX_DOY').format(year=iy))
     # print(max_doy)
     months = []
@@ -436,7 +449,7 @@ def q1a_raw_month(y: int, m: int):
 def q1a_raw_year(y: int):
     return __q1a_raw(
         __get_records(Qry.get('Q1A_RAW_YEAR').format(y=int(y))),
-        y,
+        str(y),
         request.args.get('xls') is not None
     )
 
@@ -449,11 +462,22 @@ def q1a_table():
     in_btc = False
     if form.validate_on_submit():
         qid = form.qid.data
+        __update_cookie(COOKEY_FORM_QID, qid)
         date0 = form.date0.data
+        __update_cookie(COOKEY_FORM_DATE0, date0)
         date1 = form.date1.data
+        __update_cookie(COOKEY_FORM_DATE1, date1)
         data = __get_records(Qry.get('Q1A_X').format(qid=qid, date0=date0, date1=date1))
         title = f"qid={qid} for {date0}...{date1}"
         in_btc = qid in {4, 6}
+    else:
+        if request.method == 'GET':
+            if qid := __get_cookie(COOKEY_FORM_QID):
+                form.qid.data = qid
+            if date0 := __get_cookie(COOKEY_FORM_DATE0, datetime.date):
+                form.date0.data = date0
+            if date1 := __get_cookie(COOKEY_FORM_DATE1, datetime.date):
+                form.date1.data = date1
     return render_template("q1a_table.html", form=form, title=title, data=data, in_btc=in_btc)
 
 
