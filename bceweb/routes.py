@@ -308,8 +308,14 @@ def __q_addr_x_y_tx(formclass: Type, title: str, head: Tuple, qry_name: str, tpl
     xl_id = 0
     if form.validate_on_submit():
         num = form.num.data
-        date0 = form.date0.data if 'date0' in form.data else None
+        __update_cookie(COOKEY_FORM_NUM, num)
+        if 'date0' in form.data:
+            date0 = form.date0.data
+            __update_cookie(COOKEY_FORM_DATE0, date0)
+        else:
+            date0 = None
         date1 = form.date1.data
+        __update_cookie(COOKEY_FORM_DATE1, date1)
         # TODO: dates to txs
         txs = __get_a_record(Qry.get('SRC_TXS_BY_DATES').format(date0=date0 or date1, date1=date1))
         time0 = __now()
@@ -321,6 +327,14 @@ def __q_addr_x_y_tx(formclass: Type, title: str, head: Tuple, qry_name: str, tpl
         title = title.format(num=num, date0=date0, date1=date1, table=table)
         meta = {'title': title, 'subject': '', 'created': time1, 'comments': ''}
         xl_id = xlstore.mk_xlsx(meta, head, data, col_fmt)
+    elif request.method == 'GET':
+        if num := __get_cookie(COOKEY_FORM_NUM):
+            form.num.data = num
+        if 'date0' in form.data:
+            if date0 := __get_cookie(COOKEY_FORM_DATE0, datetime.date):
+                form.date0.data = date0
+        if date1 := __get_cookie(COOKEY_FORM_DATE1, datetime.date):
+            form.date1.data = date1
     return render_template(tpl_name, title=title, head=head, data=data, form=form, times=times, xl_id=xl_id)
 
 
@@ -470,14 +484,13 @@ def q1a_table():
         data = __get_records(Qry.get('Q1A_X').format(qid=qid, date0=date0, date1=date1))
         title = f"qid={qid} for {date0}...{date1}"
         in_btc = qid in {4, 6}
-    else:
-        if request.method == 'GET':
-            if qid := __get_cookie(COOKEY_FORM_QID):
-                form.qid.data = qid
-            if date0 := __get_cookie(COOKEY_FORM_DATE0, datetime.date):
-                form.date0.data = date0
-            if date1 := __get_cookie(COOKEY_FORM_DATE1, datetime.date):
-                form.date1.data = date1
+    elif request.method == 'GET':
+        if qid := __get_cookie(COOKEY_FORM_QID):
+            form.qid.data = qid
+        if date0 := __get_cookie(COOKEY_FORM_DATE0, datetime.date):
+            form.date0.data = date0
+        if date1 := __get_cookie(COOKEY_FORM_DATE1, datetime.date):
+            form.date1.data = date1
     return render_template("q1a_table.html", form=form, title=title, data=data, in_btc=in_btc)
 
 
