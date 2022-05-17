@@ -378,15 +378,15 @@ def q_addr_gt_tx():
 
 
 def __q1a_raw(src: Iterable, suffix: str, xls: bool = False):
+    """
+    Download Q1A for period as CSV/XLSX file
+    :param src: Query data
+    :param suffix:
+    :param xls:
+    :return:
+    """
     if xls:
-        # FIXME: date column (worksheet.write_datetime(0, 0, datetime, date_format))
-        xl_id = xlstore.mk_xlsx(
-            {'title': 'f"Q1A_{suffix}"', 'subject': '', 'created': __now(), 'comments': ''},
-            ("date", "qid", "rid", "value"),
-            src,
-            {0: xlstore.ECellType.Date}
-        )
-        if data := xlstore.Store.get(xl_id):
+        if data := xlstore.q1a(src):
             return send_file(
                 io.BytesIO(data),
                 download_name=f"q1a_{suffix}.xlsx"
@@ -509,9 +509,3 @@ def q1a_2d_rid():
         src = __get_records(Qry.get('Q1A_2D_RID').format(qid=qid, date0=date0))
         data = {'title': title, 'svg': __mk_plot(src)}
     return render_template("q1a_2d_date.html", form=form, data=data)
-
-
-SVG_SAMPLE = '''<svg height="100" width="100">
-<circle cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill="red" />
-Inline SVG not supported.  
-</svg>'''
