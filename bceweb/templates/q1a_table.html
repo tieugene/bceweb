@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% block title %} Q1A table {% endblock %}
+{% block head %}
+    <style>
+        ul#qid {
+            margin: 0;
+        }
+        ul#qid li {
+            display: inline;
+        }
+        ul#qid li input {
+            position: absolute !important;
+            clip: rect(0, 0, 0, 0);
+            height: 1px;
+            width: 1px;
+            overflow: hidden;
+        }
+        ul#qid li label {
+            text-align: center;
+            border: 1px solid gainsboro;
+            border-radius: 4px;
+            padding: 1px 5px;
+            margin: 0 1px;
+        }
+        ul#qid li label:hover {
+            cursor: pointer;
+        }
+        ul#qid li input:checked + label {
+            background-color: gainsboro;
+        }
+    </style>
+    <script type='text/javascript'>
+        $(document).ready(function() {
+            $('input[type=radio][name=qid]').change(function() {
+                if ($('#date0').val() && $('#date1').val())
+                    $('input[type=submit]').click();
+            });
+        });
+    </script>
+{% endblock %}
+{% block body %}
+    <h1> Q1A </h1>
+    <form action="" method="post" novalidate="">
+    {{ form.csrf_token() }}
+		<table> <tr>
+        {% for field in form if field.name != "csrf_token" %}
+            <th>{{ field.label() }}</th>
+            <td style="border: none;">
+                <p>{{ field }}</p>
+                {% for error in field.errors %}
+                    {{ error }}<br/>
+                {% endfor %}
+            </td>
+		{% endfor %}
+            <td><input id="submit" name="submit" type="submit" value="Go"></td>
+        </tr></table>
+    </form>
+    <table class="thick">
+        <caption> {{ title }} </caption>
+        <thead>
+        <tr>
+            <th rowspan="2"> Date </th>
+            <th colspan="11"> % </th>
+            <th colspan="12"> Abs </th>
+        </tr>
+        <tr>
+            </th> <th title="≤.001"> r1 </th> <th title=".001 < x ≤.01"> r2 </th> <th title="≤.1"> r3 </th> <th title="≤1"> r4 </th> <th title="≤10"> r5 </th> <th title="≤100"> r6 </th> <th title="≤1k"> r7 </th> <th title="≤10k"> r8 </th> <th title="≤100k"> r9 </th> <th title="≤1m"> r10 </th> <th title=">1m"> r11 </th>
+            </th> <th> r1 </th> <th> r2 </th> <th> r3 </th> <th> r4 </th> <th> r5 </th> <th> r6 </th> <th> r7 </th> <th> r8 </th> <th> r9 </th> <th> r10 </th> <th> r11 </th> <th> &Sum; </th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for row in data %}
+            <tr>
+                <th> {{ row.d }} </th>
+
+                <td class="right"> {{ "%.1f"|format(100*row.rid1/row.total) }} </td>
+                <td class="right"> {{ "%.1f"|format(100*row.rid2/row.total) }} </td>
+                <td class="right"> {{ "%.1f"|format(100*row.rid3/row.total) }} </td>
+                <td class="right"> {{ "%.1f"|format(100*row.rid4/row.total) }} </td>
+                <td class="right"> {{ "%.1f"|format(100*row.rid5/row.total) }} </td>
+                <td class="right"> {{ "%.1f"|format(100*row.rid6/row.total) }} </td>
+                <td class="right"> {{ "%.1f"|format(100*row.rid7/row.total) }} </td>
+                <td class="right"> {{ "%.1f"|format(100*row.rid8/row.total) }} </td>
+                <td class="right"> {{ "%.1f"|format(100*row.rid9/row.total) }} </td>
+                <td class="right"> {{ "%.1f"|format(100*row.rid10/row.total) }} </td>
+                <td class="right"> {{ "%.1f"|format(100*row.rid11/row.total) }} </td>
+            {% if in_btc %}
+                <td class="right"> {{ (row.rid1/100000000)|round|int }} </td>
+                <td class="right"> {{ (row.rid2/100000000)|round|int }} </td>
+                <td class="right"> {{ (row.rid3/100000000)|round|int }} </td>
+                <td class="right"> {{ (row.rid4/100000000)|round|int }} </td>
+                <td class="right"> {{ (row.rid5/100000000)|round|int }} </td>
+                <td class="right"> {{ (row.rid6/100000000)|round|int }} </td>
+                <td class="right"> {{ (row.rid7/100000000)|round|int }} </td>
+                <td class="right"> {{ (row.rid8/100000000)|round|int }} </td>
+                <td class="right"> {{ (row.rid9/100000000)|round|int }} </td>
+                <td class="right"> {{ (row.rid10/100000000)|round|int }} </td>
+                <td class="right"> {{ (row.rid11/100000000)|round|int }} </td>
+                <td class="right"> {{ (row.total/100000000)|round|int }} </td>
+            {% else %}
+                <td class="right"> {{ row.rid1 }} </td>
+                <td class="right"> {{ row.rid2 }} </td>
+                <td class="right"> {{ row.rid3 }} </td>
+                <td class="right"> {{ row.rid4 }} </td>
+                <td class="right"> {{ row.rid5 }} </td>
+                <td class="right"> {{ row.rid6 }} </td>
+                <td class="right"> {{ row.rid7 }} </td>
+                <td class="right"> {{ row.rid8 }} </td>
+                <td class="right"> {{ row.rid9 }} </td>
+                <td class="right"> {{ row.rid10 }} </td>
+                <td class="right"> {{ row.rid11 }} </td>
+                <td class="right"> {{ row.total }} </td>
+            {% endif %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

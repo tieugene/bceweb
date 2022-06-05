@@ -1,28 +1,30 @@
 """Main router"""
 # 1. std
 import csv
-from typing import Optional, Tuple, Type, Iterable
+from typing import Optional, Tuple, Type, Iterable, Union
 import datetime
 import io
 import math
 import calendar
-import pprint
 # 2. 3rd
-import sys
+import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
 
 import psycopg2
 import psycopg2.extras
 from flask import Blueprint, render_template, request, send_file, g, current_app, session, redirect, url_for
 
 # 3. local
-from flask_wtf import FlaskForm
-
 from . import forms, xlstore
 from .queries import Qry
 
 # consts
 PAGE_SIZE = 25
 COOKEY_YEAR = 'year'
+COOKEY_FORM_NUM = 'form_num'
+COOKEY_FORM_DATE0 = 'form_date0'
+COOKEY_FORM_DATE1 = 'form_date1'
+COOKEY_FORM_QID = 'form_qid'
 
 bp = Blueprint('bceweb', __name__)
 
@@ -74,6 +76,20 @@ def __get_records(q: str, data: dict = None):
     return cur
 
 
+def __get_cookie(name: str, t: Optional[type] = None) -> Optional[Union[int, str, datetime.date]]:
+    if name in session and (val := session.get(name)) is not None:
+        return datetime.date.fromisoformat(val) if t == datetime.date else val
+
+
+def __set_cookie(name: str, val: Union[int, str, datetime.date]):
+    session[name] = val.isoformat() if isinstance(val, datetime.date) else val
+
+
+def __update_cookie(name: str, val: Union[int, str, datetime.date]):
+    if (__get_cookie(name, datetime.date) if isinstance(val, datetime.date) else __get_cookie(name)) != val:
+        __set_cookie(name, val)
+
+
 # filters
 @bp.add_app_template_filter
 def intorna(i: Optional[int]) -> str:
@@ -97,7 +113,7 @@ def index():
 def src_years():
     # TODO: redirect
     max_year = int(__get_a_value(Qry.get('SRC_MAX_YEAR')))  # FIXME: what if None
-    if COOKEY_YEAR not in session or (y := session.get(COOKEY_YEAR)) > max_year:
+    if (y := __get_cookie(COOKEY_YEAR)) is None or y > max_year:
         y = 2009
     return redirect(url_for('bceweb.src_year', y=y))
 
@@ -112,8 +128,7 @@ def src_year(y: int):
     """
     max_year = int(__get_a_value(Qry.get('SRC_MAX_YEAR')))
     iy = int(y)
-    if COOKEY_YEAR in session and session.get(COOKEY_YEAR) != iy:
-        session[COOKEY_YEAR] = iy
+    __update_cookie(COOKEY_YEAR, iy)
     max_doy: datetime.date = __get_a_value(Qry.get('SRC_MAX_DOY').format(year=iy))
     # print(max_doy)
     months = []
@@ -293,8 +308,14 @@ def __q_addr_x_y_tx(formclass: Type, title: str, head: Tuple, qry_name: str, tpl
     xl_id = 0
     if form.validate_on_submit():
         num = form.num.data
-        date0 = form.date0.data if 'date0' in form.data else None
+        __update_cookie(COOKEY_FORM_NUM, num)
+        if 'date0' in form.data:
+            date0 = form.date0.data
+            __update_cookie(COOKEY_FORM_DATE0, date0)
+        else:
+            date0 = None
         date1 = form.date1.data
+        __update_cookie(COOKEY_FORM_DATE1, date1)
         # TODO: dates to txs
         txs = __get_a_record(Qry.get('SRC_TXS_BY_DATES').format(date0=date0 or date1, date1=date1))
         time0 = __now()
@@ -306,6 +327,14 @@ def __q_addr_x_y_tx(formclass: Type, title: str, head: Tuple, qry_name: str, tpl
         title = title.format(num=num, date0=date0, date1=date1, table=table)
         meta = {'title': title, 'subject': '', 'created': time1, 'comments': ''}
         xl_id = xlstore.mk_xlsx(meta, head, data, col_fmt)
+    elif request.method == 'GET':
+        if num := __get_cookie(COOKEY_FORM_NUM):
+            form.num.data = num
+        if 'date0' in form.data:
+            if date0 := __get_cookie(COOKEY_FORM_DATE0, datetime.date):
+                form.date0.data = date0
+        if date1 := __get_cookie(COOKEY_FORM_DATE1, datetime.date):
+            form.date1.data = date1
     return render_template(tpl_name, title=title, head=head, data=data, form=form, times=times, xl_id=xl_id)
 
 
@@ -380,15 +409,15 @@ def q_addr_gt_tx():
 
 
 def __q1a_raw(src: Iterable, suffix: str, xls: bool = False):
+    """
+    Download Q1A for period as CSV/XLSX file
+    :param src: Query data
+    :param suffix:
+    :param xls:
+    :return:
+    """
     if xls:
-        # FIXME: date column (worksheet.write_datetime(0, 0, datetime, date_format))
-        xl_id = xlstore.mk_xlsx(
-            {'title': 'f"Q1A_{suffix}"', 'subject': '', 'created': __now(), 'comments': ''},
-            ("date", "qid", "rid", "value"),
-            src,
-            {0: xlstore.ECellType.Date}
-        )
-        if data := xlstore.Store.get(xl_id):
+        if data := xlstore.q1a(src):
             return send_file(
                 io.BytesIO(data),
                 download_name=f"q1a_{suffix}.xlsx"
@@ -434,6 +463,90 @@ def q1a_raw_month(y: int, m: int):
 def q1a_raw_year(y: int):
     return __q1a_raw(
         __get_records(Qry.get('Q1A_RAW_YEAR').format(y=int(y))),
-        y,
+        str(y),
         request.args.get('xls') is not None
     )
+
+
+@bp.route('/q1a/table/', methods=['GET', 'POST'])
+def q1a_table():
+    form = forms.Q1ATableForm()
+    data = []
+    title = ""
+    in_btc = False
+    if form.validate_on_submit():
+        qid = form.qid.data
+        __update_cookie(COOKEY_FORM_QID, qid)
+        date0 = form.date0.data
+        __update_cookie(COOKEY_FORM_DATE0, date0)
+        date1 = form.date1.data
+        __update_cookie(COOKEY_FORM_DATE1, date1)
+        data = __get_records(Qry.get('Q1A_X').format(qid=qid, date0=date0, date1=date1))
+        title = f"qid={qid} for {date0}...{date1}"
+        in_btc = qid in {4, 6}
+    elif request.method == 'GET':
+        if qid := __get_cookie(COOKEY_FORM_QID):
+            form.qid.data = qid
+        if date0 := __get_cookie(COOKEY_FORM_DATE0, datetime.date):
+            form.date0.data = date0
+        if date1 := __get_cookie(COOKEY_FORM_DATE1, datetime.date):
+            form.date1.data = date1
+    return render_template("q1a_table.html", form=form, title=title, data=data, in_btc=in_btc)
+
+
+def __plt2svg() -> str:
+    of = io.StringIO()
+    plt.savefig(of, format='svg')
+    return of.getvalue()
+
+
+@bp.route('/q1a/2d/date/', methods=['GET', 'POST'])
+def q1a_2d_date():
+    def __mk_plot(__data: Iterable) -> str:
+        x = []
+        y = []
+        for row in __data:
+            x.append(row.d)
+            y.append(row.val)
+        fig, ax = plt.subplots()
+        ax.plot(x, y)
+        ax.xaxis.set_major_formatter(mdates.DateFormatter("%d.%m"))
+        plt.setp(ax.get_xticklabels(), rotation=45, ha="right")
+        return __plt2svg()
+    form = forms.Q1A2DDatesForm()
+    data = None
+    if form.validate_on_submit():
+        qid = form.qid.data
+        rid = form.rid.data
+        date0 = form.date0.data
+        date1 = form.date1.data
+        # percent = form.percent.data
+        # in_btc = qid in {4, 6}
+        title = f"qid={qid}, rid={rid} for {date0}...{date1}"
+        src = __get_records(Qry.get('Q1A_2D_DATE').format(qid=qid, rid=rid, date0=date0, date1=date1))
+        data = {'title': title, 'svg': __mk_plot(src)}
+    return render_template("q1a_2d_date.html", form=form, data=data)
+
+
+@bp.route('/q1a/2d/rid/', methods=['GET', 'POST'])
+def q1a_2d_rid():
+    def __mk_plot(__data: Iterable) -> str:
+        x = []
+        y = []
+        for row in __data:
+            x.append(row.rid)
+            y.append(row.val)
+        fig, ax = plt.subplots()
+        ax.plot(x, y)
+        return __plt2svg()
+    form = forms.Q1A2DRIDForm()
+    data = None
+    if form.validate_on_submit():
+        qid = form.qid.data
+        date0 = form.date0.data
+        # percent = form.percent.data
+        # in_btc = qid in {4, 6}
+        title = f"qid={qid} for {date0}"
+        src = __get_records(Qry.get('Q1A_2D_RID').format(qid=qid, date0=date0))
+        data = {'title': title, 'svg': __mk_plot(src)}
+    return render_template("q1a_2d_date.html", form=form, data=data)
