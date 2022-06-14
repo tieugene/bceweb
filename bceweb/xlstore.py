@@ -76,6 +76,11 @@ def mk_xlsx(meta: dict, head: tuple, data: Iterable, col_fmt: dict[int: ECellTyp
 
 
 def q1a(data: Iterable) -> bytes:
+    """
+
+    :param data: recordset of (d:date, qid:int, rid:int, val:bigint)
+    :return:
+    """
     meta = {'title': "Q1A", 'subject': "Subject", 'created': date.today(), 'comments': ''}
     head = ('date', 'rid1', 'rid2', 'rid3', 'rid4', 'rid5', 'rid6', 'rid7', 'rid8', 'rid9', 'rid10', 'rid11')
     like_file = io.BytesIO()
