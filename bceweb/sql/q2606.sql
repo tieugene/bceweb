@@ -1,0 +1,1 @@
+SELECT * FROM _q_220606(__get_date_tx_min('{date0}'), {m_min}, {m_max}, {num}) ORDER BY a_id, dt0, dt1;

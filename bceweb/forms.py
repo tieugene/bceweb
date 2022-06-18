@@ -4,6 +4,7 @@ try:  # wtforms 2.x
 except ImportError:  # wtforms 3.x
     from wtforms import IntegerField, DateField
 from wtforms import BooleanField, SelectField, RadioField
+from wtforms.validators import Optional, DataRequired
 
 QID_LIST = ((1, "Addr, #"), (2, "Addr, # Active"), (3, "Utxo, #"), (4, "Utxo, ₿"), (5, "Vout, #"), (6, "Vout, ₿"))
 RID_LIST = ((1, "≤.001"), (2, "001….01"), (3, ".01….1"), (4, ".1…1"), (5, "1…10"), (6, "10…100"), (7, "100…1k"), (8, "1k…10k"), (9, "10k…100k"), (10, "100k…1m"), (11, ">1m"))
@@ -42,3 +43,10 @@ class Q1A2DRIDForm(FlaskForm):
     qid = SelectField("qid:", choices=QID_LIST, coerce=int)
     date0 = DateField("date:")
     percent = BooleanField("%")
+
+
+class Q2606Form(FlaskForm):
+    """q_220606 form"""
+    date0 = DateField("from:", validators=[DataRequired()])
+    rid = SelectField("rid:", choices=RID_LIST, coerce=int)
+    num = IntegerField("Addrs:", validators=[Optional()])

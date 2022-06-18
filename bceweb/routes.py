@@ -25,7 +25,20 @@ COOKEY_FORM_NUM = 'form_num'
 COOKEY_FORM_DATE0 = 'form_date0'
 COOKEY_FORM_DATE1 = 'form_date1'
 COOKEY_FORM_QID = 'form_qid'
-
+COOKEY_FORM_RID = 'form_rid'
+RID = (
+    (1, 10**5),
+    (10**5 + 1, 10**6),
+    (10**6 + 1, 10**7),
+    (10**7 + 1, 10**8),
+    (10**8 + 1, 10**9),
+    (10**9 + 1, 10**10),
+    (10**10 + 1, 10**11),
+    (10**11 + 1, 10**12),
+    (10**12 + 1, 10**13),
+    (10**13 + 1, 10**14),
+    (10**14 + 1, 22 * 10**14)  # 21 M₿ is hardcoded limit
+)
 bp = Blueprint('bceweb', __name__)
 
 
@@ -550,3 +563,26 @@ def q1a_2d_rid():
         src = __get_records(Qry.get('Q1A_2D_RID').format(qid=qid, date0=date0))
         data = {'title': title, 'svg': __mk_plot(src)}
     return render_template("q1a_2d_date.html", form=form, data=data)
+
+
+@bp.route('/q2606/', methods=['GET', 'POST'])
+def q2606():
+    form = forms.Q2606Form()
+    if form.validate_on_submit():
+        date0 = form.date0.data
+        __update_cookie(COOKEY_FORM_DATE0, date0)
+        rid = form.rid.data
+        __update_cookie(COOKEY_FORM_RID, rid)
+        num = form.num.data
+        __update_cookie(COOKEY_FORM_NUM, num)
+        return redirect(url_for('bceweb.q_index'))
+        # data = __get_records(Qry.get('Q2622').format(date0=date0, m_min=RID[rid][0], m_max=RID[rid][1], num=num or 22*10**6))
+        # TODO: return txt
+    elif request.method == 'GET':
+        if date0 := __get_cookie(COOKEY_FORM_DATE0, datetime.date):
+            form.date0.data = date0
+        if rid := __get_cookie(COOKEY_FORM_RID):
+            form.rid.data = rid
+        if num := __get_cookie(COOKEY_FORM_NUM):
+            form.num.data = num
+    return render_template("q2606.html", form=form)
