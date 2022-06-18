@@ -1,13 +1,14 @@
 """XLSX files store"""
 # 1. std
 import io
-from datetime import date
+from datetime import date, datetime
 from enum import IntEnum
 from typing import Optional, Iterable
 # 2. 3rd
 import xlsxwriter
 
 OPTIONS = {'in_memory': True}
+
 
 class ECellType(IntEnum):
     BTC = 1
@@ -77,7 +78,7 @@ def mk_xlsx(meta: dict, head: tuple, data: Iterable, col_fmt: dict[int: ECellTyp
 
 def q1a(data: Iterable) -> bytes:
     """
-
+    Make xlsx with Q1A's 'table' data.
     :param data: recordset of (d:date, qid:int, rid:int, val:bigint)
     :return:
     """
@@ -111,3 +112,44 @@ def q1a(data: Iterable) -> bytes:
         worksheet[irow[1]-1].write_number(orow, irow[2], irow[3], num_format)
     workbook.close()
     return like_file.getvalue()
+
+
+def q2606_csf(d: date, data: Iterable) -> io.StringIO:
+    """
+    Make like-CSV file for Wolfram on given data
+    :param d: date start from
+    :param data: queryset
+    :return: file-like object
+    """
+
+    def __out_vout(_d: date, _row: list, _fs: str, _file: io.StringIO):
+        """Print one vout
+        :param _d: date from
+        :param _row: [money, d0, d1]
+        """
+
+        def __prn(__fs: str, m: int, __d: datetime, __file: io.StringIO):
+            print("%s{%.3f,%s}" % (__fs, m / 100000000, __d.strftime("%y%m%d,%H:%M")), end='', file=__file)
+
+        if _row[1].date() >= _d:
+            __prn(_fs, _row[0], _row[1], _file)
+            _fs = ','
+        if _row[2] is not None:
+            __prn(_fs, -_row[0], _row[2], _file)
+
+    like_file = io.StringIO()
+    addr = None
+    rs = ''  # record separator (between addrs)
+    fs = ''  # field separator (between vouts)
+    for row in data:
+        a_id = row[0]
+        if a_id != addr:
+            print("%s#%s{" % (rs, row[1]), end='', file=like_file)
+            addr = a_id
+            if not rs:
+                rs = "},\n"
+            fs = ''
+        elif not fs:
+            fs = ','
+        __out_vout(d, row[2:], fs, like_file)
+    return like_file

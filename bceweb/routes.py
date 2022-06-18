@@ -573,11 +573,26 @@ def q2606():
         __update_cookie(COOKEY_FORM_DATE0, date0)
         rid = form.rid.data
         __update_cookie(COOKEY_FORM_RID, rid)
-        num = form.num.data
-        __update_cookie(COOKEY_FORM_NUM, num)
-        return redirect(url_for('bceweb.q_index'))
-        # data = __get_records(Qry.get('Q2622').format(date0=date0, m_min=RID[rid][0], m_max=RID[rid][1], num=num or 22*10**6))
-        # TODO: return txt
+        if num := form.num.data:
+            __update_cookie(COOKEY_FORM_NUM, num)
+        # return redirect(url_for('bceweb.q_index'))
+        # print(date0, RID[rid][0], RID[rid][1], num)
+        data = __get_records(Qry.get('Q2606').format(
+            date0=date0.isoformat(),
+            m_min=RID[rid][0],
+            m_max=RID[rid][1],
+            num=num or 22*10**6)
+        )
+        ofile = xlstore.q2606_csf(date0, data)
+        ofile.seek(0)
+        fname = "q2606.txt"
+        return send_file(
+            io.BytesIO(ofile.read().encode()),
+            mimetype='text/plain',
+            as_attachment=True,
+            download_name=fname,
+            attachment_filename=fname
+        )
     elif request.method == 'GET':
         if date0 := __get_cookie(COOKEY_FORM_DATE0, datetime.date):
             form.date0.data = date0
