@@ -585,7 +585,7 @@ def q2606():
         )
         ofile = xlstore.q2606_csf(date0, data)
         ofile.seek(0)
-        fname = "q2606.txt"
+        fname = f"q2606-{datetime.datetime.now().strftime('%y%m%d%H%M%S')}.txt"
         return send_file(
             io.BytesIO(ofile.read().encode()),
             mimetype='text/plain',
