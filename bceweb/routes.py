@@ -579,8 +579,8 @@ def q2606():
         # print(date0, RID[rid][0], RID[rid][1], num)
         data = __get_records(Qry.get('Q2606').format(
             date0=date0.isoformat(),
-            m_min=RID[rid][0],
-            m_max=RID[rid][1],
+            m_min=RID[rid-1][0],
+            m_max=RID[rid-1][1],
             num=num or 22*10**6)
         )
         ofile = xlstore.q2606_csf(date0, data)
