@@ -144,7 +144,7 @@ def q2606_csf(d: date, data: Iterable) -> io.StringIO:
     for row in data:
         a_id = row[0]
         if a_id != addr:
-            print("%s{%s,{" % (rs, row[1]), end='', file=like_file)
+            print("%s{%s" % (rs, row[1]), end='', file=like_file)
             addr = a_id
             if not rs:
                 rs = "},\n"
