@@ -122,34 +122,32 @@ def q2606_csf(d: date, data: Iterable) -> io.StringIO:
     :return: file-like object
     """
 
-    def __out_vout(_d: date, _row: list, _fs: str, _file: io.StringIO):
+    def __out_vout(_d: date, _row: list, _file: io.StringIO):
         """Print one vout
         :param _d: date from
         :param _row: [money, d0, d1]
+        :param _file: file to print to
         """
 
-        def __prn(__fs: str, m: int, __d: datetime, __file: io.StringIO):
-            print("%s{%.3f,%s}" % (__fs, m / 100000000, __d.strftime("%y%m%d,%H:%M")), end='', file=__file)
+        def __prn(m: int, __d: datetime, __file: io.StringIO):
+            print(",{%.3f,%s}" % (m / 100000000, __d.strftime("%y,%m,%d,%H,%M")), end='', file=__file)
 
         if _row[1].date() >= _d:
-            __prn(_fs, _row[0], _row[1], _file)
-            _fs = ','
+            __prn(_row[0], _row[1], _file)
         if _row[2] is not None:
-            __prn(_fs, -_row[0], _row[2], _file)
+            __prn(-_row[0], _row[2], _file)
 
     like_file = io.StringIO()
     addr = None
     rs = ''  # record separator (between addrs)
-    fs = ''  # field separator (between vouts)
+    print("{", end='', file=like_file)
     for row in data:
         a_id = row[0]
         if a_id != addr:
-            print("%s#%s{" % (rs, row[1]), end='', file=like_file)
+            print("%s{%s,{" % (rs, row[1]), end='', file=like_file)
             addr = a_id
             if not rs:
                 rs = "},\n"
-            fs = ''
-        elif not fs:
-            fs = ','
-        __out_vout(d, row[2:], fs, like_file)
+        __out_vout(d, row[2:], like_file)
+    print("}}", file=like_file)
     return like_file
