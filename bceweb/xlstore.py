@@ -114,11 +114,12 @@ def q1a(data: Iterable) -> bytes:
     return like_file.getvalue()
 
 
-def q2606_csf(d: date, data: Iterable) -> io.StringIO:
+def q2606_csf(d: date, data: Iterable, crlf: bool) -> io.StringIO:
     """
     Make like-CSV file for Wolfram on given data
     :param d: date start from
     :param data: queryset
+    :param crlf: end address record with CR/LF
     :return: file-like object
     """
 
@@ -139,6 +140,7 @@ def q2606_csf(d: date, data: Iterable) -> io.StringIO:
 
     like_file = io.StringIO()
     addr = None
+    eol = '\n' if crlf else ''
     rs = ''  # record separator (between addrs)
     print("{", end='', file=like_file)
     for row in data:
@@ -147,7 +149,7 @@ def q2606_csf(d: date, data: Iterable) -> io.StringIO:
             print("%s{%s" % (rs, row[1]), end='', file=like_file)
             addr = a_id
             if not rs:
-                rs = "},\n"
+                rs = "},%s" % eol
         __out_vout(d, row[2:], like_file)
     print("}}", file=like_file)
     return like_file

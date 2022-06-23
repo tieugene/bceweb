@@ -583,7 +583,7 @@ def q2606():
             m_max=RID[rid-1][1],
             num=num or 22*10**6)
         )
-        ofile = xlstore.q2606_csf(date0, data)
+        ofile = xlstore.q2606_csf(date0, data, form.crlf.data)
         ofile.seek(0)
         fname = f"q2606-{datetime.datetime.now().strftime('%y%m%d%H%M%S')}.txt"
         return send_file(

@@ -50,3 +50,4 @@ class Q2606Form(FlaskForm):
     date0 = DateField("from:", validators=[DataRequired()])
     rid = SelectField("rid:", choices=RID_LIST, coerce=int)
     num = IntegerField("Addrs:", validators=[Optional()])
+    crlf = BooleanField("CR/LF:")
