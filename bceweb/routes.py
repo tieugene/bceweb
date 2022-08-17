@@ -13,6 +13,7 @@ import matplotlib.dates as mdates
 import psycopg2
 import psycopg2.extras
 from flask import Blueprint, render_template, request, send_file, g, current_app, session, redirect, url_for
+from werkzeug.exceptions import BadRequest
 
 # 3. local
 from . import forms, xlstore
@@ -565,6 +566,30 @@ def q1a_2d_rid():
     return render_template("q1a_2d_date.html", form=form, data=data)
 
 
+def __q2606_common(date0: datetime.date, rid: int, num: int = 0, crlf: bool = False):
+    """Common part for q2606*.
+    :param date0: Date to starts from
+    :param rid: Subj, 1-based
+    """
+    data = __get_records(Qry.get('Q2606').format(
+        date0=date0.isoformat(),
+        m_min=RID[rid - 1][0],
+        m_max=RID[rid - 1][1],
+        num=num or 22 * 10 ** 6)
+    )
+    ofile = xlstore.q2606_csf(date0, data, crlf)
+    ofile.seek(0)
+    now = datetime.datetime.now()
+    fname = f"q2606-{now:%y%m%d}_from{date0:%y%m%d}_rid{rid:02d}.txt"
+    return send_file(
+        io.BytesIO(ofile.read().encode()),
+        mimetype='text/plain',
+        as_attachment=True,
+        download_name=fname,
+        attachment_filename=fname
+    )
+
+
 @bp.route('/q2606/', methods=['GET', 'POST'])
 def q2606():
     form = forms.Q2606Form()
@@ -575,25 +600,7 @@ def q2606():
         __update_cookie(COOKEY_FORM_RID, rid)
         if num := form.num.data:
             __update_cookie(COOKEY_FORM_NUM, num)
-        # return redirect(url_for('bceweb.q_index'))
-        # print(date0, RID[rid][0], RID[rid][1], num)
-        data = __get_records(Qry.get('Q2606').format(
-            date0=date0.isoformat(),
-            m_min=RID[rid-1][0],
-            m_max=RID[rid-1][1],
-            num=num or 22*10**6)
-        )
-        ofile = xlstore.q2606_csf(date0, data, form.crlf.data)
-        ofile.seek(0)
-        now = datetime.datetime.now()
-        fname = f"q2606-{now:%y%m%d}_from{date0:%y%m%d}_rid{rid:02d}.txt"
-        return send_file(
-            io.BytesIO(ofile.read().encode()),
-            mimetype='text/plain',
-            as_attachment=True,
-            download_name=fname,
-            attachment_filename=fname
-        )
+        return __q2606_common(date0, rid, num, form.crlf.data)
     elif request.method == 'GET':
         if date0 := __get_cookie(COOKEY_FORM_DATE0, datetime.date):
             form.date0.data = date0
@@ -602,3 +609,18 @@ def q2606():
         if num := __get_cookie(COOKEY_FORM_NUM):
             form.num.data = num
     return render_template("q2606.html", form=form)
+
+
+@bp.route('/q2606/<int:date0>/<int:rid>/', methods=['GET'])
+def q2606_cli(date0: int, rid: int):
+    """The same as 'q2606', but for curl, addrs=0, CR/LF=False.
+    :param date0: Date to start from, YYYYMMDD
+    :param rid: 1-based
+    """
+    try:
+        d0 = datetime.datetime.strptime(str(date0), "%Y%m%d")
+    except ValueError:
+        return BadRequest(f"Bad date: '{date0}'")
+    if not (1 < rid < 11):
+        return BadRequest(f"Bad rif: '{rid}'")
+    return __q2606_common(d0, rid)

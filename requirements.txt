@@ -1,7 +1,9 @@
 psycopg2
-XlsxWriter
 Flask
-Jinja2
 Flask-WTF
 WTForms
+Werkzeug
+Jinja2
+XlsxWriter
 matplotlib
+numpy
