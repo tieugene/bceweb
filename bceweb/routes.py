@@ -618,7 +618,7 @@ def q2606_cli(date0: int, rid: int):
     :param rid: 1-based
     """
     try:
-        d0 = datetime.datetime.strptime(str(date0), "%Y%m%d")
+        d0 = datetime.datetime.strptime(str(date0), "%Y%m%d").date()
     except ValueError:
         return BadRequest(f"Bad date: '{date0}'")
     if not (1 < rid < 11):
